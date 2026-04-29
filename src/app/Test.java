@@ -5,6 +5,10 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
+import entity.LoaiMon;
+import entity.Mon;
+import entity.PhanLoaiMonAn;
+
 public class Test{
 	public static void main(String[] args) {
 		try {
@@ -17,5 +21,7 @@ public class Test{
 //            new Login_UI().setVisible(true);
             new MenuManagement().setVisible(true);
         });
+        
+        
 	}
 }

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "F001",
+    "name": "Artisanal Cortado",
+    "price": 4.50,
+    "description": "Espresso mixed with a roughly equal amount of warm milk.",
+    "imgPath": "img/cortado.png",
+    "type": "DRINK"
+  },
+  {
+    "id": "F002",
+    "name": "Almond Croissant",
+    "price": 5.50,
+    "description": "Twice-baked with house-made frangipane.",
+    "imgPath": "img/croissant.png",
+    "type": "PASTRY"
+  }
+]
