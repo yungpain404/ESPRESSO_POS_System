@@ -11,9 +11,9 @@ public class MenuManagement_UI extends JFrame{
     public MenuManagement_UI() {
         setTitle("Espresso Logic - Menu Management");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 850);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
-
         // Layout chính: Sidebar bên trái và Main Content bên phải
         setLayout(new BorderLayout());
 
@@ -55,12 +55,22 @@ public class MenuManagement_UI extends JFrame{
 	            btn.setContentAreaFilled(false); // Làm các nút khác trong suốt
 	        }
 	        if (data[0].equals("Menu")) {
-	            btn.addActionListener(e -> {
-	                new CreateOrders_UI().setVisible(true);
-	                this.dispose();
-	            });
-	        }
-
+                btn.addActionListener(e -> {
+                    CreateOrders_UI nextFrame = new CreateOrders_UI();
+                    nextFrame.setBounds(this.getBounds()); 
+                    nextFrame.setExtendedState(this.getExtendedState());
+                    nextFrame.setVisible(true);
+                    this.dispose();
+                });
+            } else if (data[0].equals("Analytics")) {
+                btn.addActionListener(e -> {
+                    Dashboard_UI nextFrame = new Dashboard_UI();
+                    nextFrame.setBounds(this.getBounds());
+                    nextFrame.setExtendedState(this.getExtendedState());
+                    nextFrame.setVisible(true);
+                    this.dispose();
+                });
+            }
 	        sidebar.add(btn);
 	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
 	    }

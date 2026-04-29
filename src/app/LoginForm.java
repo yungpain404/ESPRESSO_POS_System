@@ -32,10 +32,9 @@ public class LoginForm extends JFrame implements ActionListener{
 
 	public LoginForm() {
         setTitle("Cafe POS Login");
-        setSize(1200, 850);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
-
         //Main layout
         setLayout(new BorderLayout());
 
@@ -230,8 +229,10 @@ public class LoginForm extends JFrame implements ActionListener{
 		Object o = e.getSource();
 		if (o.equals(btnLogin)) {
 			if (validInput()) {
-				MenuManagement_UI menu_UI = new MenuManagement_UI();
-				menu_UI.setVisible(true);
+				MenuManagement_UI nextFrame = new MenuManagement_UI();
+				nextFrame.setBounds(this.getBounds());
+				nextFrame.setExtendedState(this.getExtendedState());
+				nextFrame.setVisible(true);
 				this.dispose();
 			}
 		}

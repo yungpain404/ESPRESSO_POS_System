@@ -14,9 +14,9 @@ public class Invoice_UI extends JFrame {
     public Invoice_UI() {
         setTitle("Order Details - Pure Flat Java");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 850);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
-
         // Bảng màu
         Color bgMain = Color.decode("#F9F8E6");
         Color bgWhite = Color.decode("#FFFFFF");

@@ -11,9 +11,9 @@ public class CreateOrders_UI extends JFrame {
     public CreateOrders_UI() {
         setTitle("Espresso Menu POS - Pure Java Optimized");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 850);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
-        
         // Định nghĩa màu sắc
         Color bgMain = Color.decode("#fbfbe1");
         Color bgCard = Color.decode("#FFFFFF");
