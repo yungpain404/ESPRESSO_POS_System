@@ -1,6 +1,8 @@
 package app;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -10,7 +12,11 @@ import java.awt.*;
 
 @SuppressWarnings("serial")
 public class Invoice_UI extends JFrame {
-
+	static {
+	    FlatLightLaf.setup();
+	    UIManager.put("Button.arc", 20);
+	    UIManager.put("Component.arc", 20);
+	}
     public Invoice_UI() {
         setTitle("Order Details - Pure Flat Java");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,12 +31,16 @@ public class Invoice_UI extends JFrame {
         Color accentMint = Color.decode("#D1E7E5");
         Color btnBrown = Color.decode("#4E342E");
         Color bgStatus = Color.decode("#F1F0D5");
-
+        
         JPanel pnlRoot = new JPanel(new BorderLayout(30, 20));
         pnlRoot.setBackground(bgMain);
-        pnlRoot.setBorder(new EmptyBorder(40, 40, 40, 40));
+        
         setContentPane(pnlRoot);
-
+        pnlRoot.add(createSidebar(), BorderLayout.WEST);
+        
+        JPanel pnlContent = new JPanel(new BorderLayout(30, 0));
+        pnlContent.setOpaque(false);
+        pnlContent.setBorder(new EmptyBorder(40, 40, 40, 40));
         // cột bên trái
         JPanel pnlSidebar = new JPanel();
         pnlSidebar.setLayout(new BoxLayout(pnlSidebar, BoxLayout.Y_AXIS));
@@ -197,9 +207,10 @@ public class Invoice_UI extends JFrame {
         pnlBottomBar.add(boxBarista);
 
         
-        pnlRoot.add(pnlSidebar, BorderLayout.WEST);
-        pnlRoot.add(pnlInvoiceCard, BorderLayout.CENTER);
-        pnlRoot.add(pnlBottomBar, BorderLayout.SOUTH);
+        pnlContent.add(pnlSidebar, BorderLayout.WEST);
+        pnlContent.add(pnlInvoiceCard, BorderLayout.CENTER);
+        pnlContent.add(pnlBottomBar, BorderLayout.SOUTH);
+        pnlRoot.add(pnlContent, BorderLayout.CENTER);
     }
 
     // Tùy chỉnh hiển thị JTable
@@ -230,4 +241,98 @@ public class Invoice_UI extends JFrame {
             return this;
         }
     }
+	
+    private JPanel createSidebar() {
+	    JPanel sidebar = new JPanel();
+	    sidebar.setPreferredSize(new Dimension(250, 0));
+	    sidebar.setBackground(new Color(245, 245, 230));
+	    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20)); // Margin cho menu
+	
+	    // Logo
+	    JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
+	    lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 20));
+	    lblLogo.setForeground(new Color(85, 55, 34));
+	    lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái label
+	    sidebar.add(lblLogo);
+	    sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
+	
+	    
+	    String[][] menuData = {
+	        {"Menu", "img/menu.png"},
+	        {"Menu Management", "img/menumanagement.png"}, 
+	        {"Analytics", "img/analytics.png"}
+	    };
+	
+	    for (String[] data : menuData) {
+	        JButton btn = createMenuButton(data[0], data[1]);
+	        
+	        // Highlight mục đang chọn ( Menu mangement )
+	        if (data[0].equals("Menu Management")) {
+	            btn.setBackground(new Color(230, 230, 210));
+	            btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
+	            btn.putClientProperty(FlatClientProperties.BUTTON_TYPE, 10);
+	        } else {
+	            btn.setContentAreaFilled(false); // Làm các nút khác trong suốt
+	        }
+	        if (data[0].equals("Menu")) {
+                btn.addActionListener(e -> {
+                    CreateOrders_UI nextFrame = new CreateOrders_UI();
+                    nextFrame.setBounds(this.getBounds()); 
+                    nextFrame.setExtendedState(this.getExtendedState());
+                    nextFrame.setVisible(true);
+                    this.dispose();
+                });
+            } else if (data[0].equals("Analytics")) {
+                btn.addActionListener(e -> {
+                    Dashboard_UI nextFrame = new Dashboard_UI();
+                    nextFrame.setBounds(this.getBounds());
+                    nextFrame.setExtendedState(this.getExtendedState());
+                    nextFrame.setVisible(true);
+                    this.dispose();
+                });
+            }
+	        sidebar.add(btn);
+	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
+	    }
+	
+	    sidebar.add(Box.createVerticalGlue());
+	    
+	    JButton btnNewOrder = new JButton(" + New Order ");
+        btnNewOrder.setBackground(new Color(85, 55, 34));
+        btnNewOrder.setForeground(Color.WHITE);
+        btnNewOrder.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnNewOrder.setPreferredSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnNewOrder.setFocusPainted(false);
+        btnNewOrder.setBorderPainted(false);
+        // 5. Thay đổi font chữ to hơn một chút cho cân đối với nút lớn
+        btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnNewOrder.putClientProperty(FlatClientProperties.STYLE, "arc: 20");
+        sidebar.add(btnNewOrder);
+        
+	    return sidebar;
+   }
+   
+   private JButton createMenuButton(String text, String iconPath) {
+	    // Tạo Icon và scale nhỏ lại cho vừa dòng
+	    ImageIcon icon = new ImageIcon(iconPath);
+	    Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+	    
+	    JButton btn = new JButton(text, new ImageIcon(scaled));
+	    
+	    // THUẬT TOÁN CĂN LỀ QUAN TRỌNG:
+	    btn.setHorizontalAlignment(SwingConstants.LEFT); // Chữ và icon dồn sang trái
+	    btn.setIconTextGap(15); // Khoảng cách giữa icon và chữ
+	    btn.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn nút thẳng hàng trong BoxLayout
+	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); // Nút dài hết cỡ sidebar
+	    
+	    // Xóa bỏ các hiệu ứng thừa của Swing cũ
+	    btn.setFocusPainted(false);
+	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); // Padding trong của nút
+	    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	    btn.setForeground(new Color(85, 55, 34));
+	    btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+	    
+	    return btn;
+	}
 }
