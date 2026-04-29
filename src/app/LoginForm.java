@@ -22,6 +22,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+@SuppressWarnings("serial")
 public class LoginForm extends JFrame implements ActionListener{
 
     private JPasswordField txtPass;
@@ -31,7 +32,7 @@ public class LoginForm extends JFrame implements ActionListener{
 
 	public LoginForm() {
         setTitle("Cafe POS Login");
-        setSize(900, 580);
+        setSize(1200, 850);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -229,7 +230,9 @@ public class LoginForm extends JFrame implements ActionListener{
 		Object o = e.getSource();
 		if (o.equals(btnLogin)) {
 			if (validInput()) {
-				
+				MenuManagement_UI menu_UI = new MenuManagement_UI();
+				menu_UI.setVisible(true);
+				this.dispose();
 			}
 		}
 		
@@ -252,7 +255,7 @@ public class LoginForm extends JFrame implements ActionListener{
 			txtUser.requestFocus();
 			return false;
 		}else {
-			if (!loginName.matches("^[a-zA-Z][a-zA-Z0-9_]{8,30}$")) {
+			if (!loginName.matches("^[a-zA-Z][a-zA-Z0-9_]{7,29}$")) {
 				lblErrName.setText("Usename bắt đầu bằng chữ cái, không chứa kí tự đặc biệt.");
 				txtUser.requestFocus();
 				return false;

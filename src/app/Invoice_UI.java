@@ -1,7 +1,6 @@
 package app;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -9,12 +8,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class Invoice_UI extends JFrame {
 
     public Invoice_UI() {
         setTitle("Order Details - Pure Flat Java");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 950);
+        setSize(1200, 850);
         setLocationRelativeTo(null);
 
         // Bảng màu
@@ -115,8 +115,8 @@ public class Invoice_UI extends JFrame {
             {new String[]{"Oat Milk Lavender Latte", "Double shot, house-made syrup"}, "02", "$5.75", "$11.50"},
             {new String[]{"Artisan Sourdough Croissant", "Twice baked, almond filling"}, "01", "$4.50", "$4.50"}
         };
-
-        JTable tblTable = new JTable(new DefaultTableModel(data, columns) {
+       
+		JTable tblTable = new JTable(new DefaultTableModel(data, columns) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         });
         tblTable.setRowHeight(80);
@@ -203,7 +203,7 @@ public class Invoice_UI extends JFrame {
     }
 
     // Tùy chỉnh hiển thị JTable
-    class DescriptionCellRenderer extends JPanel implements TableCellRenderer {
+	class DescriptionCellRenderer extends JPanel implements TableCellRenderer {
         private JLabel lblTitle = new JLabel();
         private JLabel lblDesc = new JLabel();
 
@@ -229,10 +229,5 @@ public class Invoice_UI extends JFrame {
             setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
             return this;
         }
-    }
-
-    public static void main(String[] args) {
-        FlatLightLaf.setup();
-        new Invoice_UI().setVisible(true);
     }
 }

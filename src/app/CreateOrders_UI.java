@@ -1,17 +1,17 @@
 package app;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class CreateOrders_UI extends JFrame {
 
     public CreateOrders_UI() {
         setTitle("Espresso Menu POS - Pure Java Optimized");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1300, 850);
+        setSize(1200, 850);
         setLocationRelativeTo(null);
         
         // Định nghĩa màu sắc
@@ -210,11 +210,4 @@ public class CreateOrders_UI extends JFrame {
         return pnlCard;
     }
 
-    public static void main(String[] args) {
-        FlatLightLaf.setup(); 
-        UIManager.put("Button.arc", 20); 
-        UIManager.put("Component.arc", 20); 
-        
-        new CreateOrders_UI().setVisible(true);
-    }
 }

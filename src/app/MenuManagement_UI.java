@@ -5,9 +5,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class MenuManagement extends JFrame {
+@SuppressWarnings("serial")
+public class MenuManagement_UI extends JFrame{
 
-    public MenuManagement() {
+    public MenuManagement_UI() {
         setTitle("Espresso Logic - Menu Management");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 850);
@@ -53,7 +54,13 @@ public class MenuManagement extends JFrame {
 	        } else {
 	            btn.setContentAreaFilled(false); // Làm các nút khác trong suốt
 	        }
-	
+	        if (data[0].equals("Menu")) {
+	            btn.addActionListener(e -> {
+	                new CreateOrders_UI().setVisible(true);
+	                this.dispose();
+	            });
+	        }
+
 	        sidebar.add(btn);
 	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
 	    }
@@ -118,7 +125,8 @@ public class MenuManagement extends JFrame {
         titlePanel.add(lblSub);
 
         // Bên phải: Nút Add Item
-        JPanel pnlWrapperBtnAdd = new JPanel();
+        @SuppressWarnings("unused")
+		JPanel pnlWrapperBtnAdd = new JPanel();
         JButton btnAdd = new JButton("Add Item");
         btnAdd.setBackground(new Color(85, 55, 34));
         btnAdd.setForeground(Color.WHITE);
@@ -292,4 +300,5 @@ public class MenuManagement extends JFrame {
 	
 	    return card;
 	}
+
 }
