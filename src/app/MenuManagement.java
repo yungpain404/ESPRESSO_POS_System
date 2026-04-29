@@ -15,7 +15,7 @@ public class MenuManagement extends JFrame {
     public MenuManagement() {
         setTitle("Espresso Logic - Menu Management");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 850);
+        setSize(900, 600);
         setLocationRelativeTo(null);
 
         // Layout chính: Sidebar bên trái và Main Content bên phải

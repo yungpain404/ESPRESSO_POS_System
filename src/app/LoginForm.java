@@ -229,7 +229,7 @@ public class LoginForm extends JFrame implements ActionListener{
 		Object o = e.getSource();
 		if (o.equals(btnLogin)) {
 			if (validInput()) {
-				MenuManagement nextFrame = new MenuManagement();
+				CreateOrders_UI nextFrame = new CreateOrders_UI();
 				nextFrame.setBounds(this.getBounds());
 				nextFrame.setExtendedState(this.getExtendedState());
 				nextFrame.setVisible(true);
