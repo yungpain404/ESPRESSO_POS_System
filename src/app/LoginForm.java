@@ -22,14 +22,14 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class Login_UI extends JFrame implements ActionListener{
+public class LoginForm extends JFrame implements ActionListener{
 
     private JPasswordField txtPass;
 	private JTextField txtUser;
 	private JButton btnLogin;
 	private JLabel lblErrName;
 
-	public Login_UI() {
+	public LoginForm() {
         setTitle("Cafe POS Login");
         setSize(900, 580);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -157,6 +157,7 @@ public class Login_UI extends JFrame implements ActionListener{
         pnlUserField.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblErrName = new JLabel();
         lblErrName.setForeground(new Color(222, 93, 75));
+        lblErrName.setFont(new Font("Segoe UI", Font.ITALIC, 10));
         
 
         JLabel lblPass = new JLabel("MẬT KHẨU");
@@ -235,20 +236,30 @@ public class Login_UI extends JFrame implements ActionListener{
 	}
 	
 	private boolean validInput() {
-		String loginName = txtUser.getText();
-		String loginPass = new String(txtPass.getPassword());
+		String loginName = txtUser.getText().trim();
+		String loginPass = new String(txtPass.getPassword()).trim();
 		if (loginName.length() == 0 || loginPass.length() == 0) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
+			if (loginName.length() == 0) {
+				txtUser.requestFocus();
+			}else {
+				txtPass.requestFocus();
+			}
 			return false;
 		}
-		if (!loginName.matches("^[a-zA-Z][a-zA-Z0-9_]{8,30}$")) {
-			lblErrName.setText("Username ≥ 8 ký tự, bắt đầu bằng chữ cái.");
+		if (loginName.length() < 8) {
+			lblErrName.setText("Username phải ≥ 8 ký tự.");
 			txtUser.requestFocus();
 			return false;
 		}else {
-			lblErrName.setText("");
+			if (!loginName.matches("^[a-zA-Z][a-zA-Z0-9_]{8,30}$")) {
+				lblErrName.setText("Usename bắt đầu bằng chữ cái, không chứa kí tự đặc biệt.");
+				txtUser.requestFocus();
+				return false;
+			}else {
+				lblErrName.setText("");
+			}
 		}
-		
 		return true;
 	}
 }

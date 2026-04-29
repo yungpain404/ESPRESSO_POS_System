@@ -14,7 +14,7 @@ public class Test{
         }
 
         SwingUtilities.invokeLater(()->{
-            new Login_UI().setVisible(true);
+            new LoginForm().setVisible(true);
         });
 	}
 }
