@@ -5,12 +5,14 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class MenuManagement extends JFrame {
 
     public MenuManagement() {
         setTitle("Espresso Logic - Menu Management");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 850);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
 
         // Layout chính: Sidebar bên trái và Main Content bên phải
@@ -53,7 +55,23 @@ public class MenuManagement extends JFrame {
 	        } else {
 	            btn.setContentAreaFilled(false); // Làm các nút khác trong suốt
 	        }
-	
+	        if (data[0].equals("Menu")) {
+                btn.addActionListener(e -> {
+                    CreateOrders_UI nextFrame = new CreateOrders_UI();
+                    nextFrame.setBounds(this.getBounds()); 
+                    nextFrame.setExtendedState(this.getExtendedState());
+                    nextFrame.setVisible(true);
+                    this.dispose();
+                });
+            } else if (data[0].equals("Analytics")) {
+                btn.addActionListener(e -> {
+                    Dashboard_UI nextFrame = new Dashboard_UI();
+                    nextFrame.setBounds(this.getBounds());
+                    nextFrame.setExtendedState(this.getExtendedState());
+                    nextFrame.setVisible(true);
+                    this.dispose();
+                });
+            }
 	        sidebar.add(btn);
 	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
 	    }
@@ -118,7 +136,8 @@ public class MenuManagement extends JFrame {
         titlePanel.add(lblSub);
 
         // Bên phải: Nút Add Item
-        JPanel pnlWrapperBtnAdd = new JPanel();
+        @SuppressWarnings("unused")
+		JPanel pnlWrapperBtnAdd = new JPanel();
         JButton btnAdd = new JButton("Add Item");
         btnAdd.setBackground(new Color(85, 55, 34));
         btnAdd.setForeground(Color.WHITE);

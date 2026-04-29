@@ -371,7 +371,7 @@ public class Dashboard_UI extends JFrame {
                 });
             } else if (data[0].equals("Menu Management")) {
                 btn.addActionListener(e -> {
-                    MenuManagement_UI nextFrame = new MenuManagement_UI();
+                    MenuManagement nextFrame = new MenuManagement();
                     nextFrame.setBounds(this.getBounds());
                     nextFrame.setExtendedState(this.getExtendedState());
                     nextFrame.setVisible(true);
