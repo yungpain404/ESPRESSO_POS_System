@@ -13,9 +13,11 @@ import java.awt.*;
 @SuppressWarnings("serial")
 public class Invoice_UI extends JFrame {
 	static {
-	    FlatLightLaf.setup();
-	    UIManager.put("Button.arc", 20);
-	    UIManager.put("Component.arc", 20);
+	    try {
+	        FlatLightLaf.setup();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
     public Invoice_UI() {
         setTitle("Order Details - Pure Flat Java");
@@ -30,7 +32,6 @@ public class Invoice_UI extends JFrame {
         Color textGray = Color.decode("#7D7D7D");
         Color accentMint = Color.decode("#D1E7E5");
         Color btnBrown = Color.decode("#4E342E");
-        Color bgStatus = Color.decode("#F1F0D5");
         
         JPanel pnlRoot = new JPanel(new BorderLayout(30, 20));
         pnlRoot.setBackground(bgMain);
@@ -59,7 +60,6 @@ public class Invoice_UI extends JFrame {
         btnPrint.setForeground(Color.WHITE);
         btnPrint.setFont(new Font("Inter", Font.BOLD, 13));
         btnPrint.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        btnPrint.putClientProperty(FlatClientProperties.STYLE, "arc: 15; borderWidth: 0; focusWidth: 0");
         pnlSidebar.add(btnPrint);
         pnlSidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -69,7 +69,6 @@ public class Invoice_UI extends JFrame {
         btnEmail.setForeground(textDark);
         btnEmail.setFont(new Font("Inter", Font.BOLD, 13));
         btnEmail.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        btnEmail.putClientProperty(FlatClientProperties.STYLE, "arc: 15; borderWidth: 0; focusWidth: 0");
         pnlSidebar.add(btnEmail);
         pnlSidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -79,13 +78,11 @@ public class Invoice_UI extends JFrame {
         btnExport.setForeground(textDark);
         btnExport.setFont(new Font("Inter", Font.BOLD, 13));
         btnExport.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        btnExport.putClientProperty(FlatClientProperties.STYLE, "arc: 15; outlineColor: #E0E0E0; borderWidth: 1; focusWidth: 0");
         pnlSidebar.add(btnExport);
 
         // cột bên phải
         JPanel pnlInvoiceCard = new JPanel(new BorderLayout());
         pnlInvoiceCard.setBackground(bgWhite);
-        pnlInvoiceCard.putClientProperty(FlatClientProperties.STYLE, "arc: 45");
         pnlInvoiceCard.setBorder(new EmptyBorder(50, 50, 50, 50));
 
         // Header của Invoice
@@ -178,38 +175,9 @@ public class Invoice_UI extends JFrame {
         pnlInvoiceCard.add(pnlHeader, BorderLayout.NORTH);
         pnlInvoiceCard.add(scrPane, BorderLayout.CENTER);
         pnlInvoiceCard.add(pnlFooterInvoice, BorderLayout.SOUTH);
-
-        // thanh trạng thái
-        JPanel pnlBottomBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        pnlBottomBar.setOpaque(false);
-
-        // Box 1: Preparation Time
-        JPanel boxPrep = new JPanel(new BorderLayout(5, 2));
-        boxPrep.setBackground(bgStatus);
-        boxPrep.setBorder(new EmptyBorder(15, 20, 15, 20));
-        boxPrep.putClientProperty(FlatClientProperties.STYLE, "arc: 20");
-        JLabel t1 = new JLabel("Preparation Time"); t1.setFont(new Font("Inter", Font.BOLD, 13));
-        JLabel d1 = new JLabel("Order was fulfilled in 8 minutes and 24 seconds."); d1.setForeground(Color.DARK_GRAY);
-        boxPrep.add(t1, BorderLayout.NORTH);
-        boxPrep.add(d1, BorderLayout.CENTER);
-
-        // Box 2: Barista on Duty
-        JPanel boxBarista = new JPanel(new BorderLayout(5, 2));
-        boxBarista.setBackground(bgStatus);
-        boxBarista.setBorder(new EmptyBorder(15, 20, 15, 20));
-        boxBarista.putClientProperty(FlatClientProperties.STYLE, "arc: 20");
-        JLabel t2 = new JLabel("Barista on Duty"); t2.setFont(new Font("Inter", Font.BOLD, 13));
-        JLabel d2 = new JLabel("Prepared by Senior Sommelier: Marcus Chen"); d2.setForeground(Color.DARK_GRAY);
-        boxBarista.add(t2, BorderLayout.NORTH);
-        boxBarista.add(d2, BorderLayout.CENTER);
-
-        pnlBottomBar.add(boxPrep);
-        pnlBottomBar.add(boxBarista);
-
         
         pnlContent.add(pnlSidebar, BorderLayout.WEST);
         pnlContent.add(pnlInvoiceCard, BorderLayout.CENTER);
-        pnlContent.add(pnlBottomBar, BorderLayout.SOUTH);
         pnlRoot.add(pnlContent, BorderLayout.CENTER);
     }
 
@@ -307,7 +275,6 @@ public class Invoice_UI extends JFrame {
         btnNewOrder.setBorderPainted(false);
         // 5. Thay đổi font chữ to hơn một chút cho cân đối với nút lớn
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnNewOrder.putClientProperty(FlatClientProperties.STYLE, "arc: 20");
         sidebar.add(btnNewOrder);
         
 	    return sidebar;

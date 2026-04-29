@@ -10,11 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 @SuppressWarnings("serial")
 public class CreateOrders_UI extends JFrame implements ActionListener {
-		static {
-		    FlatLightLaf.setup();
-		    UIManager.put("Button.arc", 20);
-		    UIManager.put("Component.arc", 20);
-		}
+	static {
+	    try {
+	        FlatLightLaf.setup();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
 
 		private JButton btnComplete;
     public CreateOrders_UI() {
@@ -47,8 +49,9 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         
         JTextField txtSearch = new JTextField();
         txtSearch.setPreferredSize(new Dimension(400, 40));
-        txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search menu items..."); 
-        txtSearch.putClientProperty(FlatClientProperties.STYLE, "arc: 25; background: #FFFFFF; borderWidth: 0; focusWidth: 0;");
+        txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search menu items...");
+	    txtSearch.putClientProperty("JComponent.outlineWidth", 0);
+	    txtSearch.putClientProperty("JSeparator.height", 0);
         
         // Profile bên phải
         JPanel pnlProfile = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
@@ -98,10 +101,16 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         String[] category = {"All", "Coffee", "Tea", "Pastries"};
         for (String cat : category) {
             JButton btnTab = new JButton(cat);
-            String btnStyle = cat.equals("All") 
-                ? "arc: 20; background: #e6e6cc; foreground: #573824; borderWidth: 0;" 
-                : "arc: 20; background: #f5f5db; foreground: #7d7862; borderWidth: 0;";
-            btnTab.putClientProperty(FlatClientProperties.STYLE, btnStyle);
+            btnTab.setBorderPainted(false);
+            btnTab.setFocusPainted(false);
+            
+            if (cat.equals("All")) {
+                btnTab.setBackground(Color.decode("#e6e6cc"));
+                btnTab.setForeground(Color.decode("#573824"));
+            } else {
+                btnTab.setBackground(Color.decode("#f5f5db"));
+                btnTab.setForeground(Color.decode("#7d7862"));
+            }
             pnlTabs.add(btnTab);
         }
         pnlMenuHeader.add(lblTitle, BorderLayout.WEST);
@@ -159,7 +168,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         btnComplete.setForeground(Color.WHITE);
         btnComplete.setFont(new Font("Inter", Font.BOLD, 15));
         btnComplete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnComplete.putClientProperty(FlatClientProperties.STYLE, "arc: 25; focusWidth: 0;");
+        btnComplete.putClientProperty("JComponent.outlineWidth", 0);
 
         pnlCartFooter.add(lblTotalLabel);
         pnlCartFooter.add(Box.createVerticalStrut(5));
@@ -177,7 +186,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
     private JPanel createProductCard(String name, String desc, String price, Color bg, Color brown, Color gray) {
         JPanel pnlCard = new JPanel(new BorderLayout());
         pnlCard.setBackground(bg);
-        pnlCard.putClientProperty(FlatClientProperties.STYLE, "arc: 25;");
         
         // Ảnh
         JLabel lblImgPlaceholder = new JLabel("IMAGE", SwingConstants.CENTER);
@@ -185,7 +193,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         lblImgPlaceholder.setOpaque(true);
         lblImgPlaceholder.setBackground(Color.decode("#EEEEEE"));
         lblImgPlaceholder.setForeground(Color.LIGHT_GRAY);
-        lblImgPlaceholder.putClientProperty(FlatClientProperties.STYLE, "arc: 25;");
 
         // Panel thông tin
         JPanel pnlInfo = new JPanel();
@@ -294,7 +301,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         btnNewOrder.setBorderPainted(false);
         // 5. Thay đổi font chữ to hơn một chút cho cân đối với nút lớn
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnNewOrder.putClientProperty(FlatClientProperties.STYLE, "arc: 20");
         sidebar.add(btnNewOrder);
         
 	    return sidebar;
