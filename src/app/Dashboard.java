@@ -39,11 +39,28 @@ public class Dashboard extends JPanel {
     
     private JButton btnCancel;
     private JButton btnConfirm;
+    private JButton btnEndShift;
     
+    /**
+     * Constructor: Khởi tạo Dashboard Panel
+     * - Thiết lập layout chính (BorderLayout)
+     * - Tạo top panel chứa tiêu đề và nút đóng ca
+     * - Tạo content panel với các thống kê, bảng và nút hành động
+     */
+    /**
+     * Constructor: Khởi tạo Dashboard Panel
+     * - Thiết lập layout chính (BorderLayout)
+     * - Tạo sidebar navigation menu bên trái
+     * - Tạo top panel chứa tiêu đề và nút đóng ca
+     * - Tạo content panel với các thống kê, bảng và nút hành động
+     */
     public Dashboard() {
         setLayout(new BorderLayout());
         setBackground(BG);
-        setPreferredSize(new Dimension(1200, 710));
+        setPreferredSize(new Dimension(1400, 710));
+        
+        // Sidebar
+        JPanel pnlSidebar = createSidebar();
         
         // Top Panel
         JPanel pnlTop = createTopPanel();
@@ -57,10 +74,22 @@ public class Dashboard extends JPanel {
         scrollPane.setBorder(null);
         scrollPane.getViewport().setBackground(BG);
         
-        add(pnlTop, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        // Center panel (Top + Content)
+        JPanel pnlCenter = new JPanel(new BorderLayout());
+        pnlCenter.setBackground(BG);
+        pnlCenter.add(pnlTop, BorderLayout.NORTH);
+        pnlCenter.add(scrollPane, BorderLayout.CENTER);
+        
+        add(pnlSidebar, BorderLayout.WEST);
+        add(pnlCenter, BorderLayout.CENTER);
     }
     
+    /**
+     * Tạo Top Panel
+     * - Hiển thị tiêu đề "Dashboard"
+     * - Hiển thị thông tin ca làm việc (shift info)
+     * - Nút "Close" để đóng ca
+     */
     private JPanel createTopPanel() {
         JPanel pnlTop = new JPanel(new BorderLayout());
         pnlTop.setBackground(BG_CARD);
@@ -99,6 +128,11 @@ public class Dashboard extends JPanel {
         return pnlTop;
     }
     
+    /**
+     * Tạo Content Panel chính
+     * - Chứa 4 phần: thống kê, 2 bảng, insights, nút hành động
+     * - Sử dụng BoxLayout để xếp các phần theo chiều dọc
+     */
     private JPanel createContentPanel() {
         JPanel pnlContent = new JPanel();
         pnlContent.setLayout(new BoxLayout(pnlContent, BoxLayout.Y_AXIS));
@@ -125,6 +159,12 @@ public class Dashboard extends JPanel {
         return pnlContent;
     }
     
+    /**
+     * Tạo Statistics Panel
+     * - Hiển thị 4 thẻ thống kê: tổng hóa đơn, doanh thu, tiền mặt, chuyển khoản
+     * - Mỗi thẻ gồm: nhãn, giá trị chính, phụ đề (subtitle)
+     * - Dữ liệu sẽ được populate từ logic sau
+     */
     private JPanel createStatisticsPanel() {
         JPanel pnlStats = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 10));
         pnlStats.setBackground(BG);
@@ -140,6 +180,15 @@ public class Dashboard extends JPanel {
         return pnlStats;
     }
     
+    /**
+     * Tạo một thẻ thống kê (Stat Card)
+     * - Hiển thị: tiêu đề, giá trị lớn, phụ đề nhỏ
+     * - Lưu reference của các JLabel để cập nhật dữ liệu từ logic
+     * 
+     * @param label - Tiêu đề thẻ (VD: "Total Invoices")
+     * @param varValue - Tên biến để lưu JLabel giá trị
+     * @param varSubtitle - Tên biến để lưu JLabel phụ đề
+     */
     private JPanel createStatCard(String label, String varValue, String varSubtitle) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -168,7 +217,7 @@ public class Dashboard extends JPanel {
         lblSubtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblSubtitle.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
         
-        // Store references
+        // Lưu reference của các JLabel vào biến thành viên
         if (varValue.equals("lblTotalInvoices")) lblTotalInvoices = lblValue;
         else if (varValue.equals("lblTotalRevenue")) lblTotalRevenue = lblValue;
         else if (varValue.equals("lblCashAmount")) lblCashAmount = lblValue;
@@ -186,6 +235,12 @@ public class Dashboard extends JPanel {
         return card;
     }
     
+    /**
+     * Tạo Two Column Panel
+     * - Chia thành 2 cột bằng nhau (50-50)
+     * - Cột trái: bảng Hóa đơn gần nhất
+     * - Cột phải: bảng Top 5 sản phẩm bán chạy
+     */
     private JPanel createTwoColumnPanel() {
         JPanel pnlTwoCol = new JPanel(new GridLayout(1, 2, 10, 0));
         pnlTwoCol.setBackground(BG);
@@ -198,6 +253,13 @@ public class Dashboard extends JPanel {
         return pnlTwoCol;
     }
 
+    /**
+     * Tạo Recent Invoices Panel
+     * - Hiển thị bảng 5 hóa đơn gần nhất
+     * - Cột: #, Time, Total, Method
+     * - Bảng read-only, không cho chỉnh sửa
+     * - Dữ liệu sẽ được populate từ logic bằng modelRecentInvoices.addRow()
+     */
     private JPanel createRecentInvoicesPanel() {
         JPanel pnlBox = new JPanel(new BorderLayout());
         pnlBox.setBackground(BG_CARD2);
@@ -220,7 +282,7 @@ public class Dashboard extends JPanel {
         modelRecentInvoices = new DefaultTableModel(columns, 5) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return false; // Bảng read-only, không cho chỉnh sửa
             }
         };
         tblRecentInvoices = new JTable(modelRecentInvoices);
@@ -256,6 +318,13 @@ public class Dashboard extends JPanel {
         return pnlBox;
     }
 
+    /**
+     * Tạo Top Items Panel
+     * - Hiển thị bảng Top 5 sản phẩm bán chạy
+     * - Cột: Rank, Item Name, Quantity
+     * - Bảng read-only, không cho chỉnh sửa
+     * - Dữ liệu sẽ được populate từ logic bằng modelTopItems.addRow()
+     */
     private JPanel createTopItemsPanel() {
         JPanel pnlBox = new JPanel(new BorderLayout());
         pnlBox.setBackground(BG_CARD2);
@@ -278,7 +347,7 @@ public class Dashboard extends JPanel {
         modelTopItems = new DefaultTableModel(columns, 5) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return false; // Bảng read-only, không cho chỉnh sửa
             }
         };
         tblTopItems = new JTable(modelTopItems);
@@ -313,6 +382,12 @@ public class Dashboard extends JPanel {
         return pnlBox;
     }
     
+    /**
+     * Tạo Insights Panel
+     * - Chứa container để hiển thị các insight box (nhận xét từ số liệu)
+     * - Mỗi insight gồm: dot màu, text nhận xét
+     * - Dữ liệu sẽ được populate từ logic bằng pnlInsightsContainer.add()
+     */
     private JPanel createInsightsPanel() {
         JPanel pnlInsights = new JPanel();
         pnlInsights.setLayout(new BoxLayout(pnlInsights, BoxLayout.Y_AXIS));
@@ -330,6 +405,12 @@ public class Dashboard extends JPanel {
         return pnlInsights;
     }
     
+    /**
+     * Tạo Buttons Panel
+     * - Chứa 2 nút: Cancel, Confirm
+     * - Nút Cancel: để hủy bỏ đóng ca
+     * - Nút Confirm: để xác nhận đóng ca và in báo cáo
+     */
     private JPanel createButtonsPanel() {
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 10));
         pnlButtons.setBackground(BG);
@@ -359,29 +440,207 @@ public class Dashboard extends JPanel {
         return pnlButtons;
     }
     
-    // Getters for logic implementation
+    /**
+     * Tạo Sidebar Panel
+     * - Hiển thị logo "ESPRESSO LOGIC"
+     * - Menu navigation: Menu, Menu Management, Analytics
+     * - Nút "+ New Order" ở dưới cùng
+     * - Các menu item căn trái, chữ to
+     */
+    private JPanel createSidebar() {
+        JPanel sidebar = new JPanel();
+        sidebar.setPreferredSize(new Dimension(280, 0));
+        sidebar.setBackground(new Color(245, 245, 230));
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBorder(BorderFactory.createEmptyBorder(30, 20, 30, 20));
+
+        // Logo
+        JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
+        lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblLogo.setForeground(new Color(85, 55, 34));
+        sidebar.add(lblLogo);
+        sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
+
+        // Danh sách menu (Tên - Icon Path)
+        String[][] menuData = {
+            {"Menu", "src/img/menu.png"},
+            {"Menu Management", "src/img/menumanagement.png"}, 
+            {"Analytics", "src/img/analytics.png"}
+        };
+
+        for (String[] data : menuData) {
+            JButton btn = createMenuButton(data[0], data[1]);
+            btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+            btn.setMinimumSize(new Dimension(200, 45));
+            
+            // Highlight mục đang chọn (Menu Management)
+            if (data[0].equals("Menu Management")) {
+                btn.setBackground(new Color(230, 220, 200));
+                btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                btn.setContentAreaFilled(true);
+                btn.setOpaque(true);
+                btn.setBorderPainted(false);
+            } else {
+                btn.setContentAreaFilled(false);
+                btn.setOpaque(false);
+                btn.setBorderPainted(false);
+                btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            }
+
+            sidebar.add(btn);
+            sidebar.add(Box.createRigidArea(new Dimension(0, 15)));
+        }
+
+        sidebar.add(Box.createVerticalGlue());
+        
+        JButton btnNewOrder = new JButton("+ New Order");
+        btnNewOrder.setBackground(ACCENT);
+        btnNewOrder.setForeground(Color.WHITE);
+        btnNewOrder.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        btnNewOrder.setMinimumSize(new Dimension(200, 45));
+        btnNewOrder.setFocusPainted(false);
+        btnNewOrder.setBorderPainted(false);
+        btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnNewOrder.setOpaque(true);
+        sidebar.add(btnNewOrder);
+        
+        return sidebar;
+    }
+
+    /**
+     * Tạo Menu Button
+     * - Nút menu với icon và tên
+     * - Căn trái, chữ lớn
+     * 
+     * @param name - Tên menu item
+     * @param iconPath - Đường dẫn đến icon
+     * @return JButton menu button
+     */
+    private JButton createMenuButton(String name, String iconPath) {
+        JButton btn = new JButton(name);
+        btn.setForeground(new Color(100, 80, 70));
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 0));
+        
+        // TODO: Thêm icon từ iconPath khi có hình ảnh
+        // ImageIcon icon = new ImageIcon(iconPath);
+        // btn.setIcon(icon);
+        // btn.setIconTextGap(10);
+        
+        return btn;
+    }
+    
+    // ========== GETTER METHODS ==========
+    // Các getter dùng để truy cập và cập nhật dữ liệu từ logic controller
+    
+    /**
+     * Lấy JLabel tổng số hóa đơn
+     * @return JLabel lblTotalInvoices
+     */
     public JLabel getLblTotalInvoices() { return lblTotalInvoices; }
+    
+    /**
+     * Lấy JLabel tổng doanh thu
+     * @return JLabel lblTotalRevenue
+     */
     public JLabel getLblTotalRevenue() { return lblTotalRevenue; }
+    
+    /**
+     * Lấy JLabel tổng tiền mặt
+     * @return JLabel lblCashAmount
+     */
     public JLabel getLblCashAmount() { return lblCashAmount; }
+    
+    /**
+     * Lấy JLabel tổng tiền chuyển khoản
+     * @return JLabel lblBankAmount
+     */
     public JLabel getLblBankAmount() { return lblBankAmount; }
+    
+    /**
+     * Lấy JLabel phụ đề thống kê hóa đơn
+     * @return JLabel lblInvoicesSubtitle
+     */
     public JLabel getLblInvoicesSubtitle() { return lblInvoicesSubtitle; }
+    
+    /**
+     * Lấy JLabel phụ đề thống kê doanh thu
+     * @return JLabel lblRevenueSubtitle
+     */
     public JLabel getLblRevenueSubtitle() { return lblRevenueSubtitle; }
+    
+    /**
+     * Lấy JLabel phụ đề thống kê tiền mặt
+     * @return JLabel lblCashSubtitle
+     */
     public JLabel getLblCashSubtitle() { return lblCashSubtitle; }
+    
+    /**
+     * Lấy JLabel phụ đề thống kê tiền chuyển khoản
+     * @return JLabel lblBankSubtitle
+     */
     public JLabel getLblBankSubtitle() { return lblBankSubtitle; }
     
+    /**
+     * Lấy DefaultTableModel bảng hóa đơn gần nhất
+     * Dùng để thêm dữ liệu: modelRecentInvoices.addRow(new Object[]{...})
+     * @return DefaultTableModel modelRecentInvoices
+     */
     public DefaultTableModel getModelRecentInvoices() { return modelRecentInvoices; }
+    
+    /**
+     * Lấy DefaultTableModel bảng top sản phẩm bán chạy
+     * Dùng để thêm dữ liệu: modelTopItems.addRow(new Object[]{...})
+     * @return DefaultTableModel modelTopItems
+     */
     public DefaultTableModel getModelTopItems() { return modelTopItems; }
+    
+    /**
+     * Lấy JTable hóa đơn gần nhất
+     * @return JTable tblRecentInvoices
+     */
     public JTable getTblRecentInvoices() { return tblRecentInvoices; }
+    
+    /**
+     * Lấy JTable top sản phẩm bán chạy
+     * @return JTable tblTopItems
+     */
     public JTable getTblTopItems() { return tblTopItems; }
     
+    /**
+     * Lấy JPanel container insights
+     * Dùng để thêm insight box: pnlInsightsContainer.add(createInsightBox(...))
+     * @return JPanel pnlInsightsContainer
+     */
     public JPanel getPnlInsightsContainer() { return pnlInsightsContainer; }
     
+    /**
+     * Lấy nút Cancel
+     * Dùng để thêm action listener
+     * @return JButton btnCancel
+     */
     public JButton getBtnCancel() { return btnCancel; }
+    
+    /**
+     * Lấy nút Confirm
+     * Dùng để thêm action listener
+     * @return JButton btnConfirm
+     */
     public JButton getBtnConfirm() { return btnConfirm; }
+    
+    /**
+     * Lấy nút Close Shift
+     * Dùng để thêm action listener
+     * @return JButton btnEndShift
+     */
     public JButton getBtnEndShift() { return btnEndShift; }
     
-    private JButton btnEndShift;
-    
+    /**
+     * Main method - Chạy ứng dụng Dashboard
+     * Tạo JFrame và hiển thị Dashboard Panel
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Cafe POS - Dashboard");
@@ -393,4 +652,3 @@ public class Dashboard extends JPanel {
         });
     }
 }
-
