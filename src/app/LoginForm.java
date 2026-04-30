@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,6 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import dao.TaiKhoan_DAO;
+import entity.TaiKhoan;
 
 @SuppressWarnings("serial")
 public class LoginForm extends JFrame implements ActionListener{
@@ -53,7 +57,7 @@ public class LoginForm extends JFrame implements ActionListener{
         pnlLogoCircle.setBorder(BorderFactory.createLineBorder(new Color(122, 80, 64), 1, true));
 
         ImageIcon cafeIcon = new ImageIcon("img/latte.png");
-        java.awt.Image scaleLogo = cafeIcon.getImage().getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+        Image scaleLogo = cafeIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         JLabel lblLogoIcon = new JLabel(new ImageIcon(scaleLogo));
         lblLogoIcon.setHorizontalAlignment(JLabel.CENTER);
         pnlLogoCircle.add(lblLogoIcon, BorderLayout.CENTER);
@@ -105,7 +109,7 @@ public class LoginForm extends JFrame implements ActionListener{
         pnlHeaderIcon.setBackground(new Color(107, 69, 48));
         pnlHeaderIcon.setBorder(BorderFactory.createLineBorder(new Color(122, 80, 64), 1, true));
         ImageIcon iconLock = new ImageIcon("img/lock.png");
-        java.awt.Image scaleLock = iconLock.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
+        Image scaleLock = iconLock.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         JLabel lblHeaderIcon = new JLabel(new ImageIcon(scaleLock));
         lblHeaderIcon.setHorizontalAlignment(JLabel.CENTER);
         pnlHeaderIcon.add(lblHeaderIcon, BorderLayout.CENTER);
@@ -147,7 +151,7 @@ public class LoginForm extends JFrame implements ActionListener{
         ));
 
         ImageIcon iconUser = new ImageIcon("img/user.png");
-        java.awt.Image scaleUser = iconUser.getImage().getScaledInstance(22, 20, java.awt.Image.SCALE_DEFAULT);
+        Image scaleUser = iconUser.getImage().getScaledInstance(22, 20, Image.SCALE_DEFAULT);
         JLabel lblUserIcon = new JLabel(new ImageIcon(scaleUser));
         txtUser = new JTextField();
         txtUser.setBorder(null);
@@ -174,7 +178,7 @@ public class LoginForm extends JFrame implements ActionListener{
         ));
 
         ImageIcon iconPass = new ImageIcon("img/unlock.png");
-        java.awt.Image scalePass = iconPass.getImage().getScaledInstance(23, 20, java.awt.Image.SCALE_DEFAULT);
+        Image scalePass = iconPass.getImage().getScaledInstance(23, 20, Image.SCALE_DEFAULT);
         JLabel lblPassIcon = new JLabel(new ImageIcon(scalePass));
         txtPass = new JPasswordField();
         txtPass.setBorder(null);
@@ -229,11 +233,22 @@ public class LoginForm extends JFrame implements ActionListener{
 		Object o = e.getSource();
 		if (o.equals(btnLogin)) {
 			if (validInput()) {
-				CreateOrders_UI nextFrame = new CreateOrders_UI();
-				nextFrame.setBounds(this.getBounds());
-				nextFrame.setExtendedState(this.getExtendedState());
-				nextFrame.setVisible(true);
-				this.dispose();
+				String loginName = txtUser.getText().trim();
+				String loginPass = new String(txtPass.getPassword()).trim();
+				//admincoffee | Admin@2026 và nhanvien01 | Nhanvien@01
+				TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
+				TaiKhoan tk = taiKhoan_DAO.kiemTraDangNhap(loginName, loginPass);
+				if (tk != null) {
+					CreateOrders_UI nextFrame = new CreateOrders_UI();
+					nextFrame.setBounds(this.getBounds());
+					nextFrame.setExtendedState(this.getExtendedState());
+					nextFrame.setVisible(true);
+					this.dispose();
+				}else {
+					JOptionPane.showMessageDialog(this, "Tên tài khoản hoặc mật khẩu chưa chính xác.");
+					txtPass.setText("");
+					txtPass.requestFocus();
+				}
 			}
 		}
 		
