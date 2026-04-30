@@ -5,14 +5,17 @@ import java.util.Objects;
 public class Mon {
 	private String maMon;
 	private String tenMon;
+	private String moTaMon;
 	private double donGiaMua;
+	private String duongDanAnh;
 	private double donGiaBan;
 	private boolean trangThai;
-	private LoaiMon loaiMon;
 	private PhanLoaiMonAn phanLoaiMonAn;
-	private static int counter = 1;
-	private String generateMaMon() {
-		return "M" + counter++;
+	public String getDuongDanAnh() {
+		return duongDanAnh;
+	}
+	public void setDuongDanAnh(String duongDanAnh) {
+		this.duongDanAnh = duongDanAnh;
 	}
 	public String getMaMon() {
 		return maMon;
@@ -44,12 +47,6 @@ public class Mon {
 	public void setTrangThai(boolean trangThai) {
 		this.trangThai = trangThai;
 	}
-	public LoaiMon getLoaiMon() {
-		return loaiMon;
-	}
-	public void setLoaiMon(LoaiMon loaiMon) {
-		this.loaiMon = loaiMon;
-	}
 	public PhanLoaiMonAn getPhanLoaiMonAn() {
 		return phanLoaiMonAn;
 	}
@@ -57,6 +54,12 @@ public class Mon {
 		this.phanLoaiMonAn = phanLoaiMonAn;
 	}
 	
+	public String getMoTaMon() {
+		return moTaMon;
+	}
+	public void setMoTaMon(String moTaMon) {
+		this.moTaMon = moTaMon;
+	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(maMon);
@@ -72,21 +75,26 @@ public class Mon {
 		Mon other = (Mon) obj;
 		return Objects.equals(maMon, other.maMon);
 	}
-	public Mon(String tenMon, double donGiaMua, double donGiaBan, boolean trangThai, LoaiMon loaiMon,
-			PhanLoaiMonAn phanLoaiMonAn) {
-		super();
-		setMaMon(generateMaMon());
+	public Mon() {
+		
+	}
+	public Mon(String maMon, String tenMon, double donGiaMua, double donGiaBan, boolean trangThai, 
+			PhanLoaiMonAn phanLoaiMonAn, String moTamon, String duongDanAnh) {
+		setMaMon(maMon);
 		setTenMon(tenMon);
 		setDonGiaBan(donGiaBan);
 		setDonGiaMua(donGiaMua);
 		setTrangThai(trangThai);
-		setLoaiMon(loaiMon);
 		setPhanLoaiMonAn(phanLoaiMonAn);
+		setMoTaMon(moTamon);
+		setDuongDanAnh(duongDanAnh);
 	}
 	@Override
 	public String toString() {
-		return "Mon [maMon=" + maMon + ", tenMon=" + tenMon + ", donGiaMua=" + donGiaMua + ", donGiaBan=" + donGiaBan
-				+ ", trangThai=" + trangThai + ", loaiMon=" + loaiMon + ", phanLoaiMonAn=" + phanLoaiMonAn + "]";
+		return "Mon [maMon=" + maMon + ", tenMon=" + tenMon + ", moTaMon=" + moTaMon + ", donGiaMua=" + donGiaMua
+				+ ", duongDanAnh=" + duongDanAnh + ", donGiaBan=" + donGiaBan + ", trangThai=" + trangThai
+				+ ", phanLoaiMonAn=" + phanLoaiMonAn + "]";
 	}
+	
 	
 }

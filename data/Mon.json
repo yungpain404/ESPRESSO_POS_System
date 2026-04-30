@@ -1,18 +1,32 @@
 [
   {
-    "id": "F001",
-    "name": "Artisanal Cortado",
-    "price": 4.50,
-    "description": "Espresso mixed with a roughly equal amount of warm milk.",
-    "imgPath": "img/cortado.png",
-    "type": "DRINK"
+    "maMon": "M1",
+    "tenMon": "Artisanal Cortado",
+    "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
+    "donGiaMua": 3.0,
+    "donGiaBan": 4.5,
+    "duongDanAnh": "img/cortado.png",
+    "trangThai": true,
+    "phanLoaiMonAn": "DRINK"
   },
   {
-    "id": "F002",
-    "name": "Almond Croissant",
-    "price": 5.50,
-    "description": "Twice-baked with house-made frangipane.",
-    "imgPath": "img/croissant.png",
-    "type": "PASTRY"
-  }
+    "maMon": "M2",
+    "tenMon": "Almond Croissant",
+    "moTaMon": "Twice-baked with house-made frangipane.",
+    "donGiaMua": 3.5,
+    "donGiaBan": 5.5,
+    "duongDanAnh": "img/croissant.png",
+    "trangThai": true,
+    "phanLoaiMonAn": "PASTRY"
+  },
+  {
+      "maMon": "M2",
+      "tenMon": "Almond Croissant",
+      "moTaMon": "Twice-baked with house-made frangipane.",
+      "donGiaMua": 3.5,
+      "donGiaBan": 5.5,
+      "duongDanAnh": "img/croissant.png",
+      "trangThai": true,
+      "phanLoaiMonAn": "DESSERT"
+    }
 ]
