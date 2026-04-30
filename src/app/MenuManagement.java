@@ -1,6 +1,10 @@
 package app;
 
 import com.formdev.flatlaf.FlatClientProperties;
+
+import dao.Mon_DAO;
+import entity.Mon;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -8,21 +12,25 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class MenuManagement extends JFrame {
-
+	private DefaultTableModel model;
+	private Mon_DAO monDao = new Mon_DAO();
     public MenuManagement() {
         setTitle("Espresso Logic - Menu Management");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 600);
         setLocationRelativeTo(null);
-
-        // Layout chính: Sidebar bên trái và Main Content bên phải
+        
         setLayout(new BorderLayout());
 
         add(createSidebar(), BorderLayout.WEST);
         add(createMainContent(), BorderLayout.CENTER);
+        
+        loadDataToTable();
     }
 
    private JPanel createSidebar() {
@@ -156,7 +164,7 @@ public class MenuManagement extends JFrame {
 	        {new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)),"TR001", "Trà đào cam sả", "Trà", "40.000đ", "Còn hàng", ""}
 	    };
 
-	    DefaultTableModel model = new DefaultTableModel(data, columns) {
+	    model = new DefaultTableModel(data, columns) {
 	        @Override
 	        public Class<?> getColumnClass(int columnIndex) {
 	            // Cột 0 là cột chứa ImageIcon
@@ -166,13 +174,13 @@ public class MenuManagement extends JFrame {
 
 	        @Override
 	        public boolean isCellEditable(int row, int column) {
-	            return column == 6; // Cột hành động
+	            return column == 6;
 	        }
 	    };
 
 	    JTable table = new JTable(model);
-	    table.setRowHeight(60); // Tăng chiều cao dòng để nhìn rõ ảnh món ăn
-	    setupTableAppearance(table); // Hàm setup giao diện bảng bên dưới
+	    table.setRowHeight(60);
+	    setupTableAppearance(table); 
 
 	    JScrollPane scroll = new JScrollPane(table);
 	    scroll.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 210)));
@@ -218,6 +226,21 @@ public class MenuManagement extends JFrame {
 	    // Renderer cho cột "Hành động" (Nút Sửa/Xóa)
 	    table.getColumnModel().getColumn(6).setCellRenderer(new TableActionRenderer());
 	    table.getColumnModel().getColumn(6).setCellEditor(new TableActionEditor());
+	}
+   public void loadDataToTable() {
+	   
+	   List<Mon> dsMon = monDao.getAll();
+	   
+	    // 2. Xóa dữ liệu cũ trên bảng (DefaultTableModel)
+	    model.setRowCount(0); 
+	    
+	    // 3. Đổ dữ liệu mới vào
+	    for (Mon m : dsMon) {
+	    	ImageIcon foodIcon = new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+	        model.addRow(new Object[] {
+	            foodIcon,m.getMaMon(), m.getTenMon(),m.getPhanLoaiMonAn(), m.getDonGiaBan(), "Còn hàng" // Thay bằng các getter của bạn
+	        });
+	    }
 	}
 }
 

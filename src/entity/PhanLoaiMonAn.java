@@ -1,5 +1,5 @@
 package entity;
 
 public enum PhanLoaiMonAn {
-	NUOCUONG, MONANMAN, MONTRANGMIENG, MONANNGOT
+	DRINK, PASTRY,DESSERT
 }
