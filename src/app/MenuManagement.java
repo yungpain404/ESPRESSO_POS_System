@@ -154,15 +154,8 @@ public class MenuManagement extends JFrame {
 
 	    // --- Table Area ---
 	    // Định nghĩa các cột
-	    String[] columns = {"Hình ảnh","Mã", "Tên món", "Loại", "Giá", "Trạng thái", "Hành động"};
-	    Object[][] data = {
-	        {new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)),"CF001", "Cà phê sữa đá", "Cà phê", "30.000đ", "Còn hàng"},
-	        {new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)),"CF002", "Cà phê đen", "Cà phê", "25.000đ", "Còn hàng", ""},
-	        {new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)),"TS001", "Trà sữa trân châu", "Trà sữa", "45.000đ", "Còn hàng", ""},
-	        {new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)),"SG001", "Sinh tố xoài", "Sinh tố", "40.000đ", "Hết hàng", ""},
-	        {new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)),"NC001", "Nước ép cam", "Nước ép", "35.000đ", "Còn hàng", ""},
-	        {new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)),"TR001", "Trà đào cam sả", "Trà", "40.000đ", "Còn hàng", ""}
-	    };
+	    String[] columns = {"Hình ảnh","Mã", "Tên món", "Loại", "Giá Mua","Giá Bán", "Trạng thái", "Hành động"};
+	    Object[][] data = {};
 
 	    model = new DefaultTableModel(data, columns) {
 	        @Override
@@ -205,7 +198,7 @@ public class MenuManagement extends JFrame {
 	    table.getColumnModel().getColumn(2).setPreferredWidth(250);
 	    
 	    // Renderer cho cột "Trạng thái" (Badge style)
-	    table.getColumnModel().getColumn(5).setCellRenderer(new DefaultTableCellRenderer() {
+	    table.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
 	        @Override
 	        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	            JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -224,8 +217,8 @@ public class MenuManagement extends JFrame {
 	    });
 
 	    // Renderer cho cột "Hành động" (Nút Sửa/Xóa)
-	    table.getColumnModel().getColumn(6).setCellRenderer(new TableActionRenderer());
-	    table.getColumnModel().getColumn(6).setCellEditor(new TableActionEditor());
+	    table.getColumnModel().getColumn(7).setCellRenderer(new TableActionRenderer());
+	    table.getColumnModel().getColumn(7).setCellEditor(new TableActionEditor());
 	}
    public void loadDataToTable() {
 	   
@@ -238,7 +231,7 @@ public class MenuManagement extends JFrame {
 	    for (Mon m : dsMon) {
 	    	ImageIcon foodIcon = new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 	        model.addRow(new Object[] {
-	            foodIcon,m.getMaMon(), m.getTenMon(),m.getPhanLoaiMonAn(), m.getDonGiaBan(), "Còn hàng" // Thay bằng các getter của bạn
+	            foodIcon,m.getMaMon(), m.getTenMon(),m.getPhanLoaiMonAn(),m.getDonGiaMua(), m.getDonGiaBan(), "Còn hàng" // Thay bằng các getter của bạn
 	        });
 	    }
 	}
