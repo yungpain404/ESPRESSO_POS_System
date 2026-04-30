@@ -53,7 +53,6 @@ public class Mon {
 	public void setPhanLoaiMonAn(PhanLoaiMonAn phanLoaiMonAn) {
 		this.phanLoaiMonAn = phanLoaiMonAn;
 	}
-	
 	public String getMoTaMon() {
 		return moTaMon;
 	}

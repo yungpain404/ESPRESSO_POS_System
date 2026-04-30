@@ -4,13 +4,11 @@ import com.formdev.flatlaf.FlatClientProperties;
 
 import dao.Mon_DAO;
 import entity.Mon;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,21 +103,18 @@ public class MenuManagement extends JFrame {
    }
    
    private JButton createMenuButton(String text, String iconPath) {
-	    // Tạo Icon và scale nhỏ lại cho vừa dòng
 	    ImageIcon icon = new ImageIcon(iconPath);
 	    Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 	    
 	    JButton btn = new JButton(text, new ImageIcon(scaled));
 	    
-	    // THUẬT TOÁN CĂN LỀ QUAN TRỌNG:
-	    btn.setHorizontalAlignment(SwingConstants.LEFT); // Chữ và icon dồn sang trái
-	    btn.setIconTextGap(15); // Khoảng cách giữa icon và chữ
-	    btn.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn nút thẳng hàng trong BoxLayout
-	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); // Nút dài hết cỡ sidebar
+	    btn.setHorizontalAlignment(SwingConstants.LEFT); 
+	    btn.setIconTextGap(15); 
+	    btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
 	    
-	    // Xóa bỏ các hiệu ứng thừa của Swing cũ
 	    btn.setFocusPainted(false);
-	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); // Padding trong của nút
+	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); 
 	    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	    btn.setForeground(new Color(85, 55, 34));
 	    btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -128,10 +123,10 @@ public class MenuManagement extends JFrame {
 	}
    private JPanel createMainContent() {
 	    JPanel main = new JPanel(new BorderLayout());
-	    main.setBackground(new Color(251, 251, 240)); // Màu nền kem nhạt như ảnh
+	    main.setBackground(new Color(251, 251, 240)); 
 	    main.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-	    // --- Header Area ---
+	    
 	    JPanel header = new JPanel(new BorderLayout());
 	    header.setOpaque(false);
 	    header.setBorder(new EmptyBorder(0, 0, 20, 0));
@@ -141,26 +136,30 @@ public class MenuManagement extends JFrame {
 	    lblTitle.setForeground(new Color(51, 51, 51));
 
 	    JButton btnAdd = new JButton("+ Thêm món mới");
-	    btnAdd.setBackground(new Color(85, 55, 34)); // Màu nâu đậm như nút HTML
+	    btnAdd.setBackground(new Color(85, 55, 34)); 
 	    btnAdd.setForeground(Color.WHITE);
 	    btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
 	    btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	    btnAdd.putClientProperty(FlatClientProperties.STYLE, "arc: 10");
 	    btnAdd.setBorder(new EmptyBorder(8, 15, 8, 15));
+	    
+	    btnAdd.addActionListener(e -> {
+	        FoodForm form = new FoodForm(this);
+	        form.setVisible(true);
+	        loadDataToTable(); 
+	    });
 
 	    header.add(lblTitle, BorderLayout.WEST);
 	    header.add(btnAdd, BorderLayout.EAST);
 	    main.add(header, BorderLayout.NORTH);
 
-	    // --- Table Area ---
-	    // Định nghĩa các cột
 	    String[] columns = {"Hình ảnh","Mã", "Tên món", "Loại", "Giá Mua","Giá Bán", "Trạng thái", "Hành động"};
 	    Object[][] data = {};
 
 	    model = new DefaultTableModel(data, columns) {
 	        @Override
 	        public Class<?> getColumnClass(int columnIndex) {
-	            // Cột 0 là cột chứa ImageIcon
+	            
 	            if (columnIndex == 0) return Icon.class;
 	            return super.getColumnClass(columnIndex);
 	        }
@@ -218,7 +217,31 @@ public class MenuManagement extends JFrame {
 
 	    // Renderer cho cột "Hành động" (Nút Sửa/Xóa)
 	    table.getColumnModel().getColumn(7).setCellRenderer(new TableActionRenderer());
-	    table.getColumnModel().getColumn(7).setCellEditor(new TableActionEditor());
+	    table.getColumnModel().getColumn(7).setCellEditor(new TableActionEditor(new TableActionEvent() {
+	        @Override
+	        public void onEdit(int row) {
+	            // 1. Lấy dữ liệu từ model dựa trên dòng (row)
+	            String maMon = model.getValueAt(row, 1).toString();	
+	            
+	            // 2. Mở Form Sửa và truyền dữ liệu vào
+	            // Mon mon = monDao.getById(maMon);
+	            // FormMon form = new FormMon(mon); 
+	            // form.setVisible(true);
+	            System.out.println("Đang sửa món: " + maMon);
+	        }
+
+	        @Override
+	        public void onDelete(int row) {
+	            int confirm = JOptionPane.showConfirmDialog(null, 
+	                "Bạn có chắc chắn muốn xóa món này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+	            
+	            if (confirm == JOptionPane.YES_OPTION) {
+	                // Gọi DAO xóa và load lại bảng
+	                // monDao.delete(maMon);
+	                // loadDataToTable();
+	            }
+	        }
+	    }));
 	}
    public void loadDataToTable() {
 	   
@@ -237,7 +260,11 @@ public class MenuManagement extends JFrame {
 	}
 }
 
-//Panel chứa 2 nút bấm
+interface TableActionEvent {
+    public void onEdit(int row);
+    public void onDelete(int row);
+}
+
 @SuppressWarnings("serial")
 class ActionPanel extends JPanel {
  public ActionPanel() {
@@ -258,9 +285,22 @@ class ActionPanel extends JPanel {
      add(btnEdit);
      add(btnDel);
  }
+ public ActionPanel(TableActionEvent event, int row) {
+     setLayout(new FlowLayout(FlowLayout.CENTER, 5, 8));
+     setOpaque(false);
+     JButton btnEdit = new JButton("Sửa");
+     JButton btnDel = new JButton("Xóa");
+
+     btnEdit.addActionListener(e -> event.onEdit(row));
+     
+     btnDel.addActionListener(e -> event.onDelete(row));
+
+     add(btnEdit);
+     add(btnDel);
+ }
 }
 
-//Renderer để hiển thị ActionPanel trong Table
+// Renderer để hiển thị ActionPanel trong Table
 @SuppressWarnings("serial")
 class TableActionRenderer extends DefaultTableCellRenderer {
  @Override
@@ -269,13 +309,21 @@ class TableActionRenderer extends DefaultTableCellRenderer {
  }
 }
 
-//Editor để có thể tương tác (click) vào nút trong Table
+// Editor để có thể tương tác (click) vào nút trong Table
 @SuppressWarnings("serial")
 class TableActionEditor extends AbstractCellEditor implements TableCellEditor {
- @Override
- public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-     return new ActionPanel();
- }
- @Override
- public Object getCellEditorValue() { return null; }
+	private TableActionEvent event;
+	
+    public TableActionEditor(TableActionEvent event) {
+        this.event = event;
+    }
+	 @Override
+	 public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+	     return new ActionPanel();
+	 }
+	 @Override
+	 public Object getCellEditorValue() { 
+		 return null;
+	 }
+ 
 }
