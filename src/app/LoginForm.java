@@ -241,7 +241,7 @@ public class LoginForm extends JFrame implements ActionListener{
 				TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
 				TaiKhoan tk = taiKhoan_DAO.kiemTraDangNhap(loginName, loginPass);
 				if (tk != null) {
-					CreateOrders_UI nextFrame = new CreateOrders_UI();
+					CreateFormOrders_UI nextFrame = new CreateFormOrders_UI();
 					nextFrame.setBounds(this.getBounds());
 					nextFrame.setExtendedState(this.getExtendedState());
 					nextFrame.setVisible(true);

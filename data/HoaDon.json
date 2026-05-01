@@ -1,5 +1,6 @@
 [
   {
+<<<<<<< HEAD
     "maHD": "HD1777651523502",
     "ngayGioLap": "2026-05-01",
     "trangThaiTT": true,
@@ -21,10 +22,33 @@
         "soLuongMon": 3,
         "ghiChuKhachHang": "",
         "thanhTien": 3.0
+=======
+    "maHD": "HD1777641487683",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 4.5,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777641487683-1345487744597500",
+        "mon": {
+          "maMon": "M1",
+          "tenMon": "Artisanal Cortado",
+          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
+          "donGiaMua": 3.0,
+          "duongDanAnh": "img/cortado.png",
+          "donGiaBan": 4.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "DRINK"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 4.5
+>>>>>>> invoice-management-tan
       }
     ]
   },
   {
+<<<<<<< HEAD
     "maHD": "HD1777651539576",
     "ngayGioLap": "2026-05-01",
     "trangThaiTT": true,
@@ -61,6 +85,84 @@
         "soLuongMon": 3,
         "ghiChuKhachHang": "",
         "thanhTien": 36000.0
+=======
+    "maHD": "HD1777641667320",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 4.5,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777641667320-1345667382948600",
+        "mon": {
+          "maMon": "M1",
+          "tenMon": "Artisanal Cortado",
+          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
+          "donGiaMua": 3.0,
+          "duongDanAnh": "img/cortado.png",
+          "donGiaBan": 4.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "DRINK"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 4.5
+      }
+    ]
+  },
+  {
+    "maHD": "HD1777641927935",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 5.10000000001E12,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777641927935-1345927995485800",
+        "mon": {
+          "maMon": "M1",
+          "tenMon": "Artisanal Cortado",
+          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
+          "donGiaMua": 3.0,
+          "duongDanAnh": "img/cortado.png",
+          "donGiaBan": 4.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "DRINK"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 4.5
+      },
+      {
+        "maCTHD": "HD1777641927935-1345927998394600",
+        "mon": {
+          "maMon": "M2",
+          "tenMon": "Almond Croissant",
+          "moTaMon": "Twice-baked with house-made frangipane.",
+          "donGiaMua": 3.5,
+          "duongDanAnh": "img/croissant.png",
+          "donGiaBan": 5.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "PASTRY"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 5.5
+      },
+      {
+        "maCTHD": "HD1777641927935-1345927998690500",
+        "mon": {
+          "maMon": "M4",
+          "tenMon": "Quý",
+          "moTaMon": "description",
+          "donGiaMua": 1.0E11,
+          "duongDanAnh": "/img/cortado.png",
+          "donGiaBan": 5.1E12,
+          "trangThai": true,
+          "phanLoaiMonAn": "DESSERT"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 5.1E12
+>>>>>>> invoice-management-tan
       }
     ]
   }
