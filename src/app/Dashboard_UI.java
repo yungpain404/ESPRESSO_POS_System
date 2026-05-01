@@ -416,17 +416,6 @@ public class Dashboard_UI extends JFrame {
 
         sidebar.add(Box.createVerticalGlue());
 
-        JButton btnNewOrder = new JButton(" + New Order ");
-        btnNewOrder.setBackground(new Color(85, 55, 34));
-        btnNewOrder.setForeground(Color.WHITE);
-        btnNewOrder.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        btnNewOrder.setPreferredSize(new Dimension(Integer.MAX_VALUE, 40));
-        btnNewOrder.setFocusPainted(false);
-        btnNewOrder.setBorderPainted(false);
-        btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        try { btnNewOrder.putClientProperty(com.formdev.flatlaf.FlatClientProperties.STYLE, "arc: 20"); } catch (Exception ignored) {}
-        sidebar.add(btnNewOrder);
-
         return sidebar;
     }
 

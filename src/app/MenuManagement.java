@@ -8,9 +8,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Menu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.AbstractCellEditor;
@@ -63,7 +60,6 @@ public class MenuManagement extends JFrame {
 	    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
 	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20));
 
-	    // Logo
 	    JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
 	    lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 20));
 	    lblLogo.setForeground(new Color(85, 55, 34));
@@ -81,7 +77,6 @@ public class MenuManagement extends JFrame {
 	    for (String[] data : menuData) {
 	        JButton btn = createMenuButton(data[0], data[1]);
 
-	        // Highlight mục đang chọn ( Menu mangement )
 	        if (data[0].equals("Menu Management")) {
 	            btn.setBackground(new Color(230, 230, 210));
 	            btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
@@ -111,18 +106,6 @@ public class MenuManagement extends JFrame {
 	    }
 
 	    sidebar.add(Box.createVerticalGlue());
-
-	    JButton btnNewOrder = new JButton(" + New Order ");
-        btnNewOrder.setBackground(new Color(85, 55, 34));
-        btnNewOrder.setForeground(Color.WHITE);
-        btnNewOrder.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        btnNewOrder.setPreferredSize(new Dimension(Integer.MAX_VALUE, 40));
-        btnNewOrder.setFocusPainted(false);
-        btnNewOrder.setBorderPainted(false);
-
-        btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnNewOrder.putClientProperty(FlatClientProperties.STYLE, "arc: 20");
-        sidebar.add(btnNewOrder);
 
 	    return sidebar;
    }
@@ -218,12 +201,10 @@ public class MenuManagement extends JFrame {
 	    table.getTableHeader().setBackground(new Color(251, 248, 230));
 	    table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
 
-	    // Căn chỉnh độ rộng cột
 	    table.getColumnModel().getColumn(0).setPreferredWidth(60);
 	    table.getColumnModel().getColumn(1).setPreferredWidth(50);
 	    table.getColumnModel().getColumn(2).setPreferredWidth(250);
 
-	    // Render column trạng thái
 	    table.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
 	        @Override
 	        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -281,7 +262,6 @@ public class MenuManagement extends JFrame {
 
 	   List<Mon> dsMon = monDao.getAll();
 	   
-	    // Xóa dữ liệu cũ 
 	    model.setRowCount(0);
 	    
 	    for (Mon m : dsMon) {
@@ -296,7 +276,6 @@ public class MenuManagement extends JFrame {
 	    		    });
 	    	    }
 	    	} catch (Exception e) {
-	    		// default image
 	    		ImageIcon foodIcon = new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 	    	    model.addRow(new Object[] {
 	    	            foodIcon,m.getMaMon(), m.getTenMon(),m.getPhanLoaiMonAn(),m.getDonGiaMua(), m.getDonGiaBan(), trangThaiMonAn
