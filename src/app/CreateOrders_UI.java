@@ -30,24 +30,30 @@ import javax.swing.border.EmptyBorder;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
+
+
+
 @SuppressWarnings("serial")
 public class CreateOrders_UI extends JFrame implements ActionListener {
-	static {
-	    try {
-	        FlatLightLaf.setup();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
+    static {
+        try {
+            FlatLightLaf.setup();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		private JButton btnComplete;
+    private JButton btnComplete;
+    private JButton btnSearch;
+    private JTextField txtSearch;
+
     public CreateOrders_UI() {
         setTitle("Espresso Menu POS - Pure Java Optimized");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setExtendedState(Frame.MAXIMIZED_BOTH);
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
-        // Định nghĩa màu sắc
+
         Color bgMain = Color.decode("#fbfbe1");
         Color bgCard = Color.decode("#FFFFFF");
         Color accentBrown = Color.decode("#573824");
@@ -56,30 +62,37 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 
         JPanel pnlMain = new JPanel(new BorderLayout());
         pnlMain.setOpaque(false);
-     // add vào mainPanel thay vì JFrame
 
         getContentPane().setBackground(bgMain);
         setLayout(new BorderLayout());
         add(createSidebar(), BorderLayout.WEST);
         add(pnlMain, BorderLayout.CENTER);
 
-        //Header
         JPanel pnlHeader = new JPanel(new BorderLayout());
         pnlHeader.setOpaque(false);
         pnlHeader.setBorder(new EmptyBorder(15, 25, 10, 25));
+        JPanel pnlSearchBox = new JPanel(new BorderLayout(5, 0));
+        pnlSearchBox.setOpaque(false);
 
-
-        JTextField txtSearch = new JTextField();
-        txtSearch.setPreferredSize(new Dimension(400, 40));
+        txtSearch = new JTextField();
+        txtSearch.setPreferredSize(new Dimension(320, 40));
         txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search menu items...");
-	    txtSearch.putClientProperty("JComponent.outlineWidth", 0);
-	    txtSearch.putClientProperty("JSeparator.height", 0);
+        txtSearch.putClientProperty("JComponent.outlineWidth", 0);
+        txtSearch.putClientProperty("JSeparator.height", 0);
 
-        // Profile bên phải
+        btnSearch = new JButton("Search");
+        btnSearch.setBackground(accentBrown);
+        btnSearch.setForeground(Color.WHITE);
+        btnSearch.setFont(new Font("Inter", Font.BOLD, 13));
+        btnSearch.setFocusPainted(false);
+        btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnSearch.setPreferredSize(new Dimension(80, 40));
+
+        pnlSearchBox.add(txtSearch, BorderLayout.CENTER);
+        pnlSearchBox.add(btnSearch, BorderLayout.EAST);
+
         JPanel pnlProfile = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         pnlProfile.setOpaque(false);
-
-
         JPanel pnlUser = new JPanel();
         pnlUser.setLayout(new BoxLayout(pnlUser, BoxLayout.Y_AXIS));
         pnlUser.setOpaque(false);
@@ -97,21 +110,17 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlUser.add(lblRole);
         pnlProfile.add(pnlUser);
 
-        pnlHeader.add(txtSearch, BorderLayout.WEST);
+        pnlHeader.add(pnlSearchBox, BorderLayout.WEST);
         pnlHeader.add(pnlProfile, BorderLayout.EAST);
         pnlMain.add(pnlHeader, BorderLayout.NORTH);
 
-        // Body
         JPanel pnlBody = new JPanel(new BorderLayout());
         pnlBody.setOpaque(false);
         pnlMain.add(pnlBody, BorderLayout.CENTER);
 
-        // cột trái: Menu
         JPanel pnlLeft = new JPanel(new BorderLayout());
         pnlLeft.setOpaque(false);
         pnlLeft.setBorder(new EmptyBorder(10, 25, 20, 10));
-
-        // Tiêu đề & Tabs
         JPanel pnlMenuHeader = new JPanel(new BorderLayout());
         pnlMenuHeader.setOpaque(false);
         JLabel lblTitle = new JLabel("Espresso Menu");
@@ -139,12 +148,10 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlMenuHeader.add(pnlTabs, BorderLayout.SOUTH);
         pnlLeft.add(pnlMenuHeader, BorderLayout.NORTH);
 
-        // Danh sách sản phẩm
         JPanel pnlProductGrid = new JPanel(new GridLayout(0, 3, 15, 15));
         pnlProductGrid.setOpaque(false);
         pnlProductGrid.setBorder(new EmptyBorder(15, 0, 0, 0));
 
-        // Thêm 6 card sản phẩm
         for (int i = 0; i < 6; i++) {
             pnlProductGrid.add(createProductCard("Velvet Cappuccino", "Double shot, steamed silk milk with thin foam layer", "$4.50", bgCard, accentBrown, textGray));
         }
@@ -159,7 +166,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlLeft.add(scrPane, BorderLayout.CENTER);
         pnlBody.add(pnlLeft, BorderLayout.CENTER);
 
-        //Cart
         JPanel pnlCart = new JPanel(new BorderLayout());
         pnlCart.setPreferredSize(new Dimension(340, 0));
         pnlCart.setBackground(bgSidebar);
@@ -170,7 +176,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         lblCart.setFont(new Font("Inter", Font.BOLD, 20));
         pnlCart.add(lblCart, BorderLayout.NORTH);
 
-        // Footer Cart (Thanh toán)
         JPanel pnlCartFooter = new JPanel();
         pnlCartFooter.setLayout(new BoxLayout(pnlCartFooter, BoxLayout.Y_AXIS));
         pnlCartFooter.setOpaque(false);
@@ -202,21 +207,18 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlBody.add(pnlCart, BorderLayout.EAST);
 
         btnComplete.addActionListener(this);
+        btnSearch.addActionListener(this);
     }
 
-    // Hàm helper tạo Card sản phẩm nhỏ gọn
     private JPanel createProductCard(String name, String desc, String price, Color bg, Color brown, Color gray) {
         JPanel pnlCard = new JPanel(new BorderLayout());
         pnlCard.setBackground(bg);
-
-        // Ảnh
         JLabel lblImgPlaceholder = new JLabel("IMAGE", SwingConstants.CENTER);
         lblImgPlaceholder.setPreferredSize(new Dimension(0, 110));
         lblImgPlaceholder.setOpaque(true);
         lblImgPlaceholder.setBackground(Color.decode("#EEEEEE"));
         lblImgPlaceholder.setForeground(Color.LIGHT_GRAY);
 
-        // Panel thông tin
         JPanel pnlInfo = new JPanel();
         pnlInfo.setLayout(new BoxLayout(pnlInfo, BoxLayout.Y_AXIS));
         pnlInfo.setOpaque(false);
@@ -227,7 +229,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         lblName.setForeground(Color.BLACK);
         lblName.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Mô tả
         JTextArea txaDesc = new JTextArea(desc);
         txaDesc.setLineWrap(true);
         txaDesc.setWrapStyleWord(true);
@@ -237,7 +238,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         txaDesc.setFont(new Font("Inter", Font.PLAIN, 11));
         txaDesc.setForeground(gray);
         txaDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
-        txaDesc.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32)); // Giới hạn 2 dòng
+        txaDesc.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32));
 
         JLabel lblPrice = new JLabel(price);
         lblPrice.setForeground(brown);
@@ -255,43 +256,39 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 
         return pnlCard;
 
-
     }
 
     private JPanel createSidebar() {
-	    JPanel sidebar = new JPanel();
-	    sidebar.setPreferredSize(new Dimension(250, 0));
-	    sidebar.setBackground(new Color(245, 245, 230));
-	    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20)); // Margin cho menu
+        JPanel sidebar = new JPanel();
+        sidebar.setPreferredSize(new Dimension(250, 0));
+        sidebar.setBackground(new Color(245, 245, 230));
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBorder(new EmptyBorder(30, 20, 30, 20));
 
-	    // Logo
-	    JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
-	    lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 20));
-	    lblLogo.setForeground(new Color(85, 55, 34));
-	    lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái label
-	    sidebar.add(lblLogo);
-	    sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
+        JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
+        lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lblLogo.setForeground(new Color(85, 55, 34));
+        lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        sidebar.add(lblLogo);
+        sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
 
+        String[][] menuData = {
+            {"Menu", "img/menu.png"},
+            {"Menu Management", "img/menumanagement.png"},
+            {"Analytics", "img/analytics.png"}
+        };
 
-	    String[][] menuData = {
-	        {"Menu", "img/menu.png"},
-	        {"Menu Management", "img/menumanagement.png"},
-	        {"Analytics", "img/analytics.png"}
-	    };
+        for (String[] data : menuData) {
+            JButton btn = createMenuButton(data[0], data[1]);
 
-	    for (String[] data : menuData) {
-	        JButton btn = createMenuButton(data[0], data[1]);
-
-	        // Highlight mục đang chọn ( Menu mangement )
-	        if (data[0].equals("Menu")) {
-	            btn.setBackground(new Color(230, 230, 210));
-	            btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
-	            btn.putClientProperty(FlatClientProperties.BUTTON_TYPE, 10);
-	        } else {
-	            btn.setContentAreaFilled(false); // Làm các nút khác trong suốt
-	        }
-	        if (data[0].equals("Menu Management")) {
+            if (data[0].equals("Menu")) {
+                btn.setBackground(new Color(230, 230, 210));
+                btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
+                btn.putClientProperty(FlatClientProperties.BUTTON_TYPE, 10);
+            } else {
+                btn.setContentAreaFilled(false);
+            }
+            if (data[0].equals("Menu Management")) {
                 btn.addActionListener(e -> {
                     MenuManagement nextFrame = new MenuManagement();
                     nextFrame.setBounds(this.getBounds());
@@ -308,64 +305,57 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
                     this.dispose();
                 });
             }
-	        sidebar.add(btn);
-	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
-	    }
+            sidebar.add(btn);
+            sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
 
-	    sidebar.add(Box.createVerticalGlue());
+        sidebar.add(Box.createVerticalGlue());
 
-	    JButton btnNewOrder = new JButton(" + New Order ");
+        JButton btnNewOrder = new JButton(" + New Order ");
         btnNewOrder.setBackground(new Color(85, 55, 34));
         btnNewOrder.setForeground(Color.WHITE);
         btnNewOrder.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         btnNewOrder.setPreferredSize(new Dimension(Integer.MAX_VALUE, 40));
         btnNewOrder.setFocusPainted(false);
         btnNewOrder.setBorderPainted(false);
-        // 5. Thay đổi font chữ to hơn một chút cho cân đối với nút lớn
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
         sidebar.add(btnNewOrder);
+        return sidebar;
+    }
 
-	    return sidebar;
-   }
+    private JButton createMenuButton(String text, String iconPath) {
+        ImageIcon icon = new ImageIcon(iconPath);
+        Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
-   private JButton createMenuButton(String text, String iconPath) {
-	    // Tạo Icon và scale nhỏ lại cho vừa dòng
-	    ImageIcon icon = new ImageIcon(iconPath);
-	    Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        JButton btn = new JButton(text, new ImageIcon(scaled));
 
-	    JButton btn = new JButton(text, new ImageIcon(scaled));
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setIconTextGap(15);
+        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
 
-	    // THUẬT TOÁN CĂN LỀ QUAN TRỌNG:
-	    btn.setHorizontalAlignment(SwingConstants.LEFT); // Chữ và icon dồn sang trái
-	    btn.setIconTextGap(15); // Khoảng cách giữa icon và chữ
-	    btn.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn nút thẳng hàng trong BoxLayout
-	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); // Nút dài hết cỡ sidebar
+        btn.setFocusPainted(false);	
+        btn.setBorder(new EmptyBorder(10, 15, 10, 15));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setForeground(new Color(85, 55, 34));
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
-	    // Xóa bỏ các hiệu ứng thừa của Swing cũ
-	    btn.setFocusPainted(false);
-	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); // Padding trong của nút
-	    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	    btn.setForeground(new Color(85, 55, 34));
-	    btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        return btn;
+    }
 
-	    return btn;
-	}
-
- @Override
- public void actionPerformed(ActionEvent e) {
-	Object o = e.getSource();
-	if (o.equals(btnComplete)) {
-		Invoice_UI nextFrame = new Invoice_UI();
-
-	    // Giữ nguyên kích thước + trạng thái
-	    nextFrame.setBounds(this.getBounds());
-	    nextFrame.setExtendedState(this.getExtendedState());
-
-	    nextFrame.setVisible(true);
-
-	    // Đóng màn hiện tại
-	    this.dispose();
-	}
-
- }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        
+        if (o.equals(btnComplete)) {
+            Invoice_UI nextFrame = new Invoice_UI();
+            nextFrame.setBounds(this.getBounds());
+            nextFrame.setExtendedState(this.getExtendedState());
+            nextFrame.setVisible(true);
+            this.dispose();
+        } else if (o.equals(btnSearch)) {
+            String keyword = txtSearch.getText().trim();
+            
+        }
+    }
 }

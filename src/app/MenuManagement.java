@@ -287,7 +287,7 @@ public class MenuManagement extends JFrame {
 	    for (Mon m : dsMon) {
 	    	String trangThaiMonAn = m.isTrangThai() ?  "Còn hàng" : "Hết hàng";
 	    	try {
-	    	    java.net.URL url = new java.net.URL(m.getDuongDanAnh()); // throw error
+	    	    java.net.URL url = new java.net.URL(m.getDuongDanAnh());
 	    	    Image img = javax.imageio.ImageIO.read(url);
 	    	    if (img != null) {
 	    	        ImageIcon foodIcon = new ImageIcon(img.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
@@ -369,5 +369,7 @@ class TableActionEditor extends AbstractCellEditor implements TableCellEditor {
     }
 
     @Override
-    public Object getCellEditorValue() { return null; }
+    public Object getCellEditorValue() { 
+    	return null; 
+    }
 }
