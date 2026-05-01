@@ -518,5 +518,29 @@
         "thanhTien": 1.0
       }
     ]
+  },
+  {
+    "maHD": "HD1777648064687",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 12000.0,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777648064687-1243468583379000",
+        "mon": {
+          "maMon": "M01",
+          "tenMon": "Cà phê số 1 VN do Quý làm",
+          "moTaMon": "description",
+          "donGiaMua": 110000.0,
+          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
+          "donGiaBan": 12000.0,
+          "trangThai": true,
+          "phanLoaiMonAn": "PASTRY"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 12000.0
+      }
+    ]
   }
 ]
