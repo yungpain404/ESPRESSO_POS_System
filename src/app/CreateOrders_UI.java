@@ -483,23 +483,27 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 
         pnlProductGrid.removeAll();
         List<Mon> allMon = mon_dao.getAll();
-        String filterValue = "";
-        switch (category) {
-            case "Coffee": filterValue = "COFFEE"; break;
-            case "Tea": filterValue = "TEA"; break;
-            case "Pastries": filterValue = "PASTRY"; break;
+        
+        String filterValue = ""; 
+        switch (category.toLowerCase()) {
+            case "coffee": filterValue = "COFFEE"; break;
+            case "tea": filterValue = "TEA"; break;
+            case "pastries": filterValue = "PASTRY"; break;
             default: filterValue = "ALL"; break;
         }
 
         for (Mon m : allMon) {
-            if (filterValue.equals("ALL") || (m.getPhanLoaiMonAn() != null && m.getPhanLoaiMonAn().equals(filterValue))) {
+            String dataCategory = m.getPhanLoaiMonAn().toString();
+            if (filterValue.equals("ALL") || 
+               (dataCategory != null && dataCategory.trim().equalsIgnoreCase(filterValue))) {
+                
                 JPanel card = createProductCard(
-                    m.getMaMon(),
-                    m.getTenMon(),
+                    m.getMaMon(), 
+                    m.getTenMon(), 
                     m.getMoTaMon(),
-                    String.format("$%.2f", m.getDonGiaBan()),
-                    bgCard,
-                    accentBrown,
+                    String.format("$%.2f", m.getDonGiaBan()), 
+                    bgCard, 
+                    accentBrown, 
                     textGray,
                     m.getDuongDanAnh()
                 );
