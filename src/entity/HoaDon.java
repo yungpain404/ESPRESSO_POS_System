@@ -99,7 +99,14 @@ public class HoaDon {
         }
         this.tongTien = tong;
 	}
+	
+	public List<ChiTietHoaDon> getDsChiTiet() {
+		return dsChiTiet;
+	}
 
+	public void setDsChiTiet(List<ChiTietHoaDon> dsChiTiet) {
+		this.dsChiTiet = dsChiTiet;
+	}
 
 	public HoaDon() {
 		

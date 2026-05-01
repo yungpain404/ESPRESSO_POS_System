@@ -1,0 +1,40 @@
+{
+    "maHD": "HD1777566773279",
+    "ngayGioLap": "2026-04-30",
+    "trangThaiTT": true,
+    "tongTien": 10.0,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777566773279-1270759547364500",
+        "mon": {
+          "maMon": "M1",
+          "tenMon": "Artisanal Cortado",
+          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
+          "donGiaMua": 3.0,
+          "duongDanAnh": "img/cortado.png",
+          "donGiaBan": 4.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "DRINK"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "Standard Serving",
+        "thanhTien": 4.5
+      },
+      {
+        "maCTHD": "HD1777566773279-1270759549843200",
+        "mon": {
+          "maMon": "M2",
+          "tenMon": "Almond Croissant",
+          "moTaMon": "Twice-baked with house-made frangipane.",
+          "donGiaMua": 3.5,
+          "duongDanAnh": "img/croissant.png",
+          "donGiaBan": 5.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "PASTRY"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "Standard Serving",
+        "thanhTien": 5.5
+      }
+    ]
+  }

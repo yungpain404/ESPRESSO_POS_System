@@ -4,6 +4,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.List;
+
+import dao.HoaDon_DAO;
+import entity.HoaDon;
+import entity.ChiTietHoaDon;
+import entity.PhuongThucThanhToan;
 
 @SuppressWarnings("serial")
 public class Dashboard_UI extends JFrame { 
@@ -39,6 +47,8 @@ public class Dashboard_UI extends JFrame {
     private JButton btnCancel;
     private JButton btnConfirm;
     
+    private HoaDon_DAO hoaDonDao = new HoaDon_DAO();
+    
     public Dashboard_UI() {
         setTitle("Espresso Logic - Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,9 +59,7 @@ public class Dashboard_UI extends JFrame {
         getContentPane().setBackground(BG);
         
         JPanel pnlSidebar = createSidebar();
-        
         JPanel pnlTop = createTopPanel();
-        
         JPanel pnlContent = createContentPanel();
         
         JScrollPane scrollPane = new JScrollPane(pnlContent);
@@ -66,6 +74,124 @@ public class Dashboard_UI extends JFrame {
         
         add(pnlSidebar, BorderLayout.WEST);
         add(pnlCenter, BorderLayout.CENTER);
+        
+        loadDashboardData();
+    }
+    
+    /**
+     * Load dữ liệu Dashboard
+     * - Tính tổng hóa đơn, doanh thu, tiền mặt, chuyển khoản
+     * - Load 5 hóa đơn gần nhất
+     * - Load top 5 sản phẩm bán chạy
+     */
+    /**
+     * Load dữ liệu Dashboard
+     */
+    private void loadDashboardData() {
+        LocalDate testDate = LocalDate.of(2026, 4, 30);
+        List<HoaDon> hoaDonHom = hoaDonDao.getByDate(testDate);
+        
+        if (hoaDonHom == null || hoaDonHom.isEmpty()) {
+            System.out.println("Không có hóa đơn hôm nay");
+            // Set giá trị mặc định để không bị NullPointerException
+            lblTotalInvoices.setText("0");
+            lblTotalRevenue.setText("$0.00");
+            lblCashAmount.setText("$0.00");
+            lblBankAmount.setText("$0.00");
+            return;
+        }
+        
+        calculateStatistics(hoaDonHom);
+        loadRecentInvoices(hoaDonHom);
+        loadTopItems(hoaDonHom);
+    }
+    
+    /**
+     * Tính toán thống kê
+     */
+    private void calculateStatistics(List<HoaDon> hoaDonList) {
+        int totalInvoices = hoaDonList.size();
+        double totalRevenue = 0;
+        double cashRevenue = 0;
+        double transferRevenue = 0;
+        
+        for (HoaDon hd : hoaDonList) {
+            totalRevenue += hd.getTongTien();
+            
+            if (hd.getPhuongThucTT() == PhuongThucThanhToan.TIENMAT) {
+                cashRevenue += hd.getTongTien();
+            } else {
+                transferRevenue += hd.getTongTien();
+            }
+        }
+        
+        lblTotalInvoices.setText(String.valueOf(totalInvoices));
+        lblTotalRevenue.setText(formatCurrency(totalRevenue));
+        lblCashAmount.setText(formatCurrency(cashRevenue));
+        lblBankAmount.setText(formatCurrency(transferRevenue));
+        
+        lblInvoicesSubtitle.setText("+0 vs yesterday");
+        lblRevenueSubtitle.setText("+0% vs yesterday");
+        lblCashSubtitle.setText(totalInvoices + " invoices · 65%");
+        lblBankSubtitle.setText("35% revenue");
+    }
+    
+    /**
+     * Load 5 hóa đơn gần nhất
+     */
+    private void loadRecentInvoices(List<HoaDon> hoaDonList) {
+        modelRecentInvoices.setRowCount(0);
+        
+        int start = Math.max(0, hoaDonList.size() - 5);
+        for (int i = hoaDonList.size() - 1; i >= start; i--) {
+            HoaDon hd = hoaDonList.get(i);
+            String method = hd.getPhuongThucTT() == PhuongThucThanhToan.TIENMAT ? "Cash" : "Transfer";
+            
+            modelRecentInvoices.addRow(new Object[]{
+                hd.getMaHD(),
+                hd.getNgayGioLap().toString(),
+                formatCurrency(hd.getTongTien()),
+                method
+            });
+        }
+    }
+    
+    /**
+     * Load top 5 sản phẩm bán chạy
+     */
+    private void loadTopItems(List<HoaDon> hoaDonList) {
+        modelTopItems.setRowCount(0);
+        
+        Map<String, Integer> mapSoLuong = new HashMap<>();
+        
+        for (HoaDon hd : hoaDonList) {
+            List<ChiTietHoaDon> dsChiTiet = hd.getDsChiTiet();
+            if (dsChiTiet != null) {
+                for (ChiTietHoaDon ct : dsChiTiet) {
+                    String tenMon = ct.getMon().getTenMon();
+                    mapSoLuong.put(tenMon, mapSoLuong.getOrDefault(tenMon, 0) + ct.getSoLuongMon());
+                }
+            }
+        }
+        
+        List<Map.Entry<String, Integer>> sortedList = new ArrayList<>(mapSoLuong.entrySet());
+        sortedList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+        
+        int rank = 1;
+        for (int i = 0; i < Math.min(5, sortedList.size()); i++) {
+            String tenMon = sortedList.get(i).getKey();
+            int soLuong = sortedList.get(i).getValue();
+            
+            modelTopItems.addRow(new Object[]{
+                rank++,
+                tenMon,
+                soLuong + " ly"
+            });
+        }
+    }
+    
+    private String formatCurrency(double amount) {
+        return String.format("$%.2f", amount);
     }
     
     private JPanel createTopPanel() {
@@ -89,16 +215,11 @@ public class Dashboard_UI extends JFrame {
         pnlContent.setLayout(new BoxLayout(pnlContent, BoxLayout.Y_AXIS));
         pnlContent.setBackground(BG);
         
-        JPanel pnlStats = createStatisticsPanel();
-        JPanel pnlTwoCol = createTwoColumnPanel();
-        JPanel pnlInsights = createInsightsPanel();
-        JPanel pnlButtons = createButtonsPanel();
-        
-        pnlContent.add(pnlStats);
-        pnlContent.add(pnlTwoCol);
-        pnlContent.add(pnlInsights);
+        pnlContent.add(createStatisticsPanel());
+        pnlContent.add(createTwoColumnPanel());
+        pnlContent.add(createInsightsPanel());
         pnlContent.add(Box.createVerticalGlue());
-        pnlContent.add(pnlButtons);
+        pnlContent.add(createButtonsPanel());
         
         return pnlContent;
     }
@@ -357,7 +478,6 @@ public class Dashboard_UI extends JFrame {
                 btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
                 btn.setOpaque(true);
                 btn.setContentAreaFilled(true);
-                try { btn.putClientProperty(com.formdev.flatlaf.FlatClientProperties.BUTTON_TYPE, 10); } catch (Exception ignored) {}
             } else {
                 btn.setContentAreaFilled(false);
             }
@@ -392,7 +512,6 @@ public class Dashboard_UI extends JFrame {
         btnNewOrder.setFocusPainted(false);
         btnNewOrder.setBorderPainted(false);
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        try { btnNewOrder.putClientProperty(com.formdev.flatlaf.FlatClientProperties.STYLE, "arc: 20"); } catch (Exception ignored) {}
         sidebar.add(btnNewOrder);
         
         return sidebar;
@@ -419,20 +538,4 @@ public class Dashboard_UI extends JFrame {
         
         return btn;
     }
-    
-    public JLabel getLblTotalInvoices() { return lblTotalInvoices; }
-    public JLabel getLblTotalRevenue() { return lblTotalRevenue; }
-    public JLabel getLblCashAmount() { return lblCashAmount; }
-    public JLabel getLblBankAmount() { return lblBankAmount; }
-    public JLabel getLblInvoicesSubtitle() { return lblInvoicesSubtitle; }
-    public JLabel getLblRevenueSubtitle() { return lblRevenueSubtitle; }
-    public JLabel getLblCashSubtitle() { return lblCashSubtitle; }
-    public JLabel getLblBankSubtitle() { return lblBankSubtitle; }
-    public DefaultTableModel getModelRecentInvoices() { return modelRecentInvoices; }
-    public DefaultTableModel getModelTopItems() { return modelTopItems; }
-    public JTable getTblRecentInvoices() { return tblRecentInvoices; }
-    public JTable getTblTopItems() { return tblTopItems; }
-    public JPanel getPnlInsightsContainer() { return pnlInsightsContainer; }
-    public JButton getBtnCancel() { return btnCancel; }
-    public JButton getBtnConfirm() { return btnConfirm; }
 }
