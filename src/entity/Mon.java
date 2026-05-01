@@ -65,19 +65,19 @@ public class Mon {
 	}
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		Mon other = (Mon) obj;
 		return Objects.equals(maMon, other.maMon);
 	}
 	public Mon() {
-		
+
 	}
-	public Mon(String maMon, String tenMon, double donGiaMua, double donGiaBan, boolean trangThai, 
+	public Mon(String maMon, String tenMon, double donGiaMua, double donGiaBan, boolean trangThai,
 			PhanLoaiMonAn phanLoaiMonAn, String moTamon, String duongDanAnh) {
 		setMaMon(maMon);
 		setTenMon(tenMon);
@@ -94,6 +94,6 @@ public class Mon {
 				+ ", duongDanAnh=" + duongDanAnh + ", donGiaBan=" + donGiaBan + ", trangThai=" + trangThai
 				+ ", phanLoaiMonAn=" + phanLoaiMonAn + "]";
 	}
-	
-	
+
+
 }

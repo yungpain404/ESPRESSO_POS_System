@@ -5,9 +5,6 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
-import entity.Mon;
-import entity.PhanLoaiMonAn;
-
 @SuppressWarnings("unused")
 public class Test{
 	public static void main(String[] args) {
@@ -18,10 +15,10 @@ public class Test{
         }
 
         SwingUtilities.invokeLater(()->{
-            new LoginForm().setVisible(true);
+//            new LoginForm().setVisible(true);
             new MenuManagement().setVisible(true);
         });
-        
-        
+
+
 	}
 }

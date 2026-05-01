@@ -10,7 +10,7 @@ public class NhanVien {
 	private String diaChi;
 	private String soDienThoai;
 	private TaiKhoan taiKhoan;
-	
+
 	public String getMaNV() {
 		return maNV;
 	}
@@ -60,7 +60,7 @@ public class NhanVien {
 	}
 
 	public NhanVien() {
-		
+
 	}
 
 	public NhanVien(String maNV, String hoTen, LocalDate ngayVaoLam, String diaChi, String soDienThoai,
@@ -80,12 +80,12 @@ public class NhanVien {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		NhanVien other = (NhanVien) obj;
 		return Objects.equals(maNV, other.maNV);
 	}
@@ -95,5 +95,5 @@ public class NhanVien {
 		return "NhanVien [maNV=" + maNV + ", hoTen=" + hoTen + ", ngayVaoLam=" + ngayVaoLam + ", diaChi=" + diaChi
 				+ ", soDienThoai=" + soDienThoai + ", taiKhoan=" + taiKhoan + "]";
 	}
-	
+
 }

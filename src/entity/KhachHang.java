@@ -31,7 +31,7 @@ public class KhachHang {
 	}
 
 	public KhachHang() {
-		
+
 	}
 
 	public KhachHang(String maKH, String tenKH, String sdt) {
@@ -47,12 +47,12 @@ public class KhachHang {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		KhachHang other = (KhachHang) obj;
 		return Objects.equals(maKH, other.maKH);
 	}
@@ -61,6 +61,6 @@ public class KhachHang {
 	public String toString() {
 		return "KhachHang [maKH=" + maKH + ", tenKH=" + tenKH + ", sdt=" + sdt + "]";
 	}
-	
+
 
 }

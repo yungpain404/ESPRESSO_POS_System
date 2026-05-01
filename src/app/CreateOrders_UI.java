@@ -1,13 +1,35 @@
 package app;
 
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLightLaf;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLightLaf;
 @SuppressWarnings("serial")
 public class CreateOrders_UI extends JFrame implements ActionListener {
 	static {
@@ -21,8 +43,8 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 		private JButton btnComplete;
     public CreateOrders_UI() {
         setTitle("Espresso Menu POS - Pure Java Optimized");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(Frame.MAXIMIZED_BOTH);
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
         // Định nghĩa màu sắc
@@ -31,11 +53,11 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         Color accentBrown = Color.decode("#573824");
         Color textGray = Color.decode("#8E8E8E");
         Color bgSidebar = Color.decode("#f4f4da");
-        
+
         JPanel pnlMain = new JPanel(new BorderLayout());
         pnlMain.setOpaque(false);
      // add vào mainPanel thay vì JFrame
-        
+
         getContentPane().setBackground(bgMain);
         setLayout(new BorderLayout());
         add(createSidebar(), BorderLayout.WEST);
@@ -45,32 +67,32 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         JPanel pnlHeader = new JPanel(new BorderLayout());
         pnlHeader.setOpaque(false);
         pnlHeader.setBorder(new EmptyBorder(15, 25, 10, 25));
-        
-        
+
+
         JTextField txtSearch = new JTextField();
         txtSearch.setPreferredSize(new Dimension(400, 40));
         txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search menu items...");
 	    txtSearch.putClientProperty("JComponent.outlineWidth", 0);
 	    txtSearch.putClientProperty("JSeparator.height", 0);
-        
+
         // Profile bên phải
         JPanel pnlProfile = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         pnlProfile.setOpaque(false);
 
-        
+
         JPanel pnlUser = new JPanel();
         pnlUser.setLayout(new BoxLayout(pnlUser, BoxLayout.Y_AXIS));
         pnlUser.setOpaque(false);
-        
+
         JLabel lblUserName = new JLabel("Alex Reed", SwingConstants.RIGHT);
         lblUserName.setFont(new Font("Inter", Font.BOLD, 14));
         lblUserName.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         JLabel lblRole = new JLabel("Head Barista");
         lblRole.setForeground(textGray);
         lblRole.setFont(new Font("Inter", Font.PLAIN, 12));
         lblRole.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         pnlUser.add(lblUserName);
         pnlUser.add(lblRole);
         pnlProfile.add(pnlUser);
@@ -87,15 +109,15 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         // cột trái: Menu
         JPanel pnlLeft = new JPanel(new BorderLayout());
         pnlLeft.setOpaque(false);
-        pnlLeft.setBorder(new EmptyBorder(10, 25, 20, 10)); 
-        
+        pnlLeft.setBorder(new EmptyBorder(10, 25, 20, 10));
+
         // Tiêu đề & Tabs
         JPanel pnlMenuHeader = new JPanel(new BorderLayout());
         pnlMenuHeader.setOpaque(false);
         JLabel lblTitle = new JLabel("Espresso Menu");
         lblTitle.setFont(new Font("Inter", Font.BOLD, 26));
         lblTitle.setForeground(accentBrown);
-        
+
         JPanel pnlTabs = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnlTabs.setOpaque(false);
         String[] category = {"All", "Coffee", "Tea", "Pastries"};
@@ -103,7 +125,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
             JButton btnTab = new JButton(cat);
             btnTab.setBorderPainted(false);
             btnTab.setFocusPainted(false);
-            
+
             if (cat.equals("All")) {
                 btnTab.setBackground(Color.decode("#e6e6cc"));
                 btnTab.setForeground(Color.decode("#573824"));
@@ -133,14 +155,14 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         scrPane.getViewport().setOpaque(false);
         scrPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrPane.getVerticalScrollBar().setUnitIncrement(15);
-        
+
         pnlLeft.add(scrPane, BorderLayout.CENTER);
         pnlBody.add(pnlLeft, BorderLayout.CENTER);
 
         //Cart
         JPanel pnlCart = new JPanel(new BorderLayout());
         pnlCart.setPreferredSize(new Dimension(340, 0));
-        pnlCart.setBackground(bgSidebar); 
+        pnlCart.setBackground(bgSidebar);
         pnlCart.setBorder(new EmptyBorder(25, 20, 25, 20));
 
         JLabel lblCart = new JLabel("Current Cart");
@@ -156,7 +178,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         JLabel lblTotalLabel = new JLabel("Total Amount");
         lblTotalLabel.setForeground(textGray);
         lblTotalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
+
         JLabel lblTotalPrice = new JLabel("$18.99");
         lblTotalPrice.setFont(new Font("Inter", Font.BOLD, 30));
         lblTotalPrice.setForeground(accentBrown);
@@ -175,10 +197,10 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlCartFooter.add(lblTotalPrice);
         pnlCartFooter.add(Box.createVerticalStrut(20));
         pnlCartFooter.add(btnComplete);
-        
+
         pnlCart.add(pnlCartFooter, BorderLayout.SOUTH);
         pnlBody.add(pnlCart, BorderLayout.EAST);
-        
+
         btnComplete.addActionListener(this);
     }
 
@@ -186,7 +208,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
     private JPanel createProductCard(String name, String desc, String price, Color bg, Color brown, Color gray) {
         JPanel pnlCard = new JPanel(new BorderLayout());
         pnlCard.setBackground(bg);
-        
+
         // Ảnh
         JLabel lblImgPlaceholder = new JLabel("IMAGE", SwingConstants.CENTER);
         lblImgPlaceholder.setPreferredSize(new Dimension(0, 110));
@@ -221,7 +243,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         lblPrice.setForeground(brown);
         lblPrice.setFont(new Font("Inter", Font.BOLD, 16));
         lblPrice.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         pnlInfo.add(lblName);
         pnlInfo.add(Box.createVerticalStrut(4));
         pnlInfo.add(txaDesc);
@@ -230,19 +252,19 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 
         pnlCard.add(lblImgPlaceholder, BorderLayout.NORTH);
         pnlCard.add(pnlInfo, BorderLayout.CENTER);
-        
+
         return pnlCard;
-        
-        
+
+
     }
-    
+
     private JPanel createSidebar() {
 	    JPanel sidebar = new JPanel();
 	    sidebar.setPreferredSize(new Dimension(250, 0));
 	    sidebar.setBackground(new Color(245, 245, 230));
 	    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
 	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20)); // Margin cho menu
-	
+
 	    // Logo
 	    JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
 	    lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -250,17 +272,17 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 	    lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái label
 	    sidebar.add(lblLogo);
 	    sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
-	
-	    
+
+
 	    String[][] menuData = {
 	        {"Menu", "img/menu.png"},
-	        {"Menu Management", "img/menumanagement.png"}, 
+	        {"Menu Management", "img/menumanagement.png"},
 	        {"Analytics", "img/analytics.png"}
 	    };
-	
+
 	    for (String[] data : menuData) {
 	        JButton btn = createMenuButton(data[0], data[1]);
-	        
+
 	        // Highlight mục đang chọn ( Menu mangement )
 	        if (data[0].equals("Menu")) {
 	            btn.setBackground(new Color(230, 230, 210));
@@ -272,7 +294,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 	        if (data[0].equals("Menu Management")) {
                 btn.addActionListener(e -> {
                     MenuManagement nextFrame = new MenuManagement();
-                    nextFrame.setBounds(this.getBounds()); 
+                    nextFrame.setBounds(this.getBounds());
                     nextFrame.setExtendedState(this.getExtendedState());
                     nextFrame.setVisible(true);
                     this.dispose();
@@ -289,9 +311,9 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 	        sidebar.add(btn);
 	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
 	    }
-	
+
 	    sidebar.add(Box.createVerticalGlue());
-	    
+
 	    JButton btnNewOrder = new JButton(" + New Order ");
         btnNewOrder.setBackground(new Color(85, 55, 34));
         btnNewOrder.setForeground(Color.WHITE);
@@ -302,30 +324,30 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         // 5. Thay đổi font chữ to hơn một chút cho cân đối với nút lớn
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
         sidebar.add(btnNewOrder);
-        
+
 	    return sidebar;
    }
-   
+
    private JButton createMenuButton(String text, String iconPath) {
 	    // Tạo Icon và scale nhỏ lại cho vừa dòng
 	    ImageIcon icon = new ImageIcon(iconPath);
 	    Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-	    
+
 	    JButton btn = new JButton(text, new ImageIcon(scaled));
-	    
+
 	    // THUẬT TOÁN CĂN LỀ QUAN TRỌNG:
 	    btn.setHorizontalAlignment(SwingConstants.LEFT); // Chữ và icon dồn sang trái
 	    btn.setIconTextGap(15); // Khoảng cách giữa icon và chữ
 	    btn.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn nút thẳng hàng trong BoxLayout
 	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); // Nút dài hết cỡ sidebar
-	    
+
 	    // Xóa bỏ các hiệu ứng thừa của Swing cũ
 	    btn.setFocusPainted(false);
 	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); // Padding trong của nút
 	    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	    btn.setForeground(new Color(85, 55, 34));
 	    btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-	    
+
 	    return btn;
 	}
 
@@ -344,6 +366,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 	    // Đóng màn hiện tại
 	    this.dispose();
 	}
-	
+
  }
 }

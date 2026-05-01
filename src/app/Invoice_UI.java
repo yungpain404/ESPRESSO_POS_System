@@ -1,14 +1,38 @@
 package app;
 
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.FlatLightLaf;
 
 @SuppressWarnings("serial")
 public class Invoice_UI extends JFrame {
@@ -21,8 +45,8 @@ public class Invoice_UI extends JFrame {
 	}
     public Invoice_UI() {
         setTitle("Order Details - Pure Flat Java");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(Frame.MAXIMIZED_BOTH);
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
         // Bảng màu
@@ -32,13 +56,13 @@ public class Invoice_UI extends JFrame {
         Color textGray = Color.decode("#7D7D7D");
         Color accentMint = Color.decode("#D1E7E5");
         Color btnBrown = Color.decode("#4E342E");
-        
+
         JPanel pnlRoot = new JPanel(new BorderLayout(30, 20));
         pnlRoot.setBackground(bgMain);
-        
+
         setContentPane(pnlRoot);
         pnlRoot.add(createSidebar(), BorderLayout.WEST);
-        
+
         JPanel pnlContent = new JPanel(new BorderLayout(30, 0));
         pnlContent.setOpaque(false);
         pnlContent.setBorder(new EmptyBorder(40, 40, 40, 40));
@@ -88,28 +112,28 @@ public class Invoice_UI extends JFrame {
         // Header của Invoice
         JPanel pnlHeader = new JPanel(new BorderLayout());
         pnlHeader.setOpaque(false);
-        
+
         JLabel lblBrandName = new JLabel("ESPRESSO LOGIC");
         lblBrandName.setFont(new Font("Segoe UI", Font.BOLD, 32));
         lblBrandName.setForeground(textDark);
         pnlHeader.add(lblBrandName, BorderLayout.WEST);
-        
+
         JPanel pnlInfoRight = new JPanel();
         pnlInfoRight.setLayout(new BoxLayout(pnlInfoRight, BoxLayout.Y_AXIS));
         pnlInfoRight.setOpaque(false);
-        
+
         JLabel lblIdTitle = new JLabel("TRANSACTION ID");
         lblIdTitle.setForeground(textGray);
         lblIdTitle.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         JLabel lblIdValue = new JLabel("#ORD-2024-0088242");
         lblIdValue.setFont(new Font("Inter", Font.BOLD, 14));
         lblIdValue.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         JLabel lblDate = new JLabel("October 24, 2024 — 10:42 AM");
         lblDate.setForeground(textGray);
         lblDate.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         pnlInfoRight.add(lblIdTitle);
         pnlInfoRight.add(lblIdValue);
         pnlInfoRight.add(lblDate);
@@ -122,7 +146,7 @@ public class Invoice_UI extends JFrame {
             {new String[]{"Oat Milk Lavender Latte", "Double shot, house-made syrup"}, "02", "$5.75", "$11.50"},
             {new String[]{"Artisan Sourdough Croissant", "Twice baked, almond filling"}, "01", "$4.50", "$4.50"}
         };
-       
+
 		JTable tblTable = new JTable(new DefaultTableModel(data, columns) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         });
@@ -141,7 +165,9 @@ public class Invoice_UI extends JFrame {
         // Căn lề phải cho cột Qty, Unit, Amount
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
-        for(int i=1; i<4; i++) tblTable.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
+        for(int i=1; i<4; i++) {
+			tblTable.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
+		}
 
         JScrollPane scrPane = new JScrollPane(tblTable);
         scrPane.setBorder(new EmptyBorder(30, 0, 30, 0));
@@ -164,7 +190,7 @@ public class Invoice_UI extends JFrame {
             gbc.gridy = i;
             pnlFooterInvoice.add(line, gbc);
         }
-        
+
         // Dòng Total
         gbc.gridy = 3; gbc.insets = new Insets(25, 0, 15, 0);
         JLabel lblTotal = new JLabel("TOTAL   $27.78");
@@ -175,7 +201,7 @@ public class Invoice_UI extends JFrame {
         pnlInvoiceCard.add(pnlHeader, BorderLayout.NORTH);
         pnlInvoiceCard.add(scrPane, BorderLayout.CENTER);
         pnlInvoiceCard.add(pnlFooterInvoice, BorderLayout.SOUTH);
-        
+
         pnlContent.add(pnlSidebar, BorderLayout.WEST);
         pnlContent.add(pnlInvoiceCard, BorderLayout.CENTER);
         pnlRoot.add(pnlContent, BorderLayout.CENTER);
@@ -209,14 +235,14 @@ public class Invoice_UI extends JFrame {
             return this;
         }
     }
-	
+
     private JPanel createSidebar() {
 	    JPanel sidebar = new JPanel();
 	    sidebar.setPreferredSize(new Dimension(250, 0));
 	    sidebar.setBackground(new Color(245, 245, 230));
 	    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
 	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20)); // Margin cho menu
-	
+
 	    // Logo
 	    JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
 	    lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -224,17 +250,17 @@ public class Invoice_UI extends JFrame {
 	    lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái label
 	    sidebar.add(lblLogo);
 	    sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
-	
-	    
+
+
 	    String[][] menuData = {
 	        {"Menu", "img/menu.png"},
-	        {"Menu Management", "img/menumanagement.png"}, 
+	        {"Menu Management", "img/menumanagement.png"},
 	        {"Analytics", "img/analytics.png"}
 	    };
-	
+
 	    for (String[] data : menuData) {
 	        JButton btn = createMenuButton(data[0], data[1]);
-	        
+
 	        // Highlight mục đang chọn ( Menu mangement )
 	        if (data[0].equals("Menu")) {
 	            btn.setBackground(new Color(230, 230, 210));
@@ -246,7 +272,7 @@ public class Invoice_UI extends JFrame {
 	        if (data[0].equals("Menu")) {
                 btn.addActionListener(e -> {
                     CreateOrders_UI nextFrame = new CreateOrders_UI();
-                    nextFrame.setBounds(this.getBounds()); 
+                    nextFrame.setBounds(this.getBounds());
                     nextFrame.setExtendedState(this.getExtendedState());
                     nextFrame.setVisible(true);
                     this.dispose();
@@ -263,9 +289,9 @@ public class Invoice_UI extends JFrame {
 	        sidebar.add(btn);
 	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
 	    }
-	
+
 	    sidebar.add(Box.createVerticalGlue());
-	    
+
 	    JButton btnNewOrder = new JButton(" + New Order ");
         btnNewOrder.setBackground(new Color(85, 55, 34));
         btnNewOrder.setForeground(Color.WHITE);
@@ -276,30 +302,30 @@ public class Invoice_UI extends JFrame {
         // 5. Thay đổi font chữ to hơn một chút cho cân đối với nút lớn
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
         sidebar.add(btnNewOrder);
-        
+
 	    return sidebar;
    }
-   
+
    private JButton createMenuButton(String text, String iconPath) {
 	    // Tạo Icon và scale nhỏ lại cho vừa dòng
 	    ImageIcon icon = new ImageIcon(iconPath);
 	    Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-	    
+
 	    JButton btn = new JButton(text, new ImageIcon(scaled));
-	    
+
 	    // THUẬT TOÁN CĂN LỀ QUAN TRỌNG:
 	    btn.setHorizontalAlignment(SwingConstants.LEFT); // Chữ và icon dồn sang trái
 	    btn.setIconTextGap(15); // Khoảng cách giữa icon và chữ
 	    btn.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn nút thẳng hàng trong BoxLayout
 	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); // Nút dài hết cỡ sidebar
-	    
+
 	    // Xóa bỏ các hiệu ứng thừa của Swing cũ
 	    btn.setFocusPainted(false);
 	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); // Padding trong của nút
 	    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	    btn.setForeground(new Color(85, 55, 34));
 	    btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-	    
+
 	    return btn;
 	}
 }

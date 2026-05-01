@@ -21,6 +21,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import dao.TaiKhoan_DAO;
@@ -36,7 +38,7 @@ public class LoginForm extends JFrame implements ActionListener{
 
 	public LoginForm() {
         setTitle("Cafe POS Login");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
         //Main layout
@@ -45,7 +47,7 @@ public class LoginForm extends JFrame implements ActionListener{
         //Left Panel
         JPanel pnlLeft = new JPanel();
         pnlLeft.setPreferredSize(new Dimension(360, 0));
-        pnlLeft.setBackground(new Color(85, 55, 34)); 
+        pnlLeft.setBackground(new Color(85, 55, 34));
         pnlLeft.setLayout(new BoxLayout(pnlLeft, BoxLayout.Y_AXIS));
 
         pnlLeft.add(Box.createVerticalGlue());
@@ -59,7 +61,7 @@ public class LoginForm extends JFrame implements ActionListener{
         ImageIcon cafeIcon = new ImageIcon("img/latte.png");
         Image scaleLogo = cafeIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         JLabel lblLogoIcon = new JLabel(new ImageIcon(scaleLogo));
-        lblLogoIcon.setHorizontalAlignment(JLabel.CENTER);
+        lblLogoIcon.setHorizontalAlignment(SwingConstants.CENTER);
         pnlLogoCircle.add(lblLogoIcon, BorderLayout.CENTER);
         pnlLogoCircle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -111,7 +113,7 @@ public class LoginForm extends JFrame implements ActionListener{
         ImageIcon iconLock = new ImageIcon("img/lock.png");
         Image scaleLock = iconLock.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         JLabel lblHeaderIcon = new JLabel(new ImageIcon(scaleLock));
-        lblHeaderIcon.setHorizontalAlignment(JLabel.CENTER);
+        lblHeaderIcon.setHorizontalAlignment(SwingConstants.CENTER);
         pnlHeaderIcon.add(lblHeaderIcon, BorderLayout.CENTER);
 
         JPanel pnlHeaderText = new JPanel();
@@ -162,7 +164,7 @@ public class LoginForm extends JFrame implements ActionListener{
         lblErrName = new JLabel();
         lblErrName.setForeground(new Color(222, 93, 75));
         lblErrName.setFont(new Font("Segoe UI", Font.ITALIC, 10));
-        
+
 
         JLabel lblPass = new JLabel("MẬT KHẨU");
         lblPass.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -183,8 +185,8 @@ public class LoginForm extends JFrame implements ActionListener{
         txtPass = new JPasswordField();
         txtPass.setBorder(null);
         txtPass.setBackground(new Color(255, 254, 245));
-        JLabel lblEyeIcon = new JLabel(new ImageIcon("img/eye_icon.png")); 
-        
+        JLabel lblEyeIcon = new JLabel(new ImageIcon("img/eye_icon.png"));
+
         pnlPassField.add(lblPassIcon, BorderLayout.WEST);
         pnlPassField.add(txtPass, BorderLayout.CENTER);
         pnlPassField.add(lblEyeIcon, BorderLayout.EAST);
@@ -214,13 +216,13 @@ public class LoginForm extends JFrame implements ActionListener{
         pnlLoginCard.add(pnlBody, BorderLayout.CENTER);
 
         pnlCenterWrapper.add(pnlLoginCard);
-        
+
         pnlRight.add(Box.createVerticalGlue());
         pnlRight.add(pnlCenterWrapper);
         pnlRight.add(Box.createVerticalGlue());
         //Event
         btnLogin.addActionListener(this);
-        
+
         //Display
         add(pnlLeft, BorderLayout.WEST);
         add(pnlRight, BorderLayout.CENTER);
@@ -251,9 +253,9 @@ public class LoginForm extends JFrame implements ActionListener{
 				}
 			}
 		}
-		
+
 	}
-	
+
 	private boolean validInput() {
 		String loginName = txtUser.getText().trim();
 		String loginPass = new String(txtPass.getPassword()).trim();

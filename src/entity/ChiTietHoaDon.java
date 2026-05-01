@@ -9,7 +9,7 @@ public class ChiTietHoaDon {
 	private int soLuongMon;
 	private String ghiChuKhachHang;
 	private double thanhTien;
-	
+
 	public String getMaCTHD() {
 		return maCTHD;
 	}
@@ -59,7 +59,7 @@ public class ChiTietHoaDon {
 	}
 
 	public ChiTietHoaDon() {
-		
+
 	}
 
 	public ChiTietHoaDon(String maCTHD, HoaDon hoaDon, Mon mon, int soLuongMon, String ghiChuKhachHang) {
@@ -78,12 +78,12 @@ public class ChiTietHoaDon {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		ChiTietHoaDon other = (ChiTietHoaDon) obj;
 		return Objects.equals(maCTHD, other.maCTHD);
 	}
@@ -93,5 +93,5 @@ public class ChiTietHoaDon {
 		return "ChiTietHoaDon [maCTHD=" + maCTHD + ", hoaDon=" + hoaDon + ", mon=" + mon + ", soLuongMon=" + soLuongMon
 				+ ", ghiChuKhachHang=" + ghiChuKhachHang + ", thanhTien=" + thanhTien + "]";
 	}
-	
+
 }

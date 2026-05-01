@@ -1,17 +1,42 @@
 package app;
 
-import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Menu;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
-import dao.Mon_DAO;
-import entity.Mon;
-import javax.swing.*;
+import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.formdev.flatlaf.FlatClientProperties;
+
+import dao.Mon_DAO;
+import entity.Mon;
 
 @SuppressWarnings("serial")
 public class MenuManagement extends JFrame {
@@ -19,15 +44,15 @@ public class MenuManagement extends JFrame {
 	private Mon_DAO monDao = new Mon_DAO();
     public MenuManagement() {
         setTitle("Espresso Logic - Menu Management");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(900, 600);
         setLocationRelativeTo(null);
-        
+
         setLayout(new BorderLayout());
 
         add(createSidebar(), BorderLayout.WEST);
         add(createMainContent(), BorderLayout.CENTER);
-        
+
         loadDataToTable();
     }
 
@@ -36,38 +61,38 @@ public class MenuManagement extends JFrame {
 	    sidebar.setPreferredSize(new Dimension(250, 0));
 	    sidebar.setBackground(new Color(245, 245, 230));
 	    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20)); // Margin cho menu
-	
+	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20));
+
 	    // Logo
 	    JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
 	    lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 20));
 	    lblLogo.setForeground(new Color(85, 55, 34));
-	    lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái label
+	    lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT);
 	    sidebar.add(lblLogo);
 	    sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
-	
-	    
+
+
 	    String[][] menuData = {
 	        {"Menu", "img/menu.png"},
-	        {"Menu Management", "img/menumanagement.png"}, 
+	        {"Menu Management", "img/menumanagement.png"},
 	        {"Analytics", "img/analytics.png"}
 	    };
-	
+
 	    for (String[] data : menuData) {
 	        JButton btn = createMenuButton(data[0], data[1]);
-	        
+
 	        // Highlight mục đang chọn ( Menu mangement )
 	        if (data[0].equals("Menu Management")) {
 	            btn.setBackground(new Color(230, 230, 210));
 	            btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
 	            btn.putClientProperty(FlatClientProperties.BUTTON_TYPE, 10);
 	        } else {
-	            btn.setContentAreaFilled(false); // Làm các nút khác trong suốt
+	            btn.setContentAreaFilled(false);
 	        }
 	        if (data[0].equals("Menu")) {
                 btn.addActionListener(e -> {
                     CreateOrders_UI nextFrame = new CreateOrders_UI();
-                    nextFrame.setBounds(this.getBounds()); 
+                    nextFrame.setBounds(this.getBounds());
                     nextFrame.setExtendedState(this.getExtendedState());
                     nextFrame.setVisible(true);
                     this.dispose();
@@ -82,11 +107,11 @@ public class MenuManagement extends JFrame {
                 });
             }
 	        sidebar.add(btn);
-	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
+	        sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
 	    }
-	
+
 	    sidebar.add(Box.createVerticalGlue());
-	    
+
 	    JButton btnNewOrder = new JButton(" + New Order ");
         btnNewOrder.setBackground(new Color(85, 55, 34));
         btnNewOrder.setForeground(Color.WHITE);
@@ -94,39 +119,39 @@ public class MenuManagement extends JFrame {
         btnNewOrder.setPreferredSize(new Dimension(Integer.MAX_VALUE, 40));
         btnNewOrder.setFocusPainted(false);
         btnNewOrder.setBorderPainted(false);
-        // 5. Thay đổi font chữ to hơn một chút cho cân đối với nút lớn
+
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnNewOrder.putClientProperty(FlatClientProperties.STYLE, "arc: 20");
         sidebar.add(btnNewOrder);
-        
+
 	    return sidebar;
    }
-   
+
    private JButton createMenuButton(String text, String iconPath) {
 	    ImageIcon icon = new ImageIcon(iconPath);
 	    Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-	    
+
 	    JButton btn = new JButton(text, new ImageIcon(scaled));
-	    
-	    btn.setHorizontalAlignment(SwingConstants.LEFT); 
-	    btn.setIconTextGap(15); 
+
+	    btn.setHorizontalAlignment(SwingConstants.LEFT);
+	    btn.setIconTextGap(15);
 	    btn.setAlignmentX(Component.LEFT_ALIGNMENT);
 	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-	    
+
 	    btn.setFocusPainted(false);
-	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); 
+	    btn.setBorder(new EmptyBorder(10, 15, 10, 15));
 	    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	    btn.setForeground(new Color(85, 55, 34));
 	    btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-	    
+
 	    return btn;
 	}
    private JPanel createMainContent() {
 	    JPanel main = new JPanel(new BorderLayout());
-	    main.setBackground(new Color(251, 251, 240)); 
+	    main.setBackground(new Color(251, 251, 240));
 	    main.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-	    
+
 	    JPanel header = new JPanel(new BorderLayout());
 	    header.setOpaque(false);
 	    header.setBorder(new EmptyBorder(0, 0, 20, 0));
@@ -136,17 +161,17 @@ public class MenuManagement extends JFrame {
 	    lblTitle.setForeground(new Color(51, 51, 51));
 
 	    JButton btnAdd = new JButton("+ Thêm món mới");
-	    btnAdd.setBackground(new Color(85, 55, 34)); 
+	    btnAdd.setBackground(new Color(85, 55, 34));
 	    btnAdd.setForeground(Color.WHITE);
 	    btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
 	    btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	    btnAdd.putClientProperty(FlatClientProperties.STYLE, "arc: 10");
 	    btnAdd.setBorder(new EmptyBorder(8, 15, 8, 15));
-	    
+
 	    btnAdd.addActionListener(e -> {
-	        FoodForm form = new FoodForm(this);
-	        form.setVisible(true);
-	        loadDataToTable(); 
+	    	FoodForm foodForm = new FoodForm(this);
+	        foodForm.setVisible(true);
+	        loadDataToTable();
 	    });
 
 	    header.add(lblTitle, BorderLayout.WEST);
@@ -159,30 +184,32 @@ public class MenuManagement extends JFrame {
 	    model = new DefaultTableModel(data, columns) {
 	        @Override
 	        public Class<?> getColumnClass(int columnIndex) {
-	            
-	            if (columnIndex == 0) return Icon.class;
+
+	            if (columnIndex == 0) {
+					return Icon.class;
+				}
 	            return super.getColumnClass(columnIndex);
 	        }
 
 	        @Override
 	        public boolean isCellEditable(int row, int column) {
-	            return column == 6;
+	            return column == 7;
 	        }
 	    };
 
 	    JTable table = new JTable(model);
 	    table.setRowHeight(60);
-	    setupTableAppearance(table); 
+	    setupTableAppearance(table);
 
 	    JScrollPane scroll = new JScrollPane(table);
 	    scroll.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 210)));
 	    scroll.getViewport().setBackground(Color.WHITE);
-	    
+
 	    main.add(scroll, BorderLayout.CENTER);
 
 	    return main;
 	}
-   
+
    private void setupTableAppearance(JTable table) {
 	    table.setRowHeight(45);
 	    table.setShowVerticalLines(false);
@@ -190,20 +217,20 @@ public class MenuManagement extends JFrame {
 	    table.getTableHeader().setReorderingAllowed(false);
 	    table.getTableHeader().setBackground(new Color(251, 248, 230));
 	    table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-	    
+
 	    // Căn chỉnh độ rộng cột
 	    table.getColumnModel().getColumn(0).setPreferredWidth(60);
 	    table.getColumnModel().getColumn(1).setPreferredWidth(50);
 	    table.getColumnModel().getColumn(2).setPreferredWidth(250);
-	    
-	    // Renderer cho cột "Trạng thái" (Badge style)
+
+	    // Render column trạng thái
 	    table.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
 	        @Override
 	        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 	            JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	            label.setHorizontalAlignment(JLabel.CENTER);
+	            label.setHorizontalAlignment(SwingConstants.CENTER);
 	            String status = value.toString();
-	            
+
 	            if (status.equals("Còn hàng")) {
 	                label.setForeground(new Color(40, 120, 40));
 	                label.setText("<html><div style='background: #e6f4ea; padding: 2px 8px; border-radius: 10px;'>Còn hàng</div></html>");
@@ -214,116 +241,133 @@ public class MenuManagement extends JFrame {
 	            return label;
 	        }
 	    });
-
-	    // Renderer cho cột "Hành động" (Nút Sửa/Xóa)
-	    table.getColumnModel().getColumn(7).setCellRenderer(new TableActionRenderer());
-	    table.getColumnModel().getColumn(7).setCellEditor(new TableActionEditor(new TableActionEvent() {
+	    
+	    TableActionButtonCallBack callback = new TableActionButtonCallBack() {
 	        @Override
 	        public void onEdit(int row) {
-	            // 1. Lấy dữ liệu từ model dựa trên dòng (row)
-	            String maMon = model.getValueAt(row, 1).toString();	
+	        	
+	            String maMon = table.getValueAt(row, 1).toString();
 	            
-	            // 2. Mở Form Sửa và truyền dữ liệu vào
-	            // Mon mon = monDao.getById(maMon);
-	            // FormMon form = new FormMon(mon); 
-	            // form.setVisible(true);
-	            System.out.println("Đang sửa món: " + maMon);
+	         
+	            Mon mon = monDao.getMonById(maMon);
+	            
+	            FoodForm foodForm = new FoodForm(MenuManagement.this, mon);
+	            foodForm.fillData(mon);
+	            foodForm.setVisible(true);
+	            
+	            loadDataToTable();
 	        }
 
 	        @Override
 	        public void onDelete(int row) {
-	            int confirm = JOptionPane.showConfirmDialog(null, 
-	                "Bạn có chắc chắn muốn xóa món này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-	            
+	        	
+	            if (table.isEditing()) {
+	                table.getCellEditor().stopCellEditing();
+	            }
+	            int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
 	            if (confirm == JOptionPane.YES_OPTION) {
-	                // Gọi DAO xóa và load lại bảng
-	                // monDao.delete(maMon);
-	                // loadDataToTable();
+	                String maMon = table.getValueAt(row, 1).toString();
+	                monDao.deleteMonById(maMon);
+	                loadDataToTable();
+	                JOptionPane.showMessageDialog(MenuManagement.this,"Đã xóa sản phẩm thành công !");
 	            }
 	        }
-	    }));
+	    };
+
+	    table.getColumnModel().getColumn(7).setCellRenderer(new TableActionRenderer());
+	    table.getColumnModel().getColumn(7).setCellEditor(new TableActionEditor(callback));
 	}
    public void loadDataToTable() {
-	   
+
 	   List<Mon> dsMon = monDao.getAll();
 	   
-	    // 2. Xóa dữ liệu cũ trên bảng (DefaultTableModel)
-	    model.setRowCount(0); 
+	    // Xóa dữ liệu cũ 
+	    model.setRowCount(0);
 	    
-	    // 3. Đổ dữ liệu mới vào
 	    for (Mon m : dsMon) {
-	    	ImageIcon foodIcon = new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-	        model.addRow(new Object[] {
-	            foodIcon,m.getMaMon(), m.getTenMon(),m.getPhanLoaiMonAn(),m.getDonGiaMua(), m.getDonGiaBan(), "Còn hàng" // Thay bằng các getter của bạn
-	        });
+	    	String trangThaiMonAn = m.isTrangThai() ?  "Còn hàng" : "Hết hàng";
+	    	try {
+	    	    java.net.URL url = new java.net.URL(m.getDuongDanAnh()); // throw error
+	    	    Image img = javax.imageio.ImageIO.read(url);
+	    	    if (img != null) {
+	    	        ImageIcon foodIcon = new ImageIcon(img.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+	    		    model.addRow(new Object[] {
+	    		        foodIcon,m.getMaMon(), m.getTenMon(),m.getPhanLoaiMonAn(),m.getDonGiaMua(), m.getDonGiaBan(),  trangThaiMonAn 
+	    		    });
+	    	    }
+	    	} catch (Exception e) {
+	    		// default image
+	    		ImageIcon foodIcon = new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+	    	    model.addRow(new Object[] {
+	    	            foodIcon,m.getMaMon(), m.getTenMon(),m.getPhanLoaiMonAn(),m.getDonGiaMua(), m.getDonGiaBan(), trangThaiMonAn
+	    	    });
+
+	    	}
 	    }
 	}
 }
 
-interface TableActionEvent {
+interface TableActionButtonCallBack {
     public void onEdit(int row);
     public void onDelete(int row);
 }
 
 @SuppressWarnings("serial")
-class ActionPanel extends JPanel {
- public ActionPanel() {
+class ActionPanel extends JPanel{
+	private JButton btnEdit;
+	private JButton btnDel;
+ public ActionPanel(TableActionButtonCallBack callback, int row) {
      setLayout(new FlowLayout(FlowLayout.CENTER, 5, 8));
      setOpaque(false);
-     JButton btnEdit = new JButton("Sửa");
-     JButton btnDel = new JButton("Xóa");
-     
-     // Style cho nút Sửa
+     btnEdit = new JButton("Sửa");
+     btnDel = new JButton("Xóa");
+
      btnEdit.setFont(new Font("Segoe UI", Font.PLAIN, 12));
      btnEdit.putClientProperty(FlatClientProperties.STYLE, "arc: 5; margin: 2,5,2,5");
-     
-     // Style cho nút Xóa
+
      btnDel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
      btnDel.setForeground(new Color(180, 50, 50));
      btnDel.putClientProperty(FlatClientProperties.STYLE, "arc: 5; margin: 2,5,2,5");
-
-     add(btnEdit);
-     add(btnDel);
- }
- public ActionPanel(TableActionEvent event, int row) {
-     setLayout(new FlowLayout(FlowLayout.CENTER, 5, 8));
-     setOpaque(false);
-     JButton btnEdit = new JButton("Sửa");
-     JButton btnDel = new JButton("Xóa");
-
-     btnEdit.addActionListener(e -> event.onEdit(row));
      
-     btnDel.addActionListener(e -> event.onDelete(row));
+     btnEdit.addActionListener(e -> callback.onEdit(row)); 
+     btnDel.addActionListener(e -> callback.onDelete(row));
 
      add(btnEdit);
      add(btnDel);
  }
 }
 
-// Renderer để hiển thị ActionPanel trong Table
 @SuppressWarnings("serial")
 class TableActionRenderer extends DefaultTableCellRenderer {
- @Override
- public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-     return new ActionPanel();
- }
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    	
+        ActionPanel panel = new ActionPanel(new TableActionButtonCallBack() {
+            @Override public void onEdit(int row) {} 
+            @Override public void onDelete(int row) {}
+        }, row);
+        
+        if (isSelected) panel.setBackground(table.getSelectionBackground());
+        else panel.setBackground(table.getBackground());
+        
+        return panel;
+    }
 }
-
-// Editor để có thể tương tác (click) vào nút trong Table
 @SuppressWarnings("serial")
 class TableActionEditor extends AbstractCellEditor implements TableCellEditor {
-	private TableActionEvent event;
-	
-    public TableActionEditor(TableActionEvent event) {
-        this.event = event;
+    private TableActionButtonCallBack callback;
+
+    public TableActionEditor(TableActionButtonCallBack callback) {
+        this.callback = callback;
     }
-	 @Override
-	 public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-	     return new ActionPanel();
-	 }
-	 @Override
-	 public Object getCellEditorValue() { 
-		 return null;
-	 }
- 
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        ActionPanel panel = new ActionPanel(callback, row);
+        panel.setBackground(table.getSelectionBackground());
+        return panel;
+    }
+
+    @Override
+    public Object getCellEditorValue() { return null; }
 }

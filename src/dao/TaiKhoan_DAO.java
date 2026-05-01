@@ -6,9 +6,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.mindrot.jbcrypt.BCrypt;
 
 import entity.TaiKhoan;
 public class TaiKhoan_DAO {
@@ -19,7 +20,7 @@ public class TaiKhoan_DAO {
 			Gson gson = new Gson();
 			Type listType = new TypeToken<ArrayList<TaiKhoan>>(){}.getType();
 			dsTaiKhoan = gson.fromJson(reader, listType);
-		
+
 			if (dsTaiKhoan == null) {
 				dsTaiKhoan = new ArrayList<>();
 			}
@@ -31,7 +32,7 @@ public class TaiKhoan_DAO {
 
 	public TaiKhoan kiemTraDangNhap(String tenDangNhap, String matKhauNhapVao) {
 		List<TaiKhoan> danhSach = docDanhSachTaiKhoan();
-		
+
 		for (TaiKhoan tk : danhSach) {
 			if (tk.getTenTaiKhoan().equals(tenDangNhap)) {
 				if (!tk.isTrangThaiHoatDong()) {

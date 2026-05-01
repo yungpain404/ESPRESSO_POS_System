@@ -1,18 +1,42 @@
 package app;
 
-import com.formdev.flatlaf.FlatClientProperties;
-
-import dao.Mon_DAO;
-import entity.Mon;
-import entity.PhanLoaiMonAn;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import com.formdev.flatlaf.FlatClientProperties;
+
+import dao.Cloudinary_DAO;
+import dao.Mon_DAO;
+import entity.Mon;
+import entity.PhanLoaiMonAn;
 
 @SuppressWarnings("serial")
 public class FoodForm extends JDialog implements ActionListener{
@@ -24,12 +48,13 @@ public class FoodForm extends JDialog implements ActionListener{
     private JRadioButton radConHang;
     private JRadioButton radHetHang;
     private JLabel lblImagePreview;
-    private String selectedImagePath = ""; 
+    private String selectedImagePath = "";
     private JButton btnChooseImage;
     private JButton btnSave;
     private JButton btnCancel;
     private boolean isEditMode;
     private Mon_DAO monDao = new Mon_DAO();
+    private Cloudinary_DAO cloudDao = new Cloudinary_DAO();
 
     public FoodForm(Frame parent) {
         super(parent, "Thêm món mới", true);
@@ -45,8 +70,7 @@ public class FoodForm extends JDialog implements ActionListener{
     }
 
     private void initUI() {
-    	// Tăng kích thước chiều cao để chứa thêm field ảnh
-        setSize(500, 650); 
+        setSize(500, 650);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -70,12 +94,12 @@ public class FoodForm extends JDialog implements ActionListener{
 
         String fieldStyle = "arc: 10; focusColor: #553722";
 
-        // 1. Mã món
         txtMa = new JTextField();
         txtMa.putClientProperty(FlatClientProperties.STYLE, fieldStyle);
-        if (isEditMode) txtMa.setEditable(false);
+        if (isEditMode) {
+			txtMa.setEditable(false);
+		}
 
-        // 2. Tên món
         txtTen = new JTextField();
         txtTen.putClientProperty(FlatClientProperties.STYLE, fieldStyle);
 
@@ -109,7 +133,7 @@ public class FoodForm extends JDialog implements ActionListener{
         addLabelAndField(pnlForm, "Giá mua:", txtGiaMua, gbc, 3);
         addLabelAndField(pnlForm, "Giá bán:", txtGiaBan, gbc, 4);
         addLabelAndField(pnlForm, "Trạng thái:", pnlStatus, gbc, 5);
-        
+
         gbc.gridy = 6; gbc.gridx = 0; gbc.weightx = 0;
         pnlForm.add(new JLabel("Hình ảnh:"), gbc);
         gbc.gridx = 1; gbc.weightx = 1.0; gbc.insets = new Insets(5, 15, 5, 0);
@@ -133,7 +157,7 @@ public class FoodForm extends JDialog implements ActionListener{
         pnlButtons.add(btnSave);
         add(pnlButtons, BorderLayout.SOUTH);
 
-        
+
         btnSave.addActionListener(this);
         btnCancel.addActionListener(this);
         btnChooseImage.addActionListener(this);
@@ -147,6 +171,11 @@ public class FoodForm extends JDialog implements ActionListener{
         gbc.insets = new Insets(5, 0, 5, 0);
     }
     
+    private ImageIcon createImageFromLocalPath(String imgPath) {
+    	ImageIcon icon = new ImageIcon(new ImageIcon(imgPath).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+    	return icon;
+    }
+
     private void chooseImage() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Hình ảnh (jpg, png, gif)", "jpg", "png", "gif"));
@@ -154,43 +183,115 @@ public class FoodForm extends JDialog implements ActionListener{
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             selectedImagePath = selectedFile.getAbsolutePath();
-            
-            ImageIcon icon = new ImageIcon(new ImageIcon(selectedImagePath).getImage()
-                             .getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+
+            ImageIcon icon = createImageFromLocalPath(selectedImagePath);
             lblImagePreview.setIcon(icon);
             lblImagePreview.setText("");
         }
+    }
     
-    
+    private void displayDefaultImagePreview() {
+    	ImageIcon icon = new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+    	lblImagePreview.setIcon(icon);
+        lblImagePreview.setText(""); 
     }
 
-    private void fillData(Mon mon) {
+    public void fillData(Mon mon) {
         txtMa.setText(mon.getMaMon());
         txtTen.setText(mon.getTenMon());
         cbLoai.setSelectedItem(mon.getPhanLoaiMonAn());
         txtGiaMua.setText(String.valueOf(mon.getDonGiaMua()));
         txtGiaBan.setText(String.valueOf(mon.getDonGiaBan()));
+        this.selectedImagePath = mon.getDuongDanAnh(); 
+        
+        if(mon.isTrangThai()) 
+        	radConHang.setSelected(true);
+        else
+        	radHetHang.setSelected(true);
+        
+        if (selectedImagePath != null && !selectedImagePath.isEmpty()) {
+            new Thread(() -> {
+                try {
+                    java.net.URL url = new java.net.URL(selectedImagePath);
+                    Image img = javax.imageio.ImageIO.read(url);
+                    if (img != null) {
+                        ImageIcon icon = new ImageIcon(img.getScaledInstance(
+                            lblImagePreview.getWidth(), 
+                            lblImagePreview.getHeight(), 
+                            Image.SCALE_SMOOTH)
+                        );
+                        
+                        // update UI 
+                        javax.swing.SwingUtilities.invokeLater(() -> {
+                            lblImagePreview.setIcon(icon);
+                            lblImagePreview.setText(""); 
+                        });
+                    }
+                } catch (Exception e) {
+                    System.err.println("Lỗi load ảnh: " + e.getMessage());
+                    displayDefaultImagePreview();
+                }
+            }).start();
+        } else {
+        	displayDefaultImagePreview();
+        }
     }
-    
-    
 
     private void handleSave() {
-        // Logic xử lý lưu dữ liệu ở đây (Gọi DAO...)
     	String maMon = txtMa.getText();
     	String tenMon = txtTen.getText();
     	double giaMua = Double.parseDouble(txtGiaMua.getText());
     	double giaBan = Double.parseDouble(txtGiaBan.getText());
     	PhanLoaiMonAn loaiMon = (PhanLoaiMonAn) cbLoai.getSelectedItem();
     	boolean trangThai = radConHang.isSelected();
-    	String imgPath = "/img/cortado.png"; // link cloudinary
-    	Mon monMoi = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, "description",imgPath);
+	
+    	if(!isEditMode) {
+    		String finalImageUrl = "";
     	
-    	monDao.addMon(monMoi);
-    	
-        JOptionPane.showMessageDialog(this, "Đã lưu thành công!");
-        dispose();
+    		if (selectedImagePath != null && !selectedImagePath.isEmpty()) 
+                finalImageUrl = cloudDao.uploadImage(selectedImagePath);
+            
+        	
+        	if (finalImageUrl != null) {
+            	Mon monMoi = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, "description",finalImageUrl);
+            	monDao.addMon(monMoi);
+            	JOptionPane.showMessageDialog(this, "Thêm món thành công!");
+                dispose();
+            } 
+        	else 
+                JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh lên server!");
+            
+    	}
+    	else {
+    	    String urlToSave = "";
+    	    
+    	    if (selectedImagePath != null && !selectedImagePath.startsWith("http") && !selectedImagePath.isEmpty()) {
+    	        btnSave.setText("Đang tải ảnh mới...");
+    	        urlToSave = cloudDao.uploadImage(selectedImagePath);
+    	        
+    	        if (urlToSave == null) {
+    	            JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh mới lên server!");
+    	            return; 
+    	        }
+    	    } 
+    	    else 
+    	        urlToSave = selectedImagePath;
+    	    
+
+    	    Mon monCapNhat = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, "description", urlToSave);
+    	    
+    	    boolean isUpdated = monDao.updateMon(monCapNhat);
+
+    	    if (isUpdated) {
+    	        JOptionPane.showMessageDialog(this, "Cập nhật món thành công!");
+    	        dispose();
+    	    } 
+    	    else 
+    	        JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật dữ liệu!");
+    	    
+    	}
     }
-    
+
     private boolean isValidated() {
     	boolean isSuccess = true;
     	return isSuccess;
@@ -200,8 +301,9 @@ public class FoodForm extends JDialog implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object event = e.getSource();
 		if(event.equals(btnSave)) {
-			if(isValidated()) 
+			if(isValidated()) {
 				handleSave();
+			}
 		}
 		else if(event.equals(btnCancel)) {
 			dispose();

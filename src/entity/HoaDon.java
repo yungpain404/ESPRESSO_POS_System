@@ -1,8 +1,9 @@
 package entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.*;
 
 public class HoaDon {
 	private String maHD;
@@ -13,7 +14,7 @@ public class HoaDon {
 	private PhuongThucThanhToan phuongThucTT;
 	private double tongTien;
 	private List<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
-	
+
 	public String getMaHD() {
 		return maHD;
 	}
@@ -95,14 +96,14 @@ public class HoaDon {
 	public void setTongTien() {
 		double tong = 0;
         for (ChiTietHoaDon ct : dsChiTiet) {
-            tong += ct.getThanhTien(); 
+            tong += ct.getThanhTien();
         }
         this.tongTien = tong;
 	}
 
 
 	public HoaDon() {
-		
+
 	}
 
 	public HoaDon(String maHD, KhachHang khachHang, NhanVien nvLap, LocalDate ngayGioLap, boolean trangThaiTT,
@@ -125,12 +126,12 @@ public class HoaDon {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		HoaDon other = (HoaDon) obj;
 		return Objects.equals(maHD, other.maHD);
 	}
@@ -140,7 +141,7 @@ public class HoaDon {
 		return "HoaDon [maHD=" + maHD + ", khachHang=" + khachHang + ", nvLap=" + nvLap + ", ngayGioLap=" + ngayGioLap
 				+ ", trangThaiTT=" + trangThaiTT + ", phuongThucTT=" + phuongThucTT + ", tongTien=" + tongTien + "]";
 	}
-	
-	
+
+
 
 }
