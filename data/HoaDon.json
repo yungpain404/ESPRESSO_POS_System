@@ -288,6 +288,9 @@
     ]
   },
   {
+=======
+{
+>>>>>>> dashboard
     "maHD": "HD1777566773279",
     "ngayGioLap": "2026-04-30",
     "trangThaiTT": true,
@@ -326,6 +329,7 @@
         "thanhTien": 5.5
       }
     ]
+<<<<<<< HEAD
   },
   {
     "maHD": "HD1777606152832",
