@@ -36,12 +36,10 @@ import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.Mon;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class CreateOrders_UI extends JFrame implements ActionListener {
@@ -102,6 +100,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search menu items...");
         txtSearch.putClientProperty("JComponent.outlineWidth", 0);
         txtSearch.putClientProperty("JSeparator.height", 0);
+        txtSearch.addActionListener(e-> searchMenu(txtSearch.getText().trim()));
 
         btnSearch = new JButton("Search");
         btnSearch.setBackground(accentBrown);
@@ -710,14 +709,13 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
             }
         } else if (o.equals(btnSearch)) {
             String keyword = txtSearch.getText().trim();
-            
+            searchMenu(keyword);
         }
     }
     
     public void renderMenu() {
         pnlProductGrid.removeAll();
-        
-        java.util.List<Mon> listMon = mon_dao.getAll();
+        List<Mon> listMon = mon_dao.getAll();
 
         for (Mon m : listMon) {
             JPanel card = createProductCard(
@@ -733,6 +731,37 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
             pnlProductGrid.add(card);
         }
         
+        pnlProductGrid.revalidate();
+        pnlProductGrid.repaint();
+    }
+    private void searchMenu(String keyword) {
+        pnlProductGrid.removeAll();
+        List<Mon> allMon = mon_dao.getAll();
+
+        if (keyword.isEmpty()) {
+            renderMenu();
+            return;
+        }
+
+        for (Mon m : allMon) {
+            boolean matchMa = m.getMaMon().equalsIgnoreCase(keyword);
+            boolean matchTen = m.getTenMon().toLowerCase().contains(keyword.toLowerCase());
+
+            if (matchMa || matchTen) {
+                JPanel card = createProductCard(
+                    m.getMaMon(), 
+                    m.getTenMon(), 
+                    m.getMoTaMon(),
+                    String.format("$%.2f", m.getDonGiaBan()), 
+                    bgCard, 
+                    accentBrown, 
+                    textGray,
+                    m.getDuongDanAnh()
+                );
+                pnlProductGrid.add(card);
+            }
+        }
+
         pnlProductGrid.revalidate();
         pnlProductGrid.repaint();
     }

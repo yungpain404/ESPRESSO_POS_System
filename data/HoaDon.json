@@ -494,5 +494,29 @@
         "thanhTien": 12.0
       }
     ]
+  },
+  {
+    "maHD": "HD1777640537271",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 1.0,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777640537271-1235941196428100",
+        "mon": {
+          "maMon": "M03",
+          "tenMon": "Trà sữa chân châu 100% đừng",
+          "moTaMon": "description",
+          "donGiaMua": 121.0,
+          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
+          "donGiaBan": 1.0,
+          "trangThai": true,
+          "phanLoaiMonAn": "DRINK"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 1.0
+      }
+    ]
   }
 ]
