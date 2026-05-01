@@ -406,5 +406,93 @@
         "thanhTien": 5.5
       }
     ]
+  },
+  {
+    "maHD": "HD1777630328986",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 36000.0,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777630328986-280333358411300",
+        "mon": {
+          "maMon": "M01",
+          "tenMon": "Cà phê số 1 VN do Quý làm",
+          "moTaMon": "description",
+          "donGiaMua": 110000.0,
+          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
+          "donGiaBan": 12000.0,
+          "trangThai": true,
+          "phanLoaiMonAn": "PASTRY"
+        },
+        "soLuongMon": 3,
+        "ghiChuKhachHang": "",
+        "thanhTien": 36000.0
+      }
+    ]
+  },
+  {
+    "maHD": "HD1777630367795",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 48000.0,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777630367795-280372157315100",
+        "mon": {
+          "maMon": "M01",
+          "tenMon": "Cà phê số 1 VN do Quý làm",
+          "moTaMon": "description",
+          "donGiaMua": 110000.0,
+          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
+          "donGiaBan": 12000.0,
+          "trangThai": true,
+          "phanLoaiMonAn": "PASTRY"
+        },
+        "soLuongMon": 4,
+        "ghiChuKhachHang": "Xin chào quý khách",
+        "thanhTien": 48000.0
+      }
+    ]
+  },
+  {
+    "maHD": "HD1777631798778",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 12012.0,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777631798778-281803154274600",
+        "mon": {
+          "maMon": "M01",
+          "tenMon": "Cà phê số 1 VN do Quý làm",
+          "moTaMon": "description",
+          "donGiaMua": 110000.0,
+          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
+          "donGiaBan": 12000.0,
+          "trangThai": true,
+          "phanLoaiMonAn": "PASTRY"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 12000.0
+      },
+      {
+        "maCTHD": "HD1777631798778-281803158644400",
+        "mon": {
+          "maMon": "M02",
+          "tenMon": "Ca bu chi nô của Quý",
+          "moTaMon": "description",
+          "donGiaMua": 200000.0,
+          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
+          "donGiaBan": 12.0,
+          "trangThai": true,
+          "phanLoaiMonAn": "DRINK"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "",
+        "thanhTien": 12.0
+      }
+    ]
   }
 ]

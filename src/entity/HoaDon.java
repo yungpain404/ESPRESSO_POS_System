@@ -1,9 +1,7 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class HoaDon {
 	private String maHD;
@@ -100,6 +98,9 @@ public class HoaDon {
         }
         this.tongTien = tong;
 	}
+	public void setDsChiTiet(List<ChiTietHoaDon> dsChiTiet) {
+	    this.dsChiTiet = dsChiTiet;
+	}
 
 
 	public HoaDon() {
@@ -142,6 +143,8 @@ public class HoaDon {
 				+ ", trangThaiTT=" + trangThaiTT + ", phuongThucTT=" + phuongThucTT + ", tongTien=" + tongTien + "]";
 	}
 
-
+	public List<ChiTietHoaDon> getDsChiTiet() {
+	    return dsChiTiet;
+	}
 
 }
