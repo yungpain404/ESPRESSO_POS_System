@@ -8,6 +8,7 @@ import dao.Mon_DAO;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.Mon;
+import entity.PhanLoaiMonAn;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public class CreateOrders_UI extends JFrame implements ActionListener {
+public class CreateFormOrders_UI extends JFrame implements ActionListener {
     static {
         try {
             FlatLightLaf.setup();
@@ -34,14 +35,18 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
     
     private JButton btnComplete;
     private JButton btnSearch;
+    private JButton btnCancel;
     private JTextField txtSearch;
 	private JPanel pnlProductGrid;
-	private JPanel pnlCartItems; // Panel chứa danh sách món trong giỏ
-	private JLabel lblTotalPrice; // Nhãn hiển thị tổng tiền
+	private JPanel pnlCartItems;
+	private JLabel lblTotalPrice;
 	private JTextArea txaInvoiceNote;
 	
 	private double totalAmount = 0.0;
 	private ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
+
+    private java.util.List<entity.Mon> originalList;
+    private JButton activeTab; 
 
 
 	private Mon_DAO mon_dao = new Mon_DAO();
@@ -49,7 +54,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 	
 	
 	
-    public CreateOrders_UI() {
+    public CreateFormOrders_UI() {
         setTitle("Espresso Menu POS - Pure Java Optimized");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -130,19 +135,20 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 
         JPanel pnlTabs = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnlTabs.setOpaque(false);
-        String[] category = {"All", "Coffee", "Tea", "Pastries"};
-        for (String cat : category) {
-            JButton btnTab = new JButton(cat);
-            btnTab.setBorderPainted(false);
-            btnTab.setFocusPainted(false);
-
-            if (cat.equals("All")) {
-                btnTab.setBackground(Color.decode("#e6e6cc"));
-                btnTab.setForeground(Color.decode("#573824"));
-            } else {
-                btnTab.setBackground(Color.decode("#f5f5db"));
-                btnTab.setForeground(Color.decode("#7d7862"));
-            }
+        
+        JButton btnAll = createTabButton("All", true);
+        activeTab = btnAll;
+        btnAll.addActionListener(e -> filterMenu(null, btnAll));
+        pnlTabs.add(btnAll);
+       
+        for (PhanLoaiMonAn loai : PhanLoaiMonAn.values()) {
+            String tabName = loai.name().substring(0, 1).toUpperCase() + 
+                             loai.name().substring(1).toLowerCase();
+            
+            JButton btnTab = createTabButton(tabName, false);
+            
+            btnTab.addActionListener(e -> filterMenu(loai, btnTab));
+            
             pnlTabs.add(btnTab);
         }
         pnlMenuHeader.add(lblTitle, BorderLayout.WEST);
@@ -154,8 +160,11 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlProductGrid.setBorder(new EmptyBorder(15, 0, 0, 0));
 
         
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.setOpaque(false);
+        wrapper.add(pnlProductGrid);
 
-        JScrollPane scrPane = new JScrollPane(pnlProductGrid);
+        JScrollPane scrPane = new JScrollPane(wrapper);
         scrPane.setBorder(null);
         scrPane.setOpaque(false);
         scrPane.getViewport().setOpaque(false);
@@ -165,7 +174,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlBody.add(pnlLeft, BorderLayout.CENTER);
 
         JPanel pnlCart = new JPanel(new BorderLayout());
-        pnlCart.setPreferredSize(new Dimension(340, 0));
+        pnlCart.setPreferredSize(new Dimension(330, 0));
         pnlCart.setBackground(bgSidebar);
         pnlCart.setBorder(new EmptyBorder(25, 20, 25, 20));
 
@@ -178,49 +187,62 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlCartItems.setLayout(new BoxLayout(pnlCartItems, BoxLayout.Y_AXIS));
         pnlCartItems.setOpaque(false);
 
-        JScrollPane scrCart = new JScrollPane(pnlCartItems);
+        JPanel pnlWrapper = new JPanel(new BorderLayout());
+        pnlWrapper.setOpaque(false);
+        pnlWrapper.add(pnlCartItems, BorderLayout.NORTH); 
+        
+        JScrollPane scrCart = new JScrollPane(pnlWrapper);
         scrCart.setBorder(null);
         scrCart.setOpaque(false);
         scrCart.getViewport().setOpaque(false);
-        pnlCart.add(scrCart, BorderLayout.CENTER); // Thêm vào giữa giỏ hàng
+        pnlCart.add(scrCart, BorderLayout.CENTER); 
 
-        // Đảm bảo biến lblTotalPrice đã được khởi tạo để cập nhật sau này
-        // lblTotalPrice = new JLabel("$0.00");
 
         JPanel pnlCartFooter = new JPanel();
         pnlCartFooter.setLayout(new BoxLayout(pnlCartFooter, BoxLayout.Y_AXIS));
         pnlCartFooter.setOpaque(false);
         
-     // --- THÊM PHẦN GHI CHÚ TẠI ĐÂY ---
+     // Thêm ghi chú
         JLabel lblNoteInvoce = new JLabel("Order Note:");
         lblNoteInvoce.setForeground(textGray);
         lblNoteInvoce.setFont(new Font("Inter", Font.BOLD, 12));
         lblNoteInvoce.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        txaInvoiceNote = new JTextArea(3, 20); // 3 dòng
+        txaInvoiceNote = new JTextArea(3, 20);
         txaInvoiceNote.setLineWrap(true);
         txaInvoiceNote.setWrapStyleWord(true);
         txaInvoiceNote.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "E.g. Table 5, less ice...");
         txaInvoiceNote.setFont(new Font("Inter", Font.PLAIN, 13));
 
         JScrollPane scrNote = new JScrollPane(txaInvoiceNote);
-        scrNote.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); // Giới hạn chiều cao
+        scrNote.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); 
         scrNote.setBorder(BorderFactory.createLineBorder(Color.decode("#E0E0E0")));
 
         pnlCartFooter.add(lblNoteInvoce);
         pnlCartFooter.add(Box.createVerticalStrut(5));
         pnlCartFooter.add(scrNote);
         pnlCartFooter.add(Box.createVerticalStrut(15));
-        // ---------------------------------
 
         JLabel lblTotalLabel = new JLabel("Total Amount");
         lblTotalLabel.setForeground(textGray);
         lblTotalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+        
         lblTotalPrice = new JLabel("$0.00");
         lblTotalPrice.setFont(new Font("Inter", Font.BOLD, 30));
         lblTotalPrice.setForeground(accentBrown);
         lblTotalPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+       
+        JPanel pnlActionButtons = new JPanel(new GridLayout(1, 2, 10, 0)); 
+        pnlActionButtons.setOpaque(false);
+        pnlActionButtons.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        
+     // Nút Hủy (Cancel)
+        btnCancel = new JButton("Cancel");
+        btnCancel.setFont(new Font("Inter", Font.BOLD, 14));
+        btnCancel.setForeground(accentBrown);
+        btnCancel.setBackground(Color.WHITE); 
+        btnCancel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         btnComplete = new JButton("Complete Order →");
         btnComplete.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
@@ -229,49 +251,47 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         btnComplete.setFont(new Font("Inter", Font.BOLD, 15));
         btnComplete.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnComplete.putClientProperty("JComponent.outlineWidth", 0);
+        
+        pnlActionButtons.add(btnCancel);
+        pnlActionButtons.add(btnComplete);
 
         pnlCartFooter.add(lblTotalLabel);
         pnlCartFooter.add(Box.createVerticalStrut(5));
         pnlCartFooter.add(lblTotalPrice);
         pnlCartFooter.add(Box.createVerticalStrut(20));
-        pnlCartFooter.add(btnComplete);
+        pnlCartFooter.add(pnlActionButtons);
 
         pnlCart.add(pnlCartFooter, BorderLayout.SOUTH);
         pnlBody.add(pnlCart, BorderLayout.EAST);
-//        Gọi hàm thêm sản phẩm
-        renderMenu();
+        
+        renderMenu1();
 
         btnComplete.addActionListener(this);
         btnSearch.addActionListener(this);
-        
+        btnCancel.addActionListener(this);
     }
 
     private JPanel createProductCard(String maMon, String name, String desc, String price, Color bg, Color brown, Color gray, String fileImage) {
         JPanel pnlCard = new JPanel(new BorderLayout());
+        pnlCard.setPreferredSize(new Dimension(205, 245));
+        pnlCard.setMaximumSize(new Dimension(205, 245));
         pnlCard.setBackground(bg);
         
-        // Đặt tên cho card bằng mã món để dễ nhận diện khi click
         pnlCard.setName(maMon);
-
-        // -- 1. Phần hình ảnh (hoặc placeholder) --
-        JLabel lblImgPlaceholder = new JLabel("", SwingConstants.CENTER); // Bỏ chữ "IMAGE"
+//        Phần icon
+        JLabel lblImgPlaceholder = new JLabel("", SwingConstants.CENTER);
         lblImgPlaceholder.setPreferredSize(new Dimension(0, 130));
         lblImgPlaceholder.setOpaque(true);
         lblImgPlaceholder.setBackground(Color.decode("#EEEEEE"));
         lblImgPlaceholder.putClientProperty("JComponent.outlineWidth", 1);
         try {
-            // Nạp ảnh từ đường dẫn fileImage (Tham số bạn đã truyền vào)
             ImageIcon icon = new ImageIcon(fileImage);
             
-            // Kiểm tra nếu ảnh tồn tại và nạp thành công
             if (icon.getIconWidth() > 0) {
-                // Co giãn ảnh để vừa với chiều cao 110px và giữ nguyên tỉ lệ (SCALE_SMOOTH để ảnh nét)
                 Image img = icon.getImage();
-                // Ở đây ta cố định chiều cao 110, chiều rộng tự động (-1) để không bị méo ảnh
                 Image scaledImg = img.getScaledInstance(200, -1, Image.SCALE_SMOOTH);
                 lblImgPlaceholder.setIcon(new ImageIcon(scaledImg));
             } else {
-                // Nếu không tìm thấy ảnh, hiển thị text mặc định hoặc icon lỗi
                 lblImgPlaceholder.setText("No Image");
                 lblImgPlaceholder.setForeground(Color.LIGHT_GRAY);
             }
@@ -280,7 +300,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
             e.printStackTrace();
         }
 
-        // -- 2. Phần thông tin (Tên, Mô tả, Giá, Nút thêm) --
+        // phần thông tin (Tên, Mô tả, Giá, Nút thêm)
         JPanel pnlDetails = new JPanel();
         pnlDetails.setLayout(new BoxLayout(pnlDetails, BoxLayout.Y_AXIS));
         pnlDetails.setOpaque(false);
@@ -307,9 +327,9 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlDetails.add(lblName);
         pnlDetails.add(Box.createVerticalStrut(4));
         pnlDetails.add(txaDesc);
-        pnlDetails.add(Box.createVerticalGlue()); // Đẩy phần giá và nút xuống đáy
+        pnlDetails.add(Box.createVerticalGlue());
 
-        // -- 3. Phần đáy của Info (Giá và Nút thêm) --
+        //Phần đáy của Info (Giá và Nút thêm)
         JPanel pnlBottomInfo = new JPanel(new BorderLayout());
         pnlBottomInfo.setOpaque(false);
         pnlBottomInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -328,30 +348,26 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         btnAdd.setFocusPainted(false);
         btnAdd.setBorderPainted(false);
         btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAdd.setPreferredSize(new Dimension(35, 35)); // Nút vuông nhỏ
+        btnAdd.setPreferredSize(new Dimension(35, 35)); 
         btnAdd.addActionListener(e -> {
             try {
                 double priceValue = Double.parseDouble(price.replace("$", ""));
-                // Gọi hàm addToCart mới với 3 tham số
                 addToCart(name, priceValue,  maMon); 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }); 
-        // Bo góc cho nút (nếu dùng FlatLaf)
         btnAdd.putClientProperty("JButton.buttonType", "roundRect");
 
-        // Xử lý sự kiện khi nhấn nút cộng
         btnAdd.addActionListener(e -> {
             System.out.println("Thêm món: " + name + " (Mã: " + maMon + ") vào giỏ hàng");
-            // Gọi logic thêm vào giỏ hàng ở đây
+           
         });
 
-        pnlBottomInfo.add(btnAdd, BorderLayout.EAST); // Đặt nút sang bên phải
+        pnlBottomInfo.add(btnAdd, BorderLayout.EAST); 
 
         pnlDetails.add(pnlBottomInfo);
 
-        // Lắp ráp card
         pnlCard.add(lblImgPlaceholder, BorderLayout.NORTH);
         pnlCard.add(pnlDetails, BorderLayout.CENTER);
 
@@ -361,36 +377,30 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
     private void addToCart(String name, double price, String maMon) {
     	for (Component comp : pnlCartItems.getComponents()) {
             if (comp instanceof JPanel && maMon.equals(comp.getName())) {
-                // Nếu tìm thấy món trùng mã, tìm đến Label hiển thị số lượng để tăng lên
                 JPanel existingItem = (JPanel) comp;
-                // Duyệt tìm pnlCenter -> pnlQtyAction -> pnlQtyStepper -> lblQty
-                // Cách nhanh hơn: Ta lấy thông qua cấu trúc component hoặc dùng biến phụ.
-                // Ở đây ta duyệt tìm JLabel chứa số lượng trong cấu trúc đã dựng:
                 updateQuantityInExistingItem(existingItem, price);
-                return; // Thoát hàm, không tạo item mới
+                return;
             }
         }
-        // 1. Panel chính cho mỗi dòng (Dùng BorderLayout để chia 3 phần)
+        //Panel chính cho mỗi dòng
     	JPanel pnlItem = new JPanel();
-    	pnlItem.setLayout(new BoxLayout(pnlItem, BoxLayout.X_AXIS)); // ngang thay vì BorderLayout
+    	pnlItem.setLayout(new BoxLayout(pnlItem, BoxLayout.X_AXIS)); 
     	pnlItem.setOpaque(false);
     	pnlItem.setBorder(new EmptyBorder(10, 0, 15, 0));
-    	pnlItem.setName(maMon); // ĐẶT TÊN ĐỂ KIỂM TRA TRÙNG LẶP
+    	pnlItem.setName(maMon);
 
-        // --- PHẦN BÊN TRÁI: Biểu tượng (Icon) ---
         JLabel lblIcon = new JLabel();
         lblIcon.setPreferredSize(new Dimension(60, 60));
         lblIcon.setMinimumSize(new Dimension(60, 60));
         lblIcon.setMaximumSize(new Dimension(60, 60));
-        lblIcon.setAlignmentY(Component.TOP_ALIGNMENT); // QUAN TRỌNG
-        lblIcon.setBackground(Color.decode("#e9e9d4")); // Màu nền kem nhạt
+        lblIcon.setAlignmentY(Component.TOP_ALIGNMENT);
+        lblIcon.setBackground(Color.decode("#e9e9d4")); 
         lblIcon.setOpaque(true);
         lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
-        // Bạn có thể load ảnh thật từ imagePath tại đây, tạm thời dùng text đại diện
         lblIcon.setText("☕"); 
-        lblIcon.putClientProperty("JComponent.outlineWidth", 1); // Bo góc nhẹ nếu dùng FlatLaf
+        lblIcon.putClientProperty("JComponent.outlineWidth", 1);
 
-        // --- PHẦN GIỮA: Tên, Ghi chú và Bộ điều chỉnh số lượng ---
+        //Tên, Ghi chú và Bộ điều chỉnh số lượng
         JPanel pnlCenter = new JPanel();
         pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
         pnlCenter.setOpaque(false);
@@ -400,17 +410,17 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         lblItemName.setFont(new Font("Inter", Font.BOLD, 15));
         lblItemName.setForeground(Color.BLACK);
 
-        JLabel lblNote = new JLabel("+ Standard Serving"); // Ghi chú mặc định
+        JLabel lblNote = new JLabel("+ Standard Serving");
         lblNote.setFont(new Font("Inter", Font.ITALIC, 11));
         lblNote.setForeground(Color.GRAY);
 
-        // Bộ điều chỉnh số lượng: [- 1 +] Remove
+        // Điều chỉnh số lượng: [- 1 +] Remove
         JPanel pnlQtyAction = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         pnlQtyAction.setOpaque(false);
 
         // Panel nhỏ chứa nút [- 1 +]
         JPanel pnlQtyStepper = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 2));
-        pnlQtyStepper.setBackground(Color.decode("#eef3f3")); // Màu nền xanh nhạt
+        pnlQtyStepper.setBackground(Color.decode("#eef3f3"));
         pnlQtyStepper.putClientProperty("JComponent.outlineWidth", 0);
         
         JButton btnMinus = new JButton("–");
@@ -423,7 +433,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
             btn.setPreferredSize(new Dimension(24, 24));
             btn.setFocusPainted(false);
             btn.setBorderPainted(false);
-            btn.setBackground(Color.decode("#b8e2f2")); // Màu xanh nút bấm
+            btn.setBackground(Color.decode("#b8e2f2"));
             btn.setFont(new Font("Arial", Font.BOLD, 12));
         }
 
@@ -447,17 +457,16 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlCenter.add(Box.createVerticalStrut(8));
         pnlCenter.add(pnlQtyAction);
 
-        // --- PHẦN BÊN PHẢI: Giá tiền ---
+        // Giá tiền
         JLabel lblItemPrice = new JLabel(String.format("$%.2f", price));
         lblItemPrice.setFont(new Font("Inter", Font.BOLD, 16));
         lblItemPrice.setForeground(Color.decode("#573824"));
         lblItemPrice.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        // --- LOGIC XỬ LÝ SỰ KIỆN ---
         btnPlus.addActionListener(e -> {
             int q = Integer.parseInt(lblQty.getText()) + 1;
             lblQty.setText(String.valueOf(q));
-            updateTotal(price); // Hàm cập nhật tổng tiền (viết bên dưới)
+            updateTotal(price); 
         });
 
         btnMinus.addActionListener(e -> {
@@ -476,14 +485,12 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
             pnlCartItems.repaint();
         });
 
-        // Ráp các phần vào dòng item
         pnlItem.add(lblIcon);
         pnlItem.add(Box.createHorizontalStrut(15));
         pnlItem.add(pnlCenter);
-        pnlItem.add(Box.createHorizontalGlue()); // đẩy giá sang phải
+        pnlItem.add(Box.createHorizontalGlue()); 
         pnlItem.add(lblItemPrice);
 
-        // Thêm vào giỏ hàng và cập nhật tổng
         pnlCartItems.add(pnlItem);
         updateTotal(price);
         
@@ -493,19 +500,17 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
     
     private void updateTotal(double deltaPrice) {
         this.totalAmount += deltaPrice;
-        if (this.totalAmount < 0) this.totalAmount = 0; // Tránh sai số âm
+        if (this.totalAmount < 0) this.totalAmount = 0; 
         if (lblTotalPrice != null) {
             lblTotalPrice.setText(String.format("$%.2f", this.totalAmount));
         }
     }
     private void updateQuantityInExistingItem(JPanel itemPanel, double unitPrice) {
-        // Duyệt cây component để tìm lblQty (là JLabel có nội dung là con số)
-        // Cấu trúc: pnlItem -> pnlCenter -> pnlQtyAction -> pnlQtyStepper -> lblQty
         try {
-            JPanel pnlCenter = (JPanel) itemPanel.getComponent(2); // Component thứ 2 sau Icon và Strut
-            JPanel pnlQtyAction = (JPanel) pnlCenter.getComponent(3); // Sau Name, Note và Strut
+            JPanel pnlCenter = (JPanel) itemPanel.getComponent(2); 
+            JPanel pnlQtyAction = (JPanel) pnlCenter.getComponent(3); 
             JPanel pnlQtyStepper = (JPanel) pnlQtyAction.getComponent(0);
-            JLabel lblQty = (JLabel) pnlQtyStepper.getComponent(1); // Nút Minus là 0, Qty là 1
+            JLabel lblQty = (JLabel) pnlQtyStepper.getComponent(1);
 
             int newQty = Integer.parseInt(lblQty.getText()) + 1;
             lblQty.setText(String.valueOf(newQty));
@@ -537,31 +542,44 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 
         for (String[] data : menuData) {
             JButton btn = createMenuButton(data[0], data[1]);
-
+            
             if (data[0].equals("Menu")) {
-                btn.setBackground(new Color(230, 230, 210));
-                btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
-                btn.putClientProperty(FlatClientProperties.BUTTON_TYPE, 10);
-            } else {
-                btn.setContentAreaFilled(false);
+            	btn.setBackground(new Color(230, 230, 210));
+	            btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
+	            btn.putClientProperty(FlatClientProperties.BUTTON_TYPE, 10);
+            }else {
+            	btn.setContentAreaFilled(false);
             }
-            if (data[0].equals("Menu Management")) {
-                btn.addActionListener(e -> {
-                    MenuManagement nextFrame = new MenuManagement();
-                    nextFrame.setBounds(this.getBounds());
-                    nextFrame.setExtendedState(this.getExtendedState());
-                    nextFrame.setVisible(true);
-                    this.dispose();
-                });
-            } else if (data[0].equals("Analytics")) {
-                btn.addActionListener(e -> {
-                    Dashboard_UI nextFrame = new Dashboard_UI();
-                    nextFrame.setBounds(this.getBounds());
-                    nextFrame.setExtendedState(this.getExtendedState());
-                    nextFrame.setVisible(true);
-                    this.dispose();
-                });
-            }
+            
+            btn.addActionListener(e -> {
+                if (pnlCartItems.getComponentCount() > 0) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Bạn đang có đơn hàng chưa hoàn tất! Vui lòng thanh toán hoặc hủy đơn trước khi rời đi.", 
+                        "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (data[0].equals("Menu Management")) {
+                        MenuManagement nextFrame = new MenuManagement();
+                        nextFrame.setBounds(this.getBounds());
+                        nextFrame.setExtendedState(this.getExtendedState());
+                        nextFrame.setVisible(true);
+                        this.dispose();
+                } else if (data[0].equals("Analytics")) {
+                        Dashboard_UI nextFrame = new Dashboard_UI();
+                        nextFrame.setBounds(this.getBounds());
+                        nextFrame.setExtendedState(this.getExtendedState());
+                        nextFrame.setVisible(true);
+                        this.dispose();
+                }else if (data[0].equals("Menu")){
+                		MenuList_UI nextFrame = new MenuList_UI();
+	                    nextFrame.setBounds(this.getBounds());
+	                    nextFrame.setExtendedState(this.getExtendedState());
+	                    nextFrame.setVisible(true);
+	                    this.dispose();
+                }
+            });
+
+            
             sidebar.add(btn);
             sidebar.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -576,6 +594,11 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         btnNewOrder.setFocusPainted(false);
         btnNewOrder.setBorderPainted(false);
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnNewOrder.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, 
+                "Bạn đang ở trong trang tạo đơn hàng mới rồi!", 
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        });
         sidebar.add(btnNewOrder);
 
         return sidebar;
@@ -606,25 +629,23 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         Object o = e.getSource();
         if (o.equals(btnComplete)) {
 
-            // 1. Check giỏ hàng rỗng
+            //Check giỏ hàng rỗng
             if (pnlCartItems.getComponentCount() == 0) {
                 JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
                 return;
             }
 
-            // 2. Tạo hóa đơn
+            //Tạo hóa đơn
             HoaDon hd = new HoaDon();
             String maHD = "HD" + System.currentTimeMillis();
             hd.setMaHD(maHD);
             hd.setNgayGioLap(LocalDate.now());
             hd.setTrangThaiTT(true);
             
-         // --- LẤY GHI CHÚ TỪ TEXT AREA ---
             String ghiChuHoaDon = txaInvoiceNote.getText().trim();
 
             ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
 
-            // 3. Duyệt từng item trong cart
             for (Component comp : pnlCartItems.getComponents()) {
                 if (!(comp instanceof JPanel)) continue;
 
@@ -639,7 +660,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 
                     int soLuong = Integer.parseInt(lblQty.getText());
 
-                    //LẤY MON
                     Mon mon = mon_dao.getAll().stream()
                             .filter(m -> m.getMaMon().equals(maMon))
                             .findFirst().orElse(null);
@@ -649,13 +669,12 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
                         continue;
                     }
 
-                    // TẠO CHI TIẾT
                     ChiTietHoaDon ct = new ChiTietHoaDon();
                     ct.setMaCTHD(maHD + "-" + System.nanoTime());
                     ct.setMon(mon);
                     ct.setSoLuongMon(soLuong);
                     ct.setGhiChuKhachHang(ghiChuHoaDon);
-                    ct.setThanhTien(); // tính tiền
+                    ct.setThanhTien(); 
 
                     dsChiTiet.add(ct);
 
@@ -664,24 +683,20 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
                 }
             }
 
-            // 4. Check nếu không có chi tiết
+            //Check nếu không có chi tiết
             if (dsChiTiet.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Lỗi: Không có sản phẩm hợp lệ!");
                 return;
             }
 
-            // 5. Gán vào hóa đơn
+            //Gán vào hóa đơn
             hd.getDsChiTiet().clear();
             hd.getDsChiTiet().addAll(dsChiTiet);
 
-            // 6. Tính tổng tiền
+            //Tính tổng tiền
             hd.setTongTien();
 
-            // DEBUG
-            System.out.println("Số CT: " + dsChiTiet.size());
-            System.out.println("Total: " + hd.getTongTien());
-
-            // 7. Lưu file
+            //Lưu file
             if (hoaDon_dao.addHoaDon(hd)) {
 
                 JOptionPane.showMessageDialog(this,
@@ -706,29 +721,135 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         } else if (o.equals(btnSearch)) {
             String keyword = txtSearch.getText().trim();
             
+        }else if(o.equals(btnCancel)) {
+        	if (pnlCartItems.getComponentCount() > 0) {
+                int opt = JOptionPane.showConfirmDialog(this, 
+                    "Bạn có chắc muốn hủy toàn bộ giỏ hàng?", "Xác nhận hủy", 
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (opt == JOptionPane.YES_OPTION) {
+                    pnlCartItems.removeAll();
+                    totalAmount = 0;
+                    lblTotalPrice.setText("$0.00");
+                    txaInvoiceNote.setText("");
+                    pnlCartItems.revalidate();
+                    pnlCartItems.repaint();
+                }
+            }
         }
     }
-    
     public void renderMenu() {
         pnlProductGrid.removeAll();
-        
         java.util.List<entity.Mon> listMon = mon_dao.getAll();
-
         for (entity.Mon m : listMon) {
             JPanel card = createProductCard(
-                m.getMaMon(), // Thêm tham số mã món ở đây
-                m.getTenMon(), 
-                m.getMoTaMon(),
+                m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
                 String.format("$%.2f", m.getDonGiaBan()), 
-                bgCard, 
-                accentBrown, 
-                textGray,
-                m.getDuongDanAnh()
+                bgCard, accentBrown, textGray, m.getDuongDanAnh()
             );
             pnlProductGrid.add(card);
+        }
+        pnlProductGrid.revalidate();
+        pnlProductGrid.repaint();
+    }
+    
+    public void renderMenu1() {
+        pnlProductGrid.removeAll();
+        
+        originalList = mon_dao.getAll(); 
+
+        if (originalList != null) {
+            for (entity.Mon m : originalList) {
+                JPanel card = createProductCard(
+                    m.getMaMon(),
+                    m.getTenMon(), 
+                    m.getMoTaMon(),
+                    String.format("$%.2f", m.getDonGiaBan()), 
+                    bgCard, 
+                    accentBrown, 
+                    textGray,
+                    m.getDuongDanAnh()
+                );
+                pnlProductGrid.add(card);
+            }
         }
         
         pnlProductGrid.revalidate();
         pnlProductGrid.repaint();
     }
+    
+    private JButton createTabButton(String text, boolean isSelected) {
+        JButton btn = new JButton(text);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        if (isSelected) {
+            btn.setBackground(Color.decode("#e6e6cc")); 
+            btn.setForeground(accentBrown);
+            btn.setFont(new Font("Inter", Font.BOLD, 13));
+        } else {
+            btn.setBackground(Color.decode("#f5f5db")); 
+            btn.setForeground(Color.decode("#7d7862"));
+            btn.setFont(new Font("Inter", Font.PLAIN, 13));
+        }
+        
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                if (!btn.getBackground().equals(Color.decode("#e6e6cc"))) {
+                    btn.setBackground(Color.decode("#eeeecc"));
+                }
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                if (!btn.getBackground().equals(Color.decode("#e6e6cc"))) {
+                    btn.setBackground(Color.decode("#f5f5db"));
+                }
+            }
+        });
+        
+        return btn;
+    }
+
+    private void filterMenu(entity.PhanLoaiMonAn loai, JButton clickedTab) {
+        if (activeTab != null) {
+            updateTabStyle(activeTab, false);
+        }
+        updateTabStyle(clickedTab, true);
+        activeTab = clickedTab;
+
+        if (loai == null) {
+            displayFilteredList(originalList);
+        } else {
+            java.util.List<entity.Mon> filtered = originalList.stream()
+                    .filter(m -> m.getPhanLoaiMonAn().equals(loai)) 
+                    .toList();
+            displayFilteredList(filtered);
+        }
+    }
+    private void displayFilteredList(java.util.List<entity.Mon> list) {
+        pnlProductGrid.removeAll();
+        for (entity.Mon m : list) {
+            JPanel card = createProductCard(
+                m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
+                String.format("$%.2f", m.getDonGiaBan()), 
+                bgCard, accentBrown, textGray, m.getDuongDanAnh()
+            );
+            pnlProductGrid.add(card);
+        }
+        pnlProductGrid.revalidate();
+        pnlProductGrid.repaint();
+    }
+    
+    private void updateTabStyle(JButton btn, boolean isSelected) {
+        if (isSelected) {
+            btn.setBackground(Color.decode("#e6e6cc"));
+            btn.setForeground(accentBrown);
+            btn.setFont(new Font("Inter", Font.BOLD, 13));
+        } else {
+            btn.setBackground(Color.decode("#f5f5db"));
+            btn.setForeground(Color.decode("#7d7862"));
+            btn.setFont(new Font("Inter", Font.PLAIN, 13));
+        }
+    }
+
+    
 }

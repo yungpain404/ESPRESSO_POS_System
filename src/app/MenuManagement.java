@@ -66,7 +66,7 @@ public class MenuManagement extends JFrame {
 	        }
 	        if (data[0].equals("Menu")) {
                 btn.addActionListener(e -> {
-                    CreateOrders_UI nextFrame = new CreateOrders_UI();
+                	MenuList_UI nextFrame = new MenuList_UI();
                     nextFrame.setBounds(this.getBounds()); 
                     nextFrame.setExtendedState(this.getExtendedState());
                     nextFrame.setVisible(true);
