@@ -326,5 +326,85 @@
         "thanhTien": 5.5
       }
     ]
+  },
+  {
+    "maHD": "HD1777606152832",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 35.5,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777606152832-1310147433615800",
+        "mon": {
+          "maMon": "M1",
+          "tenMon": "Artisanal Cortado",
+          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
+          "donGiaMua": 3.0,
+          "duongDanAnh": "img/cortado.png",
+          "donGiaBan": 4.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "DRINK"
+        },
+        "soLuongMon": 3,
+        "ghiChuKhachHang": "Standard Serving",
+        "thanhTien": 13.5
+      },
+      {
+        "maCTHD": "HD1777606152832-1310147437254600",
+        "mon": {
+          "maMon": "M2",
+          "tenMon": "Almond Croissant",
+          "moTaMon": "Twice-baked with house-made frangipane.",
+          "donGiaMua": 3.5,
+          "duongDanAnh": "img/croissant.png",
+          "donGiaBan": 5.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "PASTRY"
+        },
+        "soLuongMon": 4,
+        "ghiChuKhachHang": "Standard Serving",
+        "thanhTien": 22.0
+      }
+    ]
+  },
+  {
+    "maHD": "HD1777606746114",
+    "ngayGioLap": "2026-05-01",
+    "trangThaiTT": true,
+    "tongTien": 10.0,
+    "dsChiTiet": [
+      {
+        "maCTHD": "HD1777606746114-1310740711666600",
+        "mon": {
+          "maMon": "M1",
+          "tenMon": "Artisanal Cortado",
+          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
+          "donGiaMua": 3.0,
+          "duongDanAnh": "img/cortado.png",
+          "donGiaBan": 4.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "DRINK"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "cho tôi ly không đường",
+        "thanhTien": 4.5
+      },
+      {
+        "maCTHD": "HD1777606746114-1310740714460000",
+        "mon": {
+          "maMon": "M2",
+          "tenMon": "Almond Croissant",
+          "moTaMon": "Twice-baked with house-made frangipane.",
+          "donGiaMua": 3.5,
+          "duongDanAnh": "img/croissant.png",
+          "donGiaBan": 5.5,
+          "trangThai": true,
+          "phanLoaiMonAn": "PASTRY"
+        },
+        "soLuongMon": 1,
+        "ghiChuKhachHang": "cho tôi ly không đường",
+        "thanhTien": 5.5
+      }
+    ]
   }
 ]

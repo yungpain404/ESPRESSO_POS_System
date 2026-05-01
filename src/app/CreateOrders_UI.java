@@ -38,6 +38,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 	private JPanel pnlProductGrid;
 	private JPanel pnlCartItems; // Panel chứa danh sách món trong giỏ
 	private JLabel lblTotalPrice; // Nhãn hiển thị tổng tiền
+	private JTextArea txaInvoiceNote;
 	
 	private double totalAmount = 0.0;
 	private ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
@@ -189,6 +190,28 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         JPanel pnlCartFooter = new JPanel();
         pnlCartFooter.setLayout(new BoxLayout(pnlCartFooter, BoxLayout.Y_AXIS));
         pnlCartFooter.setOpaque(false);
+        
+     // --- THÊM PHẦN GHI CHÚ TẠI ĐÂY ---
+        JLabel lblNoteInvoce = new JLabel("Order Note:");
+        lblNoteInvoce.setForeground(textGray);
+        lblNoteInvoce.setFont(new Font("Inter", Font.BOLD, 12));
+        lblNoteInvoce.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        txaInvoiceNote = new JTextArea(3, 20); // 3 dòng
+        txaInvoiceNote.setLineWrap(true);
+        txaInvoiceNote.setWrapStyleWord(true);
+        txaInvoiceNote.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "E.g. Table 5, less ice...");
+        txaInvoiceNote.setFont(new Font("Inter", Font.PLAIN, 13));
+
+        JScrollPane scrNote = new JScrollPane(txaInvoiceNote);
+        scrNote.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80)); // Giới hạn chiều cao
+        scrNote.setBorder(BorderFactory.createLineBorder(Color.decode("#E0E0E0")));
+
+        pnlCartFooter.add(lblNoteInvoce);
+        pnlCartFooter.add(Box.createVerticalStrut(5));
+        pnlCartFooter.add(scrNote);
+        pnlCartFooter.add(Box.createVerticalStrut(15));
+        // ---------------------------------
 
         JLabel lblTotalLabel = new JLabel("Total Amount");
         lblTotalLabel.setForeground(textGray);
@@ -595,6 +618,9 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
             hd.setMaHD(maHD);
             hd.setNgayGioLap(LocalDate.now());
             hd.setTrangThaiTT(true);
+            
+         // --- LẤY GHI CHÚ TỪ TEXT AREA ---
+            String ghiChuHoaDon = txaInvoiceNote.getText().trim();
 
             ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
 
@@ -608,13 +634,12 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
                 if (maMon == null) continue;
 
                 try {
-                    // ✅ LẤY QTY AN TOÀN (không dùng index nữa)
                     JLabel lblQty = (JLabel) pnlItem.getClientProperty("qtyLabel");
                     if (lblQty == null) continue;
 
                     int soLuong = Integer.parseInt(lblQty.getText());
 
-                    // ✅ LẤY MON
+                    //LẤY MON
                     Mon mon = mon_dao.getAll().stream()
                             .filter(m -> m.getMaMon().equals(maMon))
                             .findFirst().orElse(null);
@@ -624,12 +649,12 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
                         continue;
                     }
 
-                    // ✅ TẠO CHI TIẾT
+                    // TẠO CHI TIẾT
                     ChiTietHoaDon ct = new ChiTietHoaDon();
                     ct.setMaCTHD(maHD + "-" + System.nanoTime());
                     ct.setMon(mon);
                     ct.setSoLuongMon(soLuong);
-                    ct.setGhiChuKhachHang("Standard Serving");
+                    ct.setGhiChuKhachHang(ghiChuHoaDon);
                     ct.setThanhTien(); // tính tiền
 
                     dsChiTiet.add(ct);
