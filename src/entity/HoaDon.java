@@ -1,7 +1,6 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.*;
 
 public class HoaDon {
@@ -99,6 +98,9 @@ public class HoaDon {
         }
         this.tongTien = tong;
 	}
+	public void setDsChiTiet(List<ChiTietHoaDon> dsChiTiet) {
+	    this.dsChiTiet = dsChiTiet;
+	}
 
 
 	public HoaDon() {
@@ -140,7 +142,10 @@ public class HoaDon {
 		return "HoaDon [maHD=" + maHD + ", khachHang=" + khachHang + ", nvLap=" + nvLap + ", ngayGioLap=" + ngayGioLap
 				+ ", trangThaiTT=" + trangThaiTT + ", phuongThucTT=" + phuongThucTT + ", tongTien=" + tongTien + "]";
 	}
-	
+
+	public List<ChiTietHoaDon> getDsChiTiet() {
+	    return dsChiTiet;
+	}
 	
 
 }

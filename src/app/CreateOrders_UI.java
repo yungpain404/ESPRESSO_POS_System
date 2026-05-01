@@ -3,11 +3,19 @@ package app;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 
+import dao.HoaDon_DAO;
+import dao.Mon_DAO;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
+import entity.Mon;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class CreateOrders_UI extends JFrame implements ActionListener {
@@ -18,11 +26,28 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
-
+    private Color bgMain = Color.decode("#fbfbe1");
+    private Color bgCard = Color.decode("#FFFFFF");
+    private Color accentBrown = Color.decode("#573824");
+    private Color textGray = Color.decode("#8E8E8E");
+    private Color bgSidebar = Color.decode("#f4f4da");
+    
     private JButton btnComplete;
     private JButton btnSearch;
     private JTextField txtSearch;
+	private JPanel pnlProductGrid;
+	private JPanel pnlCartItems; // Panel chứa danh sách món trong giỏ
+	private JLabel lblTotalPrice; // Nhãn hiển thị tổng tiền
+	
+	private double totalAmount = 0.0;
+	private ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
 
+
+	private Mon_DAO mon_dao = new Mon_DAO();
+	private HoaDon_DAO hoaDon_dao = new HoaDon_DAO();
+	
+	
+	
     public CreateOrders_UI() {
         setTitle("Espresso Menu POS - Pure Java Optimized");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,11 +55,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
 
-        Color bgMain = Color.decode("#fbfbe1");
-        Color bgCard = Color.decode("#FFFFFF");
-        Color accentBrown = Color.decode("#573824");
-        Color textGray = Color.decode("#8E8E8E");
-        Color bgSidebar = Color.decode("#f4f4da");
+
 
         JPanel pnlMain = new JPanel(new BorderLayout());
         pnlMain.setOpaque(false);
@@ -127,19 +148,16 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         pnlMenuHeader.add(pnlTabs, BorderLayout.SOUTH);
         pnlLeft.add(pnlMenuHeader, BorderLayout.NORTH);
 
-        JPanel pnlProductGrid = new JPanel(new GridLayout(0, 3, 15, 15));
+        pnlProductGrid = new JPanel(new GridLayout(0, 3, 15, 15));
         pnlProductGrid.setOpaque(false);
         pnlProductGrid.setBorder(new EmptyBorder(15, 0, 0, 0));
 
-        for (int i = 0; i < 6; i++) {
-            pnlProductGrid.add(createProductCard("Velvet Cappuccino", "Double shot, steamed silk milk with thin foam layer", "$4.50", bgCard, accentBrown, textGray));
-        }
+        
 
         JScrollPane scrPane = new JScrollPane(pnlProductGrid);
         scrPane.setBorder(null);
         scrPane.setOpaque(false);
         scrPane.getViewport().setOpaque(false);
-        scrPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrPane.getVerticalScrollBar().setUnitIncrement(15);
 
         pnlLeft.add(scrPane, BorderLayout.CENTER);
@@ -154,6 +172,19 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         lblCart.setForeground(accentBrown);
         lblCart.setFont(new Font("Inter", Font.BOLD, 20));
         pnlCart.add(lblCart, BorderLayout.NORTH);
+        
+        pnlCartItems = new JPanel();
+        pnlCartItems.setLayout(new BoxLayout(pnlCartItems, BoxLayout.Y_AXIS));
+        pnlCartItems.setOpaque(false);
+
+        JScrollPane scrCart = new JScrollPane(pnlCartItems);
+        scrCart.setBorder(null);
+        scrCart.setOpaque(false);
+        scrCart.getViewport().setOpaque(false);
+        pnlCart.add(scrCart, BorderLayout.CENTER); // Thêm vào giữa giỏ hàng
+
+        // Đảm bảo biến lblTotalPrice đã được khởi tạo để cập nhật sau này
+        // lblTotalPrice = new JLabel("$0.00");
 
         JPanel pnlCartFooter = new JPanel();
         pnlCartFooter.setLayout(new BoxLayout(pnlCartFooter, BoxLayout.Y_AXIS));
@@ -163,7 +194,7 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         lblTotalLabel.setForeground(textGray);
         lblTotalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel lblTotalPrice = new JLabel("$18.99");
+        lblTotalPrice = new JLabel("$0.00");
         lblTotalPrice.setFont(new Font("Inter", Font.BOLD, 30));
         lblTotalPrice.setForeground(accentBrown);
         lblTotalPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -184,31 +215,61 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
 
         pnlCart.add(pnlCartFooter, BorderLayout.SOUTH);
         pnlBody.add(pnlCart, BorderLayout.EAST);
+//        Gọi hàm thêm sản phẩm
+        renderMenu();
 
         btnComplete.addActionListener(this);
         btnSearch.addActionListener(this);
+        
     }
 
-    private JPanel createProductCard(String name, String desc, String price, Color bg, Color brown, Color gray) {
+    private JPanel createProductCard(String maMon, String name, String desc, String price, Color bg, Color brown, Color gray, String fileImage) {
         JPanel pnlCard = new JPanel(new BorderLayout());
         pnlCard.setBackground(bg);
+        
+        // Đặt tên cho card bằng mã món để dễ nhận diện khi click
+        pnlCard.setName(maMon);
 
-        JLabel lblImgPlaceholder = new JLabel("IMAGE", SwingConstants.CENTER);
-        lblImgPlaceholder.setPreferredSize(new Dimension(0, 110));
+        // -- 1. Phần hình ảnh (hoặc placeholder) --
+        JLabel lblImgPlaceholder = new JLabel("", SwingConstants.CENTER); // Bỏ chữ "IMAGE"
+        lblImgPlaceholder.setPreferredSize(new Dimension(0, 130));
         lblImgPlaceholder.setOpaque(true);
         lblImgPlaceholder.setBackground(Color.decode("#EEEEEE"));
-        lblImgPlaceholder.setForeground(Color.LIGHT_GRAY);
+        lblImgPlaceholder.putClientProperty("JComponent.outlineWidth", 1);
+        try {
+            // Nạp ảnh từ đường dẫn fileImage (Tham số bạn đã truyền vào)
+            ImageIcon icon = new ImageIcon(fileImage);
+            
+            // Kiểm tra nếu ảnh tồn tại và nạp thành công
+            if (icon.getIconWidth() > 0) {
+                // Co giãn ảnh để vừa với chiều cao 110px và giữ nguyên tỉ lệ (SCALE_SMOOTH để ảnh nét)
+                Image img = icon.getImage();
+                // Ở đây ta cố định chiều cao 110, chiều rộng tự động (-1) để không bị méo ảnh
+                Image scaledImg = img.getScaledInstance(200, -1, Image.SCALE_SMOOTH);
+                lblImgPlaceholder.setIcon(new ImageIcon(scaledImg));
+            } else {
+                // Nếu không tìm thấy ảnh, hiển thị text mặc định hoặc icon lỗi
+                lblImgPlaceholder.setText("No Image");
+                lblImgPlaceholder.setForeground(Color.LIGHT_GRAY);
+            }
+        } catch (Exception e) {
+            lblImgPlaceholder.setText("Error");
+            e.printStackTrace();
+        }
 
-        JPanel pnlInfo = new JPanel();
-        pnlInfo.setLayout(new BoxLayout(pnlInfo, BoxLayout.Y_AXIS));
-        pnlInfo.setOpaque(false);
-        pnlInfo.setBorder(new EmptyBorder(10, 12, 12, 12));
+        // -- 2. Phần thông tin (Tên, Mô tả, Giá, Nút thêm) --
+        JPanel pnlDetails = new JPanel();
+        pnlDetails.setLayout(new BoxLayout(pnlDetails, BoxLayout.Y_AXIS));
+        pnlDetails.setOpaque(false);
+        pnlDetails.setBorder(new EmptyBorder(10, 12, 12, 12));
 
+        // Tên món
         JLabel lblName = new JLabel(name);
         lblName.setFont(new Font("Inter", Font.BOLD, 15));
         lblName.setForeground(Color.BLACK);
         lblName.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        // Mô tả món
         JTextArea txaDesc = new JTextArea(desc);
         txaDesc.setLineWrap(true);
         txaDesc.setWrapStyleWord(true);
@@ -220,23 +281,217 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
         txaDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
         txaDesc.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32));
 
+        pnlDetails.add(lblName);
+        pnlDetails.add(Box.createVerticalStrut(4));
+        pnlDetails.add(txaDesc);
+        pnlDetails.add(Box.createVerticalGlue()); // Đẩy phần giá và nút xuống đáy
+
+        // -- 3. Phần đáy của Info (Giá và Nút thêm) --
+        JPanel pnlBottomInfo = new JPanel(new BorderLayout());
+        pnlBottomInfo.setOpaque(false);
+        pnlBottomInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Nhãn giá
         JLabel lblPrice = new JLabel(price);
         lblPrice.setForeground(brown);
         lblPrice.setFont(new Font("Inter", Font.BOLD, 16));
-        lblPrice.setAlignmentX(Component.LEFT_ALIGNMENT);
+        pnlBottomInfo.add(lblPrice, BorderLayout.WEST);
 
-        pnlInfo.add(lblName);
-        pnlInfo.add(Box.createVerticalStrut(4));
-        pnlInfo.add(txaDesc);
-        pnlInfo.add(Box.createVerticalStrut(8));
-        pnlInfo.add(lblPrice);
+        // Nút dấu cộng (+)
+        JButton btnAdd = new JButton("+");
+        btnAdd.setFont(new Font("Inter", Font.BOLD, 14));
+        btnAdd.setForeground(Color.WHITE);
+        btnAdd.setBackground(brown);
+        btnAdd.setFocusPainted(false);
+        btnAdd.setBorderPainted(false);
+        btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAdd.setPreferredSize(new Dimension(35, 35)); // Nút vuông nhỏ
+        btnAdd.addActionListener(e -> {
+            try {
+                double priceValue = Double.parseDouble(price.replace("$", ""));
+                // Gọi hàm addToCart mới với 3 tham số
+                addToCart(name, priceValue,  maMon); 
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }); 
+        // Bo góc cho nút (nếu dùng FlatLaf)
+        btnAdd.putClientProperty("JButton.buttonType", "roundRect");
 
+        // Xử lý sự kiện khi nhấn nút cộng
+        btnAdd.addActionListener(e -> {
+            System.out.println("Thêm món: " + name + " (Mã: " + maMon + ") vào giỏ hàng");
+            // Gọi logic thêm vào giỏ hàng ở đây
+        });
+
+        pnlBottomInfo.add(btnAdd, BorderLayout.EAST); // Đặt nút sang bên phải
+
+        pnlDetails.add(pnlBottomInfo);
+
+        // Lắp ráp card
         pnlCard.add(lblImgPlaceholder, BorderLayout.NORTH);
-        pnlCard.add(pnlInfo, BorderLayout.CENTER);
+        pnlCard.add(pnlDetails, BorderLayout.CENTER);
 
         return pnlCard;
     }
 
+    private void addToCart(String name, double price, String maMon) {
+    	for (Component comp : pnlCartItems.getComponents()) {
+            if (comp instanceof JPanel && maMon.equals(comp.getName())) {
+                // Nếu tìm thấy món trùng mã, tìm đến Label hiển thị số lượng để tăng lên
+                JPanel existingItem = (JPanel) comp;
+                // Duyệt tìm pnlCenter -> pnlQtyAction -> pnlQtyStepper -> lblQty
+                // Cách nhanh hơn: Ta lấy thông qua cấu trúc component hoặc dùng biến phụ.
+                // Ở đây ta duyệt tìm JLabel chứa số lượng trong cấu trúc đã dựng:
+                updateQuantityInExistingItem(existingItem, price);
+                return; // Thoát hàm, không tạo item mới
+            }
+        }
+        // 1. Panel chính cho mỗi dòng (Dùng BorderLayout để chia 3 phần)
+    	JPanel pnlItem = new JPanel();
+    	pnlItem.setLayout(new BoxLayout(pnlItem, BoxLayout.X_AXIS)); // ngang thay vì BorderLayout
+    	pnlItem.setOpaque(false);
+    	pnlItem.setBorder(new EmptyBorder(10, 0, 15, 0));
+    	pnlItem.setName(maMon); // ĐẶT TÊN ĐỂ KIỂM TRA TRÙNG LẶP
+
+        // --- PHẦN BÊN TRÁI: Biểu tượng (Icon) ---
+        JLabel lblIcon = new JLabel();
+        lblIcon.setPreferredSize(new Dimension(60, 60));
+        lblIcon.setMinimumSize(new Dimension(60, 60));
+        lblIcon.setMaximumSize(new Dimension(60, 60));
+        lblIcon.setAlignmentY(Component.TOP_ALIGNMENT); // QUAN TRỌNG
+        lblIcon.setBackground(Color.decode("#e9e9d4")); // Màu nền kem nhạt
+        lblIcon.setOpaque(true);
+        lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
+        // Bạn có thể load ảnh thật từ imagePath tại đây, tạm thời dùng text đại diện
+        lblIcon.setText("☕"); 
+        lblIcon.putClientProperty("JComponent.outlineWidth", 1); // Bo góc nhẹ nếu dùng FlatLaf
+
+        // --- PHẦN GIỮA: Tên, Ghi chú và Bộ điều chỉnh số lượng ---
+        JPanel pnlCenter = new JPanel();
+        pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
+        pnlCenter.setOpaque(false);
+        pnlCenter.setAlignmentY(Component.TOP_ALIGNMENT);
+
+        JLabel lblItemName = new JLabel(name);
+        lblItemName.setFont(new Font("Inter", Font.BOLD, 15));
+        lblItemName.setForeground(Color.BLACK);
+
+        JLabel lblNote = new JLabel("+ Standard Serving"); // Ghi chú mặc định
+        lblNote.setFont(new Font("Inter", Font.ITALIC, 11));
+        lblNote.setForeground(Color.GRAY);
+
+        // Bộ điều chỉnh số lượng: [- 1 +] Remove
+        JPanel pnlQtyAction = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        pnlQtyAction.setOpaque(false);
+
+        // Panel nhỏ chứa nút [- 1 +]
+        JPanel pnlQtyStepper = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 2));
+        pnlQtyStepper.setBackground(Color.decode("#eef3f3")); // Màu nền xanh nhạt
+        pnlQtyStepper.putClientProperty("JComponent.outlineWidth", 0);
+        
+        JButton btnMinus = new JButton("–");
+        JLabel lblQty = new JLabel("1");
+        pnlItem.putClientProperty("qtyLabel", lblQty);
+        JButton btnPlus = new JButton("+");
+        
+        // Định dạng nút bấm nhỏ
+        for (JButton btn : new JButton[]{btnMinus, btnPlus}) {
+            btn.setPreferredSize(new Dimension(24, 24));
+            btn.setFocusPainted(false);
+            btn.setBorderPainted(false);
+            btn.setBackground(Color.decode("#b8e2f2")); // Màu xanh nút bấm
+            btn.setFont(new Font("Arial", Font.BOLD, 12));
+        }
+
+        pnlQtyStepper.add(btnMinus);
+        pnlQtyStepper.add(lblQty);
+        pnlQtyStepper.add(btnPlus);
+
+        // Nút Remove màu đỏ
+        JButton btnRemove = new JButton("Remove");
+        btnRemove.setFont(new Font("Inter", Font.PLAIN, 12));
+        btnRemove.setForeground(Color.decode("#d9534f"));
+        btnRemove.setBorderPainted(false);
+        btnRemove.setContentAreaFilled(false);
+        btnRemove.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        pnlQtyAction.add(pnlQtyStepper);
+        pnlQtyAction.add(btnRemove);
+
+        pnlCenter.add(lblItemName);
+        pnlCenter.add(lblNote);
+        pnlCenter.add(Box.createVerticalStrut(8));
+        pnlCenter.add(pnlQtyAction);
+
+        // --- PHẦN BÊN PHẢI: Giá tiền ---
+        JLabel lblItemPrice = new JLabel(String.format("$%.2f", price));
+        lblItemPrice.setFont(new Font("Inter", Font.BOLD, 16));
+        lblItemPrice.setForeground(Color.decode("#573824"));
+        lblItemPrice.setAlignmentY(Component.TOP_ALIGNMENT);
+
+        // --- LOGIC XỬ LÝ SỰ KIỆN ---
+        btnPlus.addActionListener(e -> {
+            int q = Integer.parseInt(lblQty.getText()) + 1;
+            lblQty.setText(String.valueOf(q));
+            updateTotal(price); // Hàm cập nhật tổng tiền (viết bên dưới)
+        });
+
+        btnMinus.addActionListener(e -> {
+            int q = Integer.parseInt(lblQty.getText());
+            if (q > 1) {
+                lblQty.setText(String.valueOf(q - 1));
+                updateTotal(-price);
+            }
+        });
+
+        btnRemove.addActionListener(e -> {
+            int q = Integer.parseInt(lblQty.getText());
+            pnlCartItems.remove(pnlItem);
+            updateTotal(-(price * q));
+            pnlCartItems.revalidate();
+            pnlCartItems.repaint();
+        });
+
+        // Ráp các phần vào dòng item
+        pnlItem.add(lblIcon);
+        pnlItem.add(Box.createHorizontalStrut(15));
+        pnlItem.add(pnlCenter);
+        pnlItem.add(Box.createHorizontalGlue()); // đẩy giá sang phải
+        pnlItem.add(lblItemPrice);
+
+        // Thêm vào giỏ hàng và cập nhật tổng
+        pnlCartItems.add(pnlItem);
+        updateTotal(price);
+        
+        pnlCartItems.revalidate();
+        pnlCartItems.repaint();
+    }
+    
+    private void updateTotal(double deltaPrice) {
+        this.totalAmount += deltaPrice;
+        if (this.totalAmount < 0) this.totalAmount = 0; // Tránh sai số âm
+        if (lblTotalPrice != null) {
+            lblTotalPrice.setText(String.format("$%.2f", this.totalAmount));
+        }
+    }
+    private void updateQuantityInExistingItem(JPanel itemPanel, double unitPrice) {
+        // Duyệt cây component để tìm lblQty (là JLabel có nội dung là con số)
+        // Cấu trúc: pnlItem -> pnlCenter -> pnlQtyAction -> pnlQtyStepper -> lblQty
+        try {
+            JPanel pnlCenter = (JPanel) itemPanel.getComponent(2); // Component thứ 2 sau Icon và Strut
+            JPanel pnlQtyAction = (JPanel) pnlCenter.getComponent(3); // Sau Name, Note và Strut
+            JPanel pnlQtyStepper = (JPanel) pnlQtyAction.getComponent(0);
+            JLabel lblQty = (JLabel) pnlQtyStepper.getComponent(1); // Nút Minus là 0, Qty là 1
+
+            int newQty = Integer.parseInt(lblQty.getText()) + 1;
+            lblQty.setText(String.valueOf(newQty));
+            updateTotal(unitPrice);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+//    Tạo thanh điều khiển
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setPreferredSize(new Dimension(250, 0));
@@ -326,16 +581,129 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        
         if (o.equals(btnComplete)) {
-            Invoice_UI nextFrame = new Invoice_UI();
-            nextFrame.setBounds(this.getBounds());
-            nextFrame.setExtendedState(this.getExtendedState());
-            nextFrame.setVisible(true);
-            this.dispose();
+
+            // 1. Check giỏ hàng rỗng
+            if (pnlCartItems.getComponentCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
+                return;
+            }
+
+            // 2. Tạo hóa đơn
+            HoaDon hd = new HoaDon();
+            String maHD = "HD" + System.currentTimeMillis();
+            hd.setMaHD(maHD);
+            hd.setNgayGioLap(LocalDate.now());
+            hd.setTrangThaiTT(true);
+
+            ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
+
+            // 3. Duyệt từng item trong cart
+            for (Component comp : pnlCartItems.getComponents()) {
+                if (!(comp instanceof JPanel)) continue;
+
+                JPanel pnlItem = (JPanel) comp;
+
+                String maMon = pnlItem.getName();
+                if (maMon == null) continue;
+
+                try {
+                    // ✅ LẤY QTY AN TOÀN (không dùng index nữa)
+                    JLabel lblQty = (JLabel) pnlItem.getClientProperty("qtyLabel");
+                    if (lblQty == null) continue;
+
+                    int soLuong = Integer.parseInt(lblQty.getText());
+
+                    // ✅ LẤY MON
+                    Mon mon = mon_dao.getAll().stream()
+                            .filter(m -> m.getMaMon().equals(maMon))
+                            .findFirst().orElse(null);
+
+                    if (mon == null) {
+                        System.out.println("Không tìm thấy món: " + maMon);
+                        continue;
+                    }
+
+                    // ✅ TẠO CHI TIẾT
+                    ChiTietHoaDon ct = new ChiTietHoaDon();
+                    ct.setMaCTHD(maHD + "-" + System.nanoTime());
+                    ct.setMon(mon);
+                    ct.setSoLuongMon(soLuong);
+                    ct.setGhiChuKhachHang("Standard Serving");
+                    ct.setThanhTien(); // tính tiền
+
+                    dsChiTiet.add(ct);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            // 4. Check nếu không có chi tiết
+            if (dsChiTiet.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Lỗi: Không có sản phẩm hợp lệ!");
+                return;
+            }
+
+            // 5. Gán vào hóa đơn
+            hd.getDsChiTiet().clear();
+            hd.getDsChiTiet().addAll(dsChiTiet);
+
+            // 6. Tính tổng tiền
+            hd.setTongTien();
+
+            // DEBUG
+            System.out.println("Số CT: " + dsChiTiet.size());
+            System.out.println("Total: " + hd.getTongTien());
+
+            // 7. Lưu file
+            if (hoaDon_dao.addHoaDon(hd)) {
+
+                JOptionPane.showMessageDialog(this,
+                        "Thanh toán thành công!\nTổng tiền: $" + hd.getTongTien());
+
+                // Reset UI
+                pnlCartItems.removeAll();
+                totalAmount = 0;
+                lblTotalPrice.setText("$0.00");
+
+                pnlCartItems.revalidate();
+                pnlCartItems.repaint();
+
+                // Chuyển trang
+                Invoice_UI next = new Invoice_UI(hd);
+                next.setVisible(true);
+                this.dispose();
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi lưu hóa đơn!");
+            }
         } else if (o.equals(btnSearch)) {
             String keyword = txtSearch.getText().trim();
             
         }
+    }
+    
+    public void renderMenu() {
+        pnlProductGrid.removeAll();
+        
+        java.util.List<entity.Mon> listMon = mon_dao.getAll();
+
+        for (entity.Mon m : listMon) {
+            JPanel card = createProductCard(
+                m.getMaMon(), // Thêm tham số mã món ở đây
+                m.getTenMon(), 
+                m.getMoTaMon(),
+                String.format("$%.2f", m.getDonGiaBan()), 
+                bgCard, 
+                accentBrown, 
+                textGray,
+                m.getDuongDanAnh()
+            );
+            pnlProductGrid.add(card);
+        }
+        
+        pnlProductGrid.revalidate();
+        pnlProductGrid.repaint();
     }
 }

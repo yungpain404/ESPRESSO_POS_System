@@ -19,6 +19,18 @@ public class Invoice_UI extends JFrame {
 	        e.printStackTrace();
 	    }
 	}
+
+	private JLabel lblIdValue;
+	private JLabel lblDate;
+	private JLabel lblTotal;
+	private DefaultTableModel model;
+	private JTextArea txtNotes;
+		
+	public Invoice_UI(entity.HoaDon hd) {
+	    this(); // Chạy constructor mặc định để dựng giao diện
+	    setData(hd); // Gọi hàm đổ dữ liệu
+	}
+	
     public Invoice_UI() {
         setTitle("Order Details - Pure Flat Java");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -102,11 +114,11 @@ public class Invoice_UI extends JFrame {
         lblIdTitle.setForeground(textGray);
         lblIdTitle.setAlignmentX(Component.RIGHT_ALIGNMENT);
         
-        JLabel lblIdValue = new JLabel("#ORD-2024-0088242");
+        lblIdValue = new JLabel("#ORD-2024-0088242");
         lblIdValue.setFont(new Font("Inter", Font.BOLD, 14));
         lblIdValue.setAlignmentX(Component.RIGHT_ALIGNMENT);
         
-        JLabel lblDate = new JLabel("October 24, 2024 — 10:42 AM");
+        lblDate = new JLabel("October 24, 2024 — 10:42 AM");
         lblDate.setForeground(textGray);
         lblDate.setAlignmentX(Component.RIGHT_ALIGNMENT);
         
@@ -117,15 +129,11 @@ public class Invoice_UI extends JFrame {
 
         // Bảng dữ liệu sản phẩm
         String[] columns = {"DESCRIPTION", "QTY", "UNIT", "AMOUNT"};
-        Object[][] data = {
-            {new String[]{"Single Origin Ethiopia Yirgacheffe", "Pour-over, light roast, floral notes"}, "01", "$6.50", "$6.50"},
-            {new String[]{"Oat Milk Lavender Latte", "Double shot, house-made syrup"}, "02", "$5.75", "$11.50"},
-            {new String[]{"Artisan Sourdough Croissant", "Twice baked, almond filling"}, "01", "$4.50", "$4.50"}
-        };
-       
-		JTable tblTable = new JTable(new DefaultTableModel(data, columns) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
-        });
+        model = new DefaultTableModel(null, columns) {
+			@Override public boolean isCellEditable(int r, int c) { return false; }
+		};
+		JTable tblTable = new JTable(model);
+        
         tblTable.setRowHeight(80);
         tblTable.setShowGrid(false);
         tblTable.setIntercellSpacing(new Dimension(0, 0));
@@ -151,26 +159,54 @@ public class Invoice_UI extends JFrame {
         JPanel pnlFooterInvoice = new JPanel(new GridBagLayout());
         pnlFooterInvoice.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; gbc.weightx = 1.0; gbc.anchor = GridBagConstraints.EAST; gbc.insets = new Insets(4, 0, 4, 0);
-
-        // Các dòng Subtotal, Fee, Tax
-        String[][] priceLines = {{"Subtotal", "$22.50"}, {"Service Fee (15%)", "$3.37"}, {"Tax (8.5%)", "$1.91"}};
-        for (int i = 0; i < priceLines.length; i++) {
-            JPanel line = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
-            line.setOpaque(false);
-            JLabel t = new JLabel(priceLines[i][0]); t.setForeground(textGray);
-            JLabel v = new JLabel(priceLines[i][1]); v.setFont(new Font("Inter", Font.BOLD, 13));
-            line.add(t); line.add(v);
-            gbc.gridy = i;
-            pnlFooterInvoice.add(line, gbc);
-        }
         
+//       Dòng note
+     // Tạo panel bọc ngoài để có màu nền kem nhạt như hình
+        JPanel pnlNotes = new JPanel();
+        pnlNotes.setBackground(new Color(245, 245, 225)); // Màu beige nhạt
+        pnlNotes.setLayout(new BorderLayout(10, 10));
+        pnlNotes.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        // Tiêu đề "NOTES & OBSERVATIONS"
+        JLabel lblNoteTitle = new JLabel("NOTES & OBSERVATIONS");
+        lblNoteTitle.setFont(new Font("SansSerif", Font.BOLD, 12));
+        lblNoteTitle.setForeground(new Color(100, 90, 70));
+        pnlNotes.add(lblNoteTitle, BorderLayout.NORTH);
+
+        // Nội dung ghi chú
+        txtNotes = new JTextArea();
+        txtNotes.setText("Guest requested extra hot on the lavender latte...");
+        txtNotes.setLineWrap(true);
+        txtNotes.setWrapStyleWord(true);
+        txtNotes.setEditable(false); // Chỉ để hiển thị trên hóa đơn
+        txtNotes.setBackground(new Color(245, 245, 225)); // Trùng màu panel
+        txtNotes.setFont(new Font("Serif", Font.ITALIC, 14));
+        txtNotes.setForeground(new Color(80, 80, 80));
+        pnlNotes.add(txtNotes, BorderLayout.CENTER);
+        
+        gbc.gridx = 0; gbc.gridy = 0;
+		gbc.weightx = 0.55; // Chiếm 55% độ rộng
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.insets = new Insets(0, 0, 0, 40);
+		pnlFooterInvoice.add(pnlNotes, gbc);
+
         // Dòng Total
-        gbc.gridy = 3; gbc.insets = new Insets(25, 0, 15, 0);
-        JLabel lblTotal = new JLabel("TOTAL   $27.78");
+		JPanel pnlPrices = new JPanel();
+		pnlPrices.setLayout(new BoxLayout(pnlPrices, BoxLayout.Y_AXIS));
+		pnlPrices.setOpaque(false);
+		
+        lblTotal = new JLabel("TOTAL   $0.0");
         lblTotal.setFont(new Font("Inter", Font.BOLD, 32));
         lblTotal.setForeground(textDark);
-        pnlFooterInvoice.add(lblTotal, gbc);
+        lblTotal.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        pnlPrices.add(Box.createVerticalGlue());
+		pnlPrices.add(lblTotal);
+		gbc.gridx = 1; 
+		gbc.weightx = 0.45;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.SOUTH;
+		gbc.insets = new Insets(0, 0, 0, 0);
+		pnlFooterInvoice.add(pnlPrices, gbc);
 
         pnlInvoiceCard.add(pnlHeader, BorderLayout.NORTH);
         pnlInvoiceCard.add(scrPane, BorderLayout.CENTER);
@@ -209,6 +245,36 @@ public class Invoice_UI extends JFrame {
             return this;
         }
     }
+	
+	public void setData(entity.HoaDon hd) {
+	    // 1. Cập nhật thông tin Header[cite: 7, 8]
+	    lblIdValue.setText("#" + hd.getMaHD());
+	    lblDate.setText(hd.getNgayGioLap().toString());
+
+	    // 2. Xóa dữ liệu cũ và đổ dữ liệu mới vào bảng[cite: 7, 8]
+	    model.setRowCount(0);
+	    for (entity.ChiTietHoaDon ct : hd.getDsChiTiet()) {
+	        model.addRow(new Object[]{
+	            // Cột DESCRIPTION: Phần tử 0 là Tên món, Phần tử 1 là Mô tả món
+	            new String[]{ 
+	                ct.getMon().getTenMon(), 
+	                ct.getMon().getMoTaMon() // Đây là nơi lấy mô tả (ví dụ: "Twice-baked...")
+	            },
+	            String.format("%02d", ct.getSoLuongMon()),
+	            String.format("$%.2f", ct.getMon().getDonGiaBan()),
+	            String.format("$%.2f", ct.getThanhTien())
+	        });
+	    }
+
+	    // 3. Cập nhật phần Ghi chú tổng (Notes & Observations)[cite: 6, 7]
+	    // Nếu bạn muốn hiển thị ghi chú khách hàng (ví dụ: "Standard Serving") vào khung lớn
+	    if (!hd.getDsChiTiet().isEmpty()) {
+	        txtNotes.setText(hd.getDsChiTiet().get(0).getGhiChuKhachHang());
+	    }
+
+	    // 4. Cập nhật tổng tiền[cite: 7]
+	    lblTotal.setText(String.format("TOTAL   $%.2f", hd.getTongTien()));
+	}
 	
     private JPanel createSidebar() {
 	    JPanel sidebar = new JPanel();
@@ -279,7 +345,6 @@ public class Invoice_UI extends JFrame {
         
 	    return sidebar;
    }
-   
    private JButton createMenuButton(String text, String iconPath) {
 	    // Tạo Icon và scale nhỏ lại cho vừa dòng
 	    ImageIcon icon = new ImageIcon(iconPath);
