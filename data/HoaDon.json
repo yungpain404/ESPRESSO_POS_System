@@ -1,77 +1,12 @@
 [
   {
-<<<<<<< HEAD
-    "maHD": "HD1777651523502",
+    "maHD": "HD1777652430428",
     "ngayGioLap": "2026-05-01",
     "trangThaiTT": true,
-    "phuongThucTT": "TIENMAT",
-    "tongTien": 3.0,
+    "tongTien": 12000.0,
     "dsChiTiet": [
       {
-        "maCTHD": "HD1777651523502-1246927364695500",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 3,
-        "ghiChuKhachHang": "",
-        "thanhTien": 3.0
-=======
-    "maHD": "HD1777641487683",
-    "ngayGioLap": "2026-05-01",
-    "trangThaiTT": true,
-    "tongTien": 4.5,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777641487683-1345487744597500",
-        "mon": {
-          "maMon": "M1",
-          "tenMon": "Artisanal Cortado",
-          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
-          "donGiaMua": 3.0,
-          "duongDanAnh": "img/cortado.png",
-          "donGiaBan": 4.5,
-          "trangThai": true,
-          "phanLoaiMonAn": "DRINK"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 4.5
->>>>>>> invoice-management-tan
-      }
-    ]
-  },
-  {
-<<<<<<< HEAD
-    "maHD": "HD1777651539576",
-    "ngayGioLap": "2026-05-01",
-    "trangThaiTT": true,
-    "tongTien": 36048.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777651539576-1246943429719800",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 4,
-        "ghiChuKhachHang": "",
-        "thanhTien": 48.0
-      },
-      {
-        "maCTHD": "HD1777651539576-1246943430550000",
+        "maCTHD": "HD1777652430428-1247834292733500",
         "mon": {
           "maMon": "M01",
           "tenMon": "Cà phê số 1 VN do Quý làm",
@@ -82,87 +17,9 @@
           "trangThai": true,
           "phanLoaiMonAn": "PASTRY"
         },
-        "soLuongMon": 3,
-        "ghiChuKhachHang": "",
-        "thanhTien": 36000.0
-=======
-    "maHD": "HD1777641667320",
-    "ngayGioLap": "2026-05-01",
-    "trangThaiTT": true,
-    "tongTien": 4.5,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777641667320-1345667382948600",
-        "mon": {
-          "maMon": "M1",
-          "tenMon": "Artisanal Cortado",
-          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
-          "donGiaMua": 3.0,
-          "duongDanAnh": "img/cortado.png",
-          "donGiaBan": 4.5,
-          "trangThai": true,
-          "phanLoaiMonAn": "DRINK"
-        },
         "soLuongMon": 1,
         "ghiChuKhachHang": "",
-        "thanhTien": 4.5
-      }
-    ]
-  },
-  {
-    "maHD": "HD1777641927935",
-    "ngayGioLap": "2026-05-01",
-    "trangThaiTT": true,
-    "tongTien": 5.10000000001E12,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777641927935-1345927995485800",
-        "mon": {
-          "maMon": "M1",
-          "tenMon": "Artisanal Cortado",
-          "moTaMon": "Espresso mixed with a roughly equal amount of warm milk.",
-          "donGiaMua": 3.0,
-          "duongDanAnh": "img/cortado.png",
-          "donGiaBan": 4.5,
-          "trangThai": true,
-          "phanLoaiMonAn": "DRINK"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 4.5
-      },
-      {
-        "maCTHD": "HD1777641927935-1345927998394600",
-        "mon": {
-          "maMon": "M2",
-          "tenMon": "Almond Croissant",
-          "moTaMon": "Twice-baked with house-made frangipane.",
-          "donGiaMua": 3.5,
-          "duongDanAnh": "img/croissant.png",
-          "donGiaBan": 5.5,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 5.5
-      },
-      {
-        "maCTHD": "HD1777641927935-1345927998690500",
-        "mon": {
-          "maMon": "M4",
-          "tenMon": "Quý",
-          "moTaMon": "description",
-          "donGiaMua": 1.0E11,
-          "duongDanAnh": "/img/cortado.png",
-          "donGiaBan": 5.1E12,
-          "trangThai": true,
-          "phanLoaiMonAn": "DESSERT"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 5.1E12
->>>>>>> invoice-management-tan
+        "thanhTien": 12000.0
       }
     ]
   }

@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class CreateFormOrders_UI extends JFrame implements ActionListener {
@@ -83,6 +84,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search menu items...");
         txtSearch.putClientProperty("JComponent.outlineWidth", 0);
         txtSearch.putClientProperty("JSeparator.height", 0);
+        txtSearch.addActionListener(e-> searchMenu(txtSearch.getText().trim()));
 
         btnSearch = new JButton("Search");
         btnSearch.setBackground(accentBrown);
@@ -850,6 +852,24 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             btn.setFont(new Font("Inter", Font.PLAIN, 13));
         }
     }
-
+    private void searchMenu(String keyword) {
+        pnlProductGrid.removeAll();
+        List<Mon> allMon = mon_dao.getAll();
+        if (keyword.isEmpty()) {
+            renderMenu();
+            return;
+        }
+        for (Mon m : allMon) {
+            if (m.getMaMon().equalsIgnoreCase(keyword) || m.getTenMon().toLowerCase().contains(keyword.toLowerCase())) {
+                JPanel card = createProductCard(
+                    m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
+                    String.format("$%.2f", m.getDonGiaBan()), bgCard, accentBrown, textGray, m.getDuongDanAnh()
+                );
+                pnlProductGrid.add(card);
+            }
+        }
+        pnlProductGrid.revalidate();
+        pnlProductGrid.repaint();
+    }
     
 }
