@@ -1,5 +1,5 @@
 package entity;
 
 public enum PhanLoaiMonAn {
-	DRINK, PASTRY,DESSERT
+	PASTRY, TEA, COFFEE;
 }

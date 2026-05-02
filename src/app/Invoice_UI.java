@@ -52,8 +52,8 @@ public class Invoice_UI extends JFrame {
 	private JTextArea txtNotes;
 		
 	public Invoice_UI(entity.HoaDon hd) {
-	    this(); // Chạy constructor mặc định để dựng giao diện
-	    setData(hd); // Gọi hàm đổ dữ liệu
+	    this(); 
+	    setData(hd); 
 	}
 	
     public Invoice_UI() {
@@ -166,11 +166,9 @@ public class Invoice_UI extends JFrame {
         tblTable.getTableHeader().setForeground(textGray);
         tblTable.getTableHeader().setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
 
-        // Renderer cho cột Description (Sử dụng class con ở dưới)
         tblTable.getColumnModel().getColumn(0).setCellRenderer(new DescriptionCellRenderer(textDark, textGray));
         tblTable.getColumnModel().getColumn(0).setPreferredWidth(400);
 
-        // Căn lề phải cho cột Qty, Unit, Amount
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
         for(int i=1; i<4; i++) {
@@ -187,13 +185,11 @@ public class Invoice_UI extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         
 //       Dòng note
-     // Tạo panel bọc ngoài để có màu nền kem nhạt như hình
         JPanel pnlNotes = new JPanel();
-        pnlNotes.setBackground(new Color(245, 245, 225)); // Màu beige nhạt
+        pnlNotes.setBackground(new Color(245, 245, 225));
         pnlNotes.setLayout(new BorderLayout(10, 10));
         pnlNotes.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // Tiêu đề "NOTES & OBSERVATIONS"
         JLabel lblNoteTitle = new JLabel("NOTES & OBSERVATIONS");
         lblNoteTitle.setFont(new Font("SansSerif", Font.BOLD, 12));
         lblNoteTitle.setForeground(new Color(100, 90, 70));
@@ -204,14 +200,14 @@ public class Invoice_UI extends JFrame {
         txtNotes.setText("Guest requested extra hot on the lavender latte...");
         txtNotes.setLineWrap(true);
         txtNotes.setWrapStyleWord(true);
-        txtNotes.setEditable(false); // Chỉ để hiển thị trên hóa đơn
-        txtNotes.setBackground(new Color(245, 245, 225)); // Trùng màu panel
+        txtNotes.setEditable(false); 
+        txtNotes.setBackground(new Color(245, 245, 225)); 
         txtNotes.setFont(new Font("Serif", Font.ITALIC, 14));
         txtNotes.setForeground(new Color(80, 80, 80));
         pnlNotes.add(txtNotes, BorderLayout.CENTER);
         
         gbc.gridx = 0; gbc.gridy = 0;
-		gbc.weightx = 0.55; // Chiếm 55% độ rộng
+		gbc.weightx = 0.55; 
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(0, 0, 0, 40);
 		pnlFooterInvoice.add(pnlNotes, gbc);
@@ -273,18 +269,16 @@ public class Invoice_UI extends JFrame {
     }
 	
 	public void setData(entity.HoaDon hd) {
-	    // 1. Cập nhật thông tin Header[cite: 7, 8]
 	    lblIdValue.setText("#" + hd.getMaHD());
 	    lblDate.setText(hd.getNgayGioLap().toString());
 
-	    // 2. Xóa dữ liệu cũ và đổ dữ liệu mới vào bảng[cite: 7, 8]
 	    model.setRowCount(0);
 	    for (entity.ChiTietHoaDon ct : hd.getDsChiTiet()) {
 	        model.addRow(new Object[]{
-	            // Cột DESCRIPTION: Phần tử 0 là Tên món, Phần tử 1 là Mô tả món
+	            
 	            new String[]{ 
 	                ct.getMon().getTenMon(), 
-	                ct.getMon().getMoTaMon() // Đây là nơi lấy mô tả (ví dụ: "Twice-baked...")
+	                ct.getMon().getMoTaMon() 
 	            },
 	            String.format("%02d", ct.getSoLuongMon()),
 	            String.format("$%.2f", ct.getMon().getDonGiaBan()),
@@ -292,13 +286,10 @@ public class Invoice_UI extends JFrame {
 	        });
 	    }
 
-	    // 3. Cập nhật phần Ghi chú tổng (Notes & Observations)[cite: 6, 7]
-	    // Nếu bạn muốn hiển thị ghi chú khách hàng (ví dụ: "Standard Serving") vào khung lớn
 	    if (!hd.getDsChiTiet().isEmpty()) {
 	        txtNotes.setText(hd.getDsChiTiet().get(0).getGhiChuKhachHang());
 	    }
 
-	    // 4. Cập nhật tổng tiền[cite: 7]
 	    lblTotal.setText(String.format("TOTAL   $%.2f", hd.getTongTien()));
 	}
     private JPanel createSidebar() {
@@ -306,13 +297,12 @@ public class Invoice_UI extends JFrame {
 	    sidebar.setPreferredSize(new Dimension(250, 0));
 	    sidebar.setBackground(new Color(245, 245, 230));
 	    sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20)); // Margin cho menu
-
+	    sidebar.setBorder(new EmptyBorder(30, 20, 30, 20)); 
 	    // Logo
 	    JLabel lblLogo = new JLabel("ESPRESSO LOGIC");
 	    lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 20));
 	    lblLogo.setForeground(new Color(85, 55, 34));
-	    lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn trái label
+	    lblLogo.setAlignmentX(Component.LEFT_ALIGNMENT);
 	    sidebar.add(lblLogo);
 	    sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
 
@@ -325,19 +315,17 @@ public class Invoice_UI extends JFrame {
 
 	    for (String[] data : menuData) {
 	        JButton btn = createMenuButton(data[0], data[1]);
-
-	        // Highlight mục đang chọn ( Menu mangement )
 	        if (data[0].equals("Menu")) {
 	            btn.setBackground(new Color(230, 230, 210));
 	            btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
 	            btn.putClientProperty(FlatClientProperties.BUTTON_TYPE, 10);
 	        } else {
-	            btn.setContentAreaFilled(false); // Làm các nút khác trong suốt
+	            btn.setContentAreaFilled(false); 
 	        }
 	        if (data[0].equals("Menu")) {
                 btn.addActionListener(e -> {
-                    CreateOrders_UI nextFrame = new CreateOrders_UI();
-                    nextFrame.setBounds(this.getBounds());
+                    MenuList_UI nextFrame = new MenuList_UI();
+                    nextFrame.setBounds(this.getBounds()); 
                     nextFrame.setExtendedState(this.getExtendedState());
                     nextFrame.setVisible(true);
                     this.dispose();
@@ -352,7 +340,7 @@ public class Invoice_UI extends JFrame {
                 });
             }
 	        sidebar.add(btn);
-	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); // Khoảng cách giữa các item
+	        sidebar.add(Box.createRigidArea(new Dimension(0, 10))); 
 	    }
 
 	    sidebar.add(Box.createVerticalGlue());
@@ -364,26 +352,27 @@ public class Invoice_UI extends JFrame {
         btnNewOrder.setPreferredSize(new Dimension(Integer.MAX_VALUE, 40));
         btnNewOrder.setFocusPainted(false);
         btnNewOrder.setBorderPainted(false);
-        // 5. Thay đổi font chữ to hơn một chút cho cân đối với nút lớn
         btnNewOrder.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnNewOrder.addActionListener(e -> {
+            new CreateFormOrders_UI().setVisible(true);
+            this.dispose();
+        });
         sidebar.add(btnNewOrder);
 
 	    return sidebar;
    }
    private JButton createMenuButton(String text, String iconPath) {
-	    // Tạo Icon và scale nhỏ lại cho vừa dòng
 	    ImageIcon icon = new ImageIcon(iconPath);
 	    Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
 	    JButton btn = new JButton(text, new ImageIcon(scaled));
-	    btn.setHorizontalAlignment(SwingConstants.LEFT); // Chữ và icon dồn sang trái
-	    btn.setIconTextGap(15); // Khoảng cách giữa icon và chữ
-	    btn.setAlignmentX(Component.LEFT_ALIGNMENT); // Căn nút thẳng hàng trong BoxLayout
-	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); // Nút dài hết cỡ sidebar
-
-	    // Xóa bỏ các hiệu ứng thừa của Swing cũ
+	    btn.setHorizontalAlignment(SwingConstants.LEFT); 
+	    btn.setIconTextGap(15); 
+	    btn.setAlignmentX(Component.LEFT_ALIGNMENT); 
+	    btn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45)); 
+	    
 	    btn.setFocusPainted(false);
-	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); // Padding trong của nút
+	    btn.setBorder(new EmptyBorder(10, 15, 10, 15)); 
 	    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	    btn.setForeground(new Color(85, 55, 34));
 	    btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
