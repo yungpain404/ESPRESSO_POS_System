@@ -118,7 +118,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
         JButton btnAll = createTabButton("All", true);
         activeTab = btnAll;
         btnAll.addActionListener(e -> filterMenu(null, btnAll));
-        pnlTabs.add(btnAll);
+        pnlTabs.add(btnAll);	
        
         for (PhanLoaiMonAn loai : PhanLoaiMonAn.values()) {
             String tabName = loai.name().substring(0, 1).toUpperCase() + 
@@ -381,6 +381,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
         }
         updateTabStyle(clickedTab, true);
         activeTab = clickedTab;
+        
 
         if (loai == null) {
             displayFilteredList(originalList);
