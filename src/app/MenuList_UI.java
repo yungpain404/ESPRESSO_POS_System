@@ -430,7 +430,6 @@ public class MenuList_UI extends JFrame implements ActionListener {
     	}
     }
     private void searchMenu(String keyword) {
-    	System.out.println(keyword);
         pnlProductGrid.removeAll();
         List<Mon> allMon = mon_dao.getAll();
         if (keyword.isEmpty()) {
@@ -439,7 +438,6 @@ public class MenuList_UI extends JFrame implements ActionListener {
         }
         for (Mon m : allMon) {
             if (m.getMaMon().equalsIgnoreCase(keyword) || m.getTenMon().toLowerCase().contains(keyword.toLowerCase())) {
-            	System.out.println("Đã tìm thấy");
                 JPanel card = createProductCard(
                     m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
                     String.format("$%.2f", m.getDonGiaBan()), bgCard, accentBrown, textGray, m.getDuongDanAnh()

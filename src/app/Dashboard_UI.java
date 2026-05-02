@@ -78,15 +78,6 @@ public class Dashboard_UI extends JFrame {
         loadDashboardData();
     }
     
-    /**
-     * Load dữ liệu Dashboard
-     * - Tính tổng hóa đơn, doanh thu, tiền mặt, chuyển khoản
-     * - Load 5 hóa đơn gần nhất
-     * - Load top 5 sản phẩm bán chạy
-     */
-    /**
-     * Load dữ liệu Dashboard
-     */
     private void loadDashboardData() {
         LocalDate testDate = LocalDate.of(2026, 4, 30);
         List<HoaDon> hoaDonHom = hoaDonDao.getByDate(testDate);
@@ -106,9 +97,6 @@ public class Dashboard_UI extends JFrame {
         loadTopItems(hoaDonHom);
     }
     
-    /**
-     * Tính toán thống kê
-     */
     private void calculateStatistics(List<HoaDon> hoaDonList) {
         int totalInvoices = hoaDonList.size();
         double totalRevenue = 0;
