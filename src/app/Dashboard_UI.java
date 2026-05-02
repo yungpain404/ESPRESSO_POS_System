@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.List;
 
@@ -49,6 +50,8 @@ public class Dashboard_UI extends JFrame {
     
     private HoaDon_DAO hoaDonDao = new HoaDon_DAO();
     
+    private YearMonth selectedYearMonth; // Lưu tháng/năm đã chọn
+    
     public Dashboard_UI() {
         setTitle("Espresso Logic - Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,6 +60,8 @@ public class Dashboard_UI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         getContentPane().setBackground(BG);
+        
+        selectedYearMonth = YearMonth.now();
         
         JPanel pnlSidebar = createSidebar();
         JPanel pnlTop = createTopPanel();
@@ -78,23 +83,206 @@ public class Dashboard_UI extends JFrame {
         loadDashboardData();
     }
     
-    private void loadDashboardData() {
-        LocalDate testDate = LocalDate.of(2026, 4, 30);
-        List<HoaDon> hoaDonHom = hoaDonDao.getByDate(testDate);
+    /**
+     * Tạo Top Panel với tiêu đề và nút chọn tháng/năm
+     */
+    private JPanel createTopPanel() {
+        JPanel pnlTop = new JPanel(new BorderLayout());
+        pnlTop.setBackground(BG_CARD);
+        pnlTop.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER_MAIN));
+        pnlTop.setPreferredSize(new Dimension(0, 44));
         
-        if (hoaDonHom == null || hoaDonHom.isEmpty()) {
-            System.out.println("Không có hóa đơn hôm nay");
-            // Set giá trị mặc định để không bị NullPointerException
+        JLabel lblTitle = new JLabel("Dashboard");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblTitle.setForeground(TEXT_DARK);
+        lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 18, 0, 0));
+        
+        JButton btnSelectMonth = new JButton("📅 " + selectedYearMonth.getMonth() + " " + selectedYearMonth.getYear());
+        btnSelectMonth.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        btnSelectMonth.setForeground(TEXT_MID);
+        btnSelectMonth.setBackground(Color.WHITE);
+        btnSelectMonth.setBorder(BorderFactory.createLineBorder(BORDER_MAIN));
+        btnSelectMonth.setFocusPainted(false);
+        btnSelectMonth.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnSelectMonth.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        
+        btnSelectMonth.addActionListener(e -> {
+            showMonthYearPicker(btnSelectMonth);
+        });
+        
+        JPanel pnlRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnlRight.setBackground(BG_CARD);
+        pnlRight.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 18));
+        pnlRight.add(btnSelectMonth);
+        
+        pnlTop.add(lblTitle, BorderLayout.WEST);
+        pnlTop.add(pnlRight, BorderLayout.EAST);
+        
+        return pnlTop;
+    }
+    
+    /**
+     * Hiển thị dialog chọn tháng/năm
+     */
+    private void showMonthYearPicker(JButton btnSelectMonth) {
+        JDialog dialog = new JDialog(this, "Select Month & Year", true);
+        dialog.setSize(350, 220);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new GridBagLayout());
+        dialog.getContentPane().setBackground(BG);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 15, 10, 15);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
+        int currentYear = java.time.Year.now().getValue();
+        
+        // Month Label
+        JLabel lblMonth = new JLabel("Month:");
+        lblMonth.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblMonth.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.3;
+        dialog.add(lblMonth, gbc);
+        
+        // Month Spinner
+        SpinnerModel monthModel = new SpinnerNumberModel(selectedYearMonth.getMonthValue(), 1, 12, 1);
+        JSpinner spMonth = new JSpinner(monthModel);
+        spMonth.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        JComponent editor = spMonth.getEditor();
+        if (editor instanceof JSpinner.DefaultEditor) {
+            JTextField tf = ((JSpinner.DefaultEditor) editor).getTextField();
+            tf.setHorizontalAlignment(SwingConstants.CENTER);
+        }
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 0.7;
+        dialog.add(spMonth, gbc);
+        
+        // Year Label
+        JLabel lblYear = new JLabel("Year:");
+        lblYear.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblYear.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0.3;
+        dialog.add(lblYear, gbc);
+        
+        // Year Spinner - max = năm hiện tại
+        SpinnerModel yearModel = new SpinnerNumberModel(selectedYearMonth.getYear(), 2020, currentYear, 1);
+        JSpinner spYear = new JSpinner(yearModel);
+        spYear.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        JSpinner.NumberEditor yearEditor = new JSpinner.NumberEditor(spYear, "#");
+        yearEditor.getTextField().setHorizontalAlignment(SwingConstants.CENTER);
+        spYear.setEditor(yearEditor);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 0.7;
+        dialog.add(spYear, gbc);
+        
+        // Buttons Panel
+        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        pnlButtons.setBackground(BG);
+        
+        JButton btnOK = new JButton("OK");
+        btnOK.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        btnOK.setBackground(ACCENT);
+        btnOK.setForeground(Color.WHITE);
+        btnOK.setFocusPainted(false);
+        btnOK.setPreferredSize(new Dimension(100, 32));
+        btnOK.addActionListener(e -> {
+            try {
+                int month = (int) spMonth.getValue();
+                int year = ((Number) spYear.getValue()).intValue();
+                
+                // ✅ Validate - năm không được vượt quá năm hiện tại
+                if (year > currentYear) {
+                    JOptionPane.showMessageDialog(dialog, 
+                        "Dữ liệu không hợp lệ", 
+                        "Invalid Input", 
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                if (year < 2020 || month < 1 || month > 12) {
+                    JOptionPane.showMessageDialog(dialog, 
+                        "Dữ liệu không hợp lệ", 
+                        "Invalid Input", 
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                selectedYearMonth = YearMonth.of(year, month);
+                btnSelectMonth.setText("📅 " + selectedYearMonth.getMonth() + " " + selectedYearMonth.getYear());
+                
+                loadDashboardData();
+                dialog.dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, 
+                    "Dữ liệu không hợp lệ", 
+                    "Invalid Input", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        
+        JButton btnCancel2 = new JButton("Cancel");
+        btnCancel2.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        btnCancel2.setBackground(Color.WHITE);
+        btnCancel2.setForeground(TEXT_MID);
+        btnCancel2.setBorder(BorderFactory.createLineBorder(BORDER_MAIN));
+        btnCancel2.setFocusPainted(false);
+        btnCancel2.setPreferredSize(new Dimension(100, 32));
+        btnCancel2.addActionListener(e -> dialog.dispose());
+        
+        pnlButtons.add(btnOK);
+        pnlButtons.add(btnCancel2);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        dialog.add(pnlButtons, gbc);
+        
+        dialog.setVisible(true);
+    }
+    
+    /**
+     * Load dữ liệu Dashboard theo tháng/năm đã chọn
+     */
+    private void loadDashboardData() {
+        List<HoaDon> hoaDonThang = getHoaDonByYearMonth(selectedYearMonth);
+        
+        if (hoaDonThang == null || hoaDonThang.isEmpty()) {
+            System.out.println("Không có hóa đơn trong tháng " + selectedYearMonth);
             lblTotalInvoices.setText("0");
             lblTotalRevenue.setText("$0.00");
             lblCashAmount.setText("$0.00");
             lblBankAmount.setText("$0.00");
+            modelRecentInvoices.setRowCount(0);
+            modelTopItems.setRowCount(0);
             return;
         }
         
-        calculateStatistics(hoaDonHom);
-        loadRecentInvoices(hoaDonHom);
-        loadTopItems(hoaDonHom);
+        calculateStatistics(hoaDonThang);
+        loadRecentInvoices(hoaDonThang);
+        loadTopItems(hoaDonThang);
+    }
+    
+    /**
+     * Lấy hóa đơn theo tháng/năm
+     */
+    private List<HoaDon> getHoaDonByYearMonth(YearMonth yearMonth) {
+        List<HoaDon> result = new ArrayList<>();
+        for (HoaDon hd : hoaDonDao.getAll()) {
+            if (hd.getNgayGioLap() != null) {
+                YearMonth hdYearMonth = YearMonth.from(hd.getNgayGioLap());
+                if (hdYearMonth.equals(yearMonth)) {
+                    result.add(hd);
+                }
+            }
+        }
+        return result;
     }
     
     private void calculateStatistics(List<HoaDon> hoaDonList) {
@@ -118,15 +306,12 @@ public class Dashboard_UI extends JFrame {
         lblCashAmount.setText(formatCurrency(cashRevenue));
         lblBankAmount.setText(formatCurrency(transferRevenue));
         
-        lblInvoicesSubtitle.setText("+0 vs yesterday");
-        lblRevenueSubtitle.setText("+0% vs yesterday");
+        lblInvoicesSubtitle.setText("+0 vs last month");
+        lblRevenueSubtitle.setText("+0% vs last month");
         lblCashSubtitle.setText(totalInvoices + " invoices · 65%");
         lblBankSubtitle.setText("35% revenue");
     }
     
-    /**
-     * Load 5 hóa đơn gần nhất
-     */
     private void loadRecentInvoices(List<HoaDon> hoaDonList) {
         modelRecentInvoices.setRowCount(0);
         
@@ -144,9 +329,6 @@ public class Dashboard_UI extends JFrame {
         }
     }
     
-    /**
-     * Load top 5 sản phẩm bán chạy
-     */
     private void loadTopItems(List<HoaDon> hoaDonList) {
         modelTopItems.setRowCount(0);
         
@@ -181,22 +363,6 @@ public class Dashboard_UI extends JFrame {
     private String formatCurrency(double amount) {
         return String.format("$%.2f", amount);
     }
-    
-    private JPanel createTopPanel() {
-        JPanel pnlTop = new JPanel(new BorderLayout());
-        pnlTop.setBackground(BG_CARD);
-        pnlTop.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, BORDER_MAIN));
-        pnlTop.setPreferredSize(new Dimension(0, 44));
-        
-        JLabel lblTitle = new JLabel("Dashboard");
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        lblTitle.setForeground(TEXT_DARK);
-        lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 18, 0, 0));
-        
-        pnlTop.add(lblTitle, BorderLayout.WEST);
-        
-        return pnlTop;
-    }
 
     private JPanel createContentPanel() {
         JPanel pnlContent = new JPanel();
@@ -212,10 +378,12 @@ public class Dashboard_UI extends JFrame {
         return pnlContent;
     }
 
+    /**
+     * Statistics Panel - chia đều 4 khung khi full màn hình
+     */
     private JPanel createStatisticsPanel() {
-        JPanel pnlStats = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 10));
+        JPanel pnlStats = new JPanel(new GridLayout(1, 4, 10, 0));
         pnlStats.setBackground(BG);
-        pnlStats.setPreferredSize(new Dimension(0, 130));
         pnlStats.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
         pnlStats.setBorder(BorderFactory.createEmptyBorder(10, 12, 0, 12));
         
@@ -235,8 +403,6 @@ public class Dashboard_UI extends JFrame {
             BorderFactory.createLineBorder(BORDER_LIGHT),
             BorderFactory.createEmptyBorder(10, 13, 10, 13)
         ));
-        card.setPreferredSize(new Dimension(270, 100));
-        card.setMaximumSize(new Dimension(270, 100));
         
         JLabel lblLabel = new JLabel(label);
         lblLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
@@ -300,7 +466,7 @@ public class Dashboard_UI extends JFrame {
         lblHeader.setBorder(BorderFactory.createEmptyBorder(8, 12, 0, 0));
         pnlHeader.add(lblHeader);
         
-        String[] columns = {"#", "Time", "Total", "Method"};
+        String[] columns = {"#", "Date", "Total", "Method"};
         modelRecentInvoices = new DefaultTableModel(columns, 5) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -471,7 +637,7 @@ public class Dashboard_UI extends JFrame {
             }
             if (data[0].equals("Menu")) {
                 btn.addActionListener(e -> {
-                	MenuList_UI nextFrame = new MenuList_UI();
+                    MenuList_UI nextFrame = new MenuList_UI();
                     nextFrame.setBounds(this.getBounds()); 
                     nextFrame.setExtendedState(this.getExtendedState());
                     nextFrame.setVisible(true);
