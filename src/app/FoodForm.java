@@ -44,6 +44,7 @@ public class FoodForm extends JDialog implements ActionListener{
     private JTextField txtTen;
     private JTextField txtGiaMua;
     private JTextField txtGiaBan;
+    private JTextField txtMoTa;
     private JComboBox<PhanLoaiMonAn> cbLoai;
     private JRadioButton radConHang;
     private JRadioButton radHetHang;
@@ -126,15 +127,19 @@ public class FoodForm extends JDialog implements ActionListener{
         lblImagePreview = new JLabel("Chưa có ảnh", SwingConstants.CENTER);
         lblImagePreview.setPreferredSize(new Dimension(100, 100));
         lblImagePreview.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        
+        txtMoTa = new JTextField();
+        txtMoTa.putClientProperty(FlatClientProperties.STYLE, fieldStyle);
 
         addLabelAndField(pnlForm, "Mã món:", txtMa, gbc, 0);
         addLabelAndField(pnlForm, "Tên món:", txtTen, gbc, 1);
-        addLabelAndField(pnlForm, "Loại:", cbLoai, gbc, 2);
-        addLabelAndField(pnlForm, "Giá mua:", txtGiaMua, gbc, 3);
-        addLabelAndField(pnlForm, "Giá bán:", txtGiaBan, gbc, 4);
-        addLabelAndField(pnlForm, "Trạng thái:", pnlStatus, gbc, 5);
+        addLabelAndField(pnlForm, "Mô tả: ", txtMoTa, gbc, 2);
+        addLabelAndField(pnlForm, "Loại:", cbLoai, gbc, 3);
+        addLabelAndField(pnlForm, "Giá mua:", txtGiaMua, gbc, 4);
+        addLabelAndField(pnlForm, "Giá bán:", txtGiaBan, gbc, 5);
+        addLabelAndField(pnlForm, "Trạng thái:", pnlStatus, gbc, 6);
 
-        gbc.gridy = 6; gbc.gridx = 0; gbc.weightx = 0;
+        gbc.gridy = 7; gbc.gridx = 0; gbc.weightx = 0;
         pnlForm.add(new JLabel("Hình ảnh:"), gbc);
         gbc.gridx = 1; gbc.weightx = 1.0; gbc.insets = new Insets(5, 15, 5, 0);
         JPanel pnlImgAction = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -199,6 +204,7 @@ public class FoodForm extends JDialog implements ActionListener{
     public void fillData(Mon mon) {
         txtMa.setText(mon.getMaMon());
         txtTen.setText(mon.getTenMon());
+        txtMoTa.setText(mon.getMoTaMon());
         cbLoai.setSelectedItem(mon.getPhanLoaiMonAn());
         txtGiaMua.setText(String.valueOf(mon.getDonGiaMua()));
         txtGiaBan.setText(String.valueOf(mon.getDonGiaBan()));
@@ -240,6 +246,7 @@ public class FoodForm extends JDialog implements ActionListener{
     private void handleSave() {
     	String maMon = txtMa.getText();
     	String tenMon = txtTen.getText();
+    	String moTa = txtMoTa.getText();
     	double giaMua = Double.parseDouble(txtGiaMua.getText());
     	double giaBan = Double.parseDouble(txtGiaBan.getText());
     	PhanLoaiMonAn loaiMon = (PhanLoaiMonAn) cbLoai.getSelectedItem();
@@ -253,7 +260,7 @@ public class FoodForm extends JDialog implements ActionListener{
             
         	
         	if (finalImageUrl != null) {
-            	Mon monMoi = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, "description",finalImageUrl);
+            	Mon monMoi = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, moTa,finalImageUrl);
             	monDao.addMon(monMoi);
             	JOptionPane.showMessageDialog(this, "Thêm món thành công!");
                 dispose();
@@ -278,7 +285,7 @@ public class FoodForm extends JDialog implements ActionListener{
     	        urlToSave = selectedImagePath;
     	    
 
-    	    Mon monCapNhat = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, "description", urlToSave);
+    	    Mon monCapNhat = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, moTa, urlToSave);
     	    
     	    boolean isUpdated = monDao.updateMon(monCapNhat);
 

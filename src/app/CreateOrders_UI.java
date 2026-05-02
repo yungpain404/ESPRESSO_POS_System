@@ -371,7 +371,6 @@ public class CreateOrders_UI extends JFrame implements ActionListener {
     }
 
     private void addToCart(String name, double price, String maMon) {
-    	System.out.println("Hàm này chạy");
     	for (Component comp : pnlCartItems.getComponents()) {
             if (comp instanceof JPanel && maMon.equals(comp.getName())) {
                 JPanel existingItem = (JPanel) comp;
