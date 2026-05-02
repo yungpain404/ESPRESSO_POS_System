@@ -5,10 +5,13 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 import dao.HoaDon_DAO;
 import dao.Mon_DAO;
+import dao.TaiKhoan_DAO;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.Mon;
 import entity.PhanLoaiMonAn;
+import entity.TaiKhoan;
+import util.SessionManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -52,7 +55,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
 
 	private Mon_DAO mon_dao = new Mon_DAO();
 	private HoaDon_DAO hoaDon_dao = new HoaDon_DAO();
-	
 	
 	
     public CreateFormOrders_UI() {
@@ -102,17 +104,19 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         pnlUser.setLayout(new BoxLayout(pnlUser, BoxLayout.Y_AXIS));
         pnlUser.setOpaque(false);
 
-        JLabel lblUserName = new JLabel("Alex Reed", SwingConstants.RIGHT);
-        lblUserName.setFont(new Font("Inter", Font.BOLD, 14));
+        TaiKhoan user = SessionManager.getCurrentUser();
+        
+        JLabel lblUserTittle = new JLabel("Account", SwingConstants.RIGHT);
+        lblUserTittle.setFont(new Font("Inter", Font.BOLD, 14));
+        lblUserTittle.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+        JLabel lblUserName = new JLabel(user.getTenTaiKhoan());
+        lblUserName.setForeground(textGray);
+        lblUserName.setFont(new Font("Inter", Font.PLAIN, 12));
         lblUserName.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        JLabel lblRole = new JLabel("Head Barista");
-        lblRole.setForeground(textGray);
-        lblRole.setFont(new Font("Inter", Font.PLAIN, 12));
-        lblRole.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
+        pnlUser.add(lblUserTittle);
         pnlUser.add(lblUserName);
-        pnlUser.add(lblRole);
         pnlProfile.add(pnlUser);
 
         pnlHeader.add(pnlSearchBox, BorderLayout.WEST);

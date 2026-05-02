@@ -27,6 +27,7 @@ import javax.swing.border.EmptyBorder;
 
 import dao.TaiKhoan_DAO;
 import entity.TaiKhoan;
+import util.SessionManager;
 
 @SuppressWarnings("serial")
 public class LoginForm extends JFrame implements ActionListener{
@@ -35,6 +36,7 @@ public class LoginForm extends JFrame implements ActionListener{
 	private JTextField txtUser;
 	private JButton btnLogin;
 	private JLabel lblErrName;
+	private JLabel lblErrPass;
 
 	public LoginForm() {
         setTitle("Cafe POS Login");
@@ -178,6 +180,9 @@ public class LoginForm extends JFrame implements ActionListener{
                 BorderFactory.createLineBorder(new Color(200, 184, 154), 1, true),
                 new EmptyBorder(0, 5, 0, 5)
         ));
+        lblErrPass = new JLabel();
+        lblErrPass.setForeground(new Color(222, 93, 75));
+        lblErrPass.setFont(new Font("Segoe UI", Font.ITALIC, 10));
 
         ImageIcon iconPass = new ImageIcon("img/unlock.png");
         Image scalePass = iconPass.getImage().getScaledInstance(23, 20, Image.SCALE_DEFAULT);
@@ -209,6 +214,7 @@ public class LoginForm extends JFrame implements ActionListener{
         pnlBody.add(lblPass);
         pnlBody.add(Box.createRigidArea(new Dimension(0, 5)));
         pnlBody.add(pnlPassField);
+        pnlBody.add(lblErrPass);
         pnlBody.add(Box.createRigidArea(new Dimension(0, 30)));
         pnlBody.add(btnLogin);
 
@@ -241,7 +247,8 @@ public class LoginForm extends JFrame implements ActionListener{
 				TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
 				TaiKhoan tk = taiKhoan_DAO.kiemTraDangNhap(loginName, loginPass);
 				if (tk != null) {
-					CreateFormOrders_UI nextFrame = new CreateFormOrders_UI();
+					SessionManager.setCurrentUser(tk);
+					MenuList_UI nextFrame = new MenuList_UI();
 					nextFrame.setBounds(this.getBounds());
 					nextFrame.setExtendedState(this.getExtendedState());
 					nextFrame.setVisible(true);
@@ -280,6 +287,13 @@ public class LoginForm extends JFrame implements ActionListener{
 			}else {
 				lblErrName.setText("");
 			}
+		}
+		if (loginPass.length() < 8) {
+			lblErrPass.setText("Password tối thiểu 8 kí tự.");
+			txtPass.requestFocus();
+			return false;
+		}else{
+			lblErrPass.setText("");
 		}
 		return true;
 	}
