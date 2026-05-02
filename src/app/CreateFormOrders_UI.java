@@ -346,7 +346,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         JPanel pnlBottomInfo = new JPanel(new BorderLayout());
         pnlBottomInfo.setOpaque(false);
         pnlBottomInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-
         // Nhãn giá
         JLabel lblPrice = new JLabel(price);
         lblPrice.setForeground(brown);
@@ -355,13 +354,13 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
 
         // Nút dấu cộng (+)
         JButton btnAdd = new JButton("+");
-        btnAdd.setFont(new Font("Inter", Font.BOLD, 14));
+        btnAdd.setFont(new Font("Inter", Font.BOLD, 18));
         btnAdd.setForeground(Color.WHITE);
         btnAdd.setBackground(brown);
         btnAdd.setFocusPainted(false);
         btnAdd.setBorderPainted(false);
         btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAdd.setPreferredSize(new Dimension(35, 35)); 
+        btnAdd.setPreferredSize(new Dimension(40, 40)); 
         btnAdd.addActionListener(e -> {
             try {
                 double priceValue = Double.parseDouble(price.replace("$", "").replace(",", "."));
@@ -372,7 +371,12 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         }); 
         btnAdd.putClientProperty("JButton.buttonType", "roundRect");
 
-        pnlBottomInfo.add(btnAdd, BorderLayout.EAST); 
+        JPanel pnlBtnAdd = new JPanel();
+        pnlBtnAdd.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        pnlBtnAdd.setOpaque(false);
+        pnlBtnAdd.add(btnAdd);
+        
+        pnlBottomInfo.add(pnlBtnAdd, BorderLayout.EAST); 
 
         pnlDetails.add(pnlBottomInfo);
 
@@ -742,6 +746,17 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                     pnlCartItems.revalidate();
                     pnlCartItems.repaint();
                 }
+            }else {
+            	int opt1 = JOptionPane.showConfirmDialog(this, 
+                        "Bạn có chắc muốn hủy hóa đơn?", "Xác nhận hủy", 
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (opt1 == JOptionPane.YES_OPTION) {
+                    	MenuList_UI nextFrame = new MenuList_UI();
+                        nextFrame.setBounds(this.getBounds()); 
+                        nextFrame.setExtendedState(this.getExtendedState());
+                        nextFrame.setVisible(true);
+                        this.dispose();
+                    }
             }
         }
     }
