@@ -44,13 +44,11 @@ public class Dashboard_UI extends JFrame {
     private DefaultTableModel modelTopItems;
     
     private JPanel pnlInsightsContainer;
-    
-    private JButton btnCancel;
     private JButton btnConfirm;
     
     private HoaDon_DAO hoaDonDao = new HoaDon_DAO();
     
-    private YearMonth selectedYearMonth; // Lưu tháng/năm đã chọn
+    private YearMonth selectedYearMonth; 
     
     public Dashboard_UI() {
         setTitle("Espresso Logic - Dashboard");
@@ -583,14 +581,6 @@ public class Dashboard_UI extends JFrame {
         pnlButtons.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         pnlButtons.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
         
-        btnCancel = new JButton("Cancel");
-        btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnCancel.setForeground(TEXT_MID);
-        btnCancel.setBackground(Color.WHITE);
-        btnCancel.setBorder(BorderFactory.createLineBorder(BORDER_MAIN));
-        btnCancel.setFocusPainted(false);
-        btnCancel.setPreferredSize(new Dimension(100, 32));
-        
         btnConfirm = new JButton("Confirm Close & Print Report");
         btnConfirm.setFont(new Font("Segoe UI", Font.BOLD, 12));
         btnConfirm.setForeground(Color.WHITE);
@@ -599,7 +589,6 @@ public class Dashboard_UI extends JFrame {
         btnConfirm.setFocusPainted(false);
         btnConfirm.setPreferredSize(new Dimension(250, 32));
         
-        pnlButtons.add(btnCancel);
         pnlButtons.add(btnConfirm);
         
         return pnlButtons;
