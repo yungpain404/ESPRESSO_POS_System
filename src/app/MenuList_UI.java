@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -160,7 +161,8 @@ public class MenuList_UI extends JFrame implements ActionListener {
         btnSearch.addActionListener(this);
     }
 
-    private JPanel createProductCard(String maMon, String name, String desc, String price, Color bg, Color brown, Color gray, String imagePath) {
+    @SuppressWarnings("deprecation")
+	private JPanel createProductCard(String maMon, String name, String desc, String price, Color bg, Color brown, Color gray, String imagePath) {
         JPanel pnlCard = new JPanel(new BorderLayout());
         pnlCard.setPreferredSize(new Dimension(230, 255));
         pnlCard.setMaximumSize(new Dimension(230, 255));
@@ -176,7 +178,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
             String urlString = imagePath; 
             
             if (urlString != null && !urlString.isEmpty()) {
-                java.net.URL url = new java.net.URL(urlString);
+                URL url = new URL(urlString);
                 
                 Image img = javax.imageio.ImageIO.read(url);
                 
