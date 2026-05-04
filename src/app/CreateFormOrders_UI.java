@@ -10,6 +10,7 @@ import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.Mon;
 import entity.PhanLoaiMonAn;
+import entity.PhuongThucThanhToan;
 import entity.TaiKhoan;
 import util.SessionManager;
 
@@ -640,7 +641,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnComplete)) {
-
+        	
             //Check giỏ hàng rỗng
             if (pnlCartItems.getComponentCount() == 0) {
                 JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
@@ -653,6 +654,8 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             hd.setMaHD(maHD);
             hd.setNgayGioLap(LocalDate.now());
             hd.setTrangThaiTT(true);
+            hd.setTaiKhoanLap(SessionManager.getCurrentUser());
+            hd.setPhuongThucTT(PhuongThucThanhToan.TIENMAT);
             
             String ghiChuHoaDon = txaInvoiceNote.getText().trim();
 
@@ -686,6 +689,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                     ct.setMon(mon);
                     ct.setSoLuongMon(soLuong);
                     ct.setGhiChuKhachHang(ghiChuHoaDon);
+//                    ct.setHoaDon(hd); // đang bị lỗi ở đây
                     ct.setThanhTien(); 
 
                     dsChiTiet.add(ct);

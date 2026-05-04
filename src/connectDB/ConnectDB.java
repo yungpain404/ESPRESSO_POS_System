@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConnectDB {
 	public static Connection getConnection() {
-        String serverName = "MINHQUY\\SQLEXPRESS";
+        String serverName = "localhost";
         String databaseName = "COFFEESHOP";	
         String user = "sa";
         String password = "sapassword";

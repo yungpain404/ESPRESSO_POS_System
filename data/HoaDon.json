@@ -1,1034 +1,128 @@
 [
   {
-    "maHD": "HD1777652430428",
-    "ngayGioLap": "2026-05-01",
+    "maHD": "HD1777814618188",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 12000.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777652430428-1247834292733500",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "description",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12000.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   },
   {
-    "maHD": "HD1777689019892",
-    "ngayGioLap": "2026-05-02",
+    "maHD": "HD1777815398685",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 132025.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777689019892-339024426446900",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      },
-      {
-        "maCTHD": "HD1777689019892-339024429988200",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777689019892-339024430453300",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12000.0
-      },
-      {
-        "maCTHD": "HD1777689019892-339024430847900",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 120000.0
-      },
-      {
-        "maCTHD": "HD1777689019892-339024431524300",
-        "mon": {
-          "maMon": "M04",
-          "tenMon": "Bơ già dừa non",
-          "moTaMon": "description",
-          "donGiaMua": 12.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630738/espresso/capheso1vn_ublspc.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   },
   {
-    "maHD": "HD1777690711035",
-    "ngayGioLap": "2026-05-02",
+    "maHD": "HD1777815936276",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 120013.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777690711035-340715572518800",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "cdcdcdc",
-        "thanhTien": 1.0
-      },
-      {
-        "maCTHD": "HD1777690711035-340715577843600",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "cdcdcdc",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777690711035-340715578369700",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "cdcdcdc",
-        "thanhTien": 120000.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   },
   {
-    "maHD": "HD1777692045701",
-    "ngayGioLap": "2026-05-02",
+    "maHD": "HD1777815995911",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 132025.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777692045701-342050232221900",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      },
-      {
-        "maCTHD": "HD1777692045701-342050234412700",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777692045701-342050234736900",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 120000.0
-      },
-      {
-        "maCTHD": "HD1777692045701-342050235067400",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12000.0
-      },
-      {
-        "maCTHD": "HD1777692045701-342050235429900",
-        "mon": {
-          "maMon": "M04",
-          "tenMon": "Bơ già dừa non",
-          "moTaMon": "description",
-          "donGiaMua": 12.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630738/espresso/capheso1vn_ublspc.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   },
   {
-    "maHD": "HD1777714328907",
-    "ngayGioLap": "2026-05-02",
+    "maHD": "HD1777816232489",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 36024.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777714328907-1309748947321500",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 3,
-        "ghiChuKhachHang": "",
-        "thanhTien": 36000.0
-      },
-      {
-        "maCTHD": "HD1777714328907-1309748951401700",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 2,
-        "ghiChuKhachHang": "",
-        "thanhTien": 24.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   },
   {
-    "maHD": "HD1777716578701",
-    "ngayGioLap": "2026-05-02",
+    "maHD": "HD1777816321100",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 36024.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777716578701-1311998770383700",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 3,
-        "ghiChuKhachHang": "",
-        "thanhTien": 36000.0
-      },
-      {
-        "maCTHD": "HD1777716578701-1311998776772500",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 2,
-        "ghiChuKhachHang": "",
-        "thanhTien": 24.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   },
   {
-    "maHD": "HD1777716848515",
-    "ngayGioLap": "2026-05-02",
+    "maHD": "HD1777816757747",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 25.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777716848515-1312268559241300",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 2,
-        "ghiChuKhachHang": "",
-        "thanhTien": 24.0
-      },
-      {
-        "maCTHD": "HD1777716848515-1312268572998300",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   },
   {
-    "maHD": "HD1777717332274",
-    "ngayGioLap": "2026-05-02",
+    "maHD": "HD1777816996204",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 13.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777717332274-1312752341811500",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777717332274-1312752355961000",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   },
   {
-    "maHD": "HD1777719346451",
-    "ngayGioLap": "2026-05-02",
+    "maHD": "HD1777818344911",
+    "taiKhoanLap": {
+      "maTaiKhoan": "a984dafb-f8e3-4d64-a7ba-6df17d431cad",
+      "tenTaiKhoan": "admincoffee",
+      "matKhau": "$2a$10$DElducenp4aO3Dd/hE0Jqu0wr.U6Lqwssz5fQDU/tD2iGvvIvabPS",
+      "trangThaiHoatDong": true
+    },
+    "ngayGioLap": "2026-05-03",
     "trangThaiTT": true,
     "phuongThucTT": "TIENMAT",
-    "tongTien": 36000.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777719346451-1314766510178700",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 3,
-        "ghiChuKhachHang": "",
-        "thanhTien": 36000.0
-      }
-    ]
-  },
-  {
-    "maHD": "HD1777719994508",
-    "ngayGioLap": "2026-05-02",
-    "trangThaiTT": true,
-    "phuongThucTT": "TIENMAT",
-    "tongTien": 132027.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777719994508-1315414543861600",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 3,
-        "ghiChuKhachHang": "",
-        "thanhTien": 3.0
-      },
-      {
-        "maCTHD": "HD1777719994508-1315414547087600",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777719994508-1315414547514300",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12000.0
-      },
-      {
-        "maCTHD": "HD1777719994508-1315414547947400",
-        "mon": {
-          "maMon": "M04",
-          "tenMon": "Bơ già dừa non",
-          "moTaMon": "description",
-          "donGiaMua": 12.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630738/espresso/capheso1vn_ublspc.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777719994508-1315414548361100",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 120000.0
-      }
-    ]
-  },
-  {
-    "maHD": "HD1777720064946",
-    "ngayGioLap": "2026-05-02",
-    "trangThaiTT": true,
-    "phuongThucTT": "TIENMAT",
-    "tongTien": 24013.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777720064946-1315484974555700",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 2,
-        "ghiChuKhachHang": "",
-        "thanhTien": 24000.0
-      },
-      {
-        "maCTHD": "HD1777720064946-1315484974950800",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720064946-1315484975361800",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      }
-    ]
-  },
-  {
-    "maHD": "HD1777720236490",
-    "ngayGioLap": "2026-05-02",
-    "trangThaiTT": true,
-    "phuongThucTT": "TIENMAT",
-    "tongTien": 168037.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777720236490-1315656525698300",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 4,
-        "ghiChuKhachHang": "",
-        "thanhTien": 48000.0
-      },
-      {
-        "maCTHD": "HD1777720236490-1315656529560900",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 2,
-        "ghiChuKhachHang": "",
-        "thanhTien": 24.0
-      },
-      {
-        "maCTHD": "HD1777720236490-1315656529984000",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      },
-      {
-        "maCTHD": "HD1777720236490-1315656530376100",
-        "mon": {
-          "maMon": "M04",
-          "tenMon": "Bơ già dừa non",
-          "moTaMon": "description",
-          "donGiaMua": 12.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630738/espresso/capheso1vn_ublspc.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720236490-1315656530774600",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 120000.0
-      }
-    ]
-  },
-  {
-    "maHD": "HD1777720295639",
-    "ngayGioLap": "2026-05-02",
-    "trangThaiTT": true,
-    "phuongThucTT": "TIENMAT",
-    "tongTien": 132025.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777720295639-1315715673547700",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720295639-1315715677954500",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      },
-      {
-        "maCTHD": "HD1777720295639-1315715678352000",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12000.0
-      },
-      {
-        "maCTHD": "HD1777720295639-1315715678786400",
-        "mon": {
-          "maMon": "M04",
-          "tenMon": "Bơ già dừa non",
-          "moTaMon": "description",
-          "donGiaMua": 12.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630738/espresso/capheso1vn_ublspc.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720295639-1315715679211600",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 120000.0
-      }
-    ]
-  },
-  {
-    "maHD": "HD1777720354694",
-    "ngayGioLap": "2026-05-02",
-    "trangThaiTT": true,
-    "phuongThucTT": "TIENMAT",
-    "tongTien": 132025.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777720354694-1315774729973800",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      },
-      {
-        "maCTHD": "HD1777720354694-1315774733878200",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720354694-1315774734374200",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12000.0
-      },
-      {
-        "maCTHD": "HD1777720354694-1315774734924000",
-        "mon": {
-          "maMon": "M04",
-          "tenMon": "Bơ già dừa non",
-          "moTaMon": "description",
-          "donGiaMua": 12.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630738/espresso/capheso1vn_ublspc.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720354694-1315774735490600",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 120000.0
-      }
-    ]
-  },
-  {
-    "maHD": "HD1777720412931",
-    "ngayGioLap": "2026-05-02",
-    "trangThaiTT": true,
-    "phuongThucTT": "TIENMAT",
-    "tongTien": 132025.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777720412931-1315832965828900",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720412931-1315832969396600",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12000.0
-      },
-      {
-        "maCTHD": "HD1777720412931-1315832969888100",
-        "mon": {
-          "maMon": "M04",
-          "tenMon": "Bơ già dừa non",
-          "moTaMon": "description",
-          "donGiaMua": 12.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630738/espresso/capheso1vn_ublspc.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720412931-1315832970300600",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 120000.0
-      },
-      {
-        "maCTHD": "HD1777720412931-1315832970691700",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 1.0
-      }
-    ]
-  },
-  {
-    "maHD": "HD1777720587975",
-    "ngayGioLap": "2026-05-02",
-    "trangThaiTT": true,
-    "tongTien": 372028.0,
-    "dsChiTiet": [
-      {
-        "maCTHD": "HD1777720587975-1316008016089800",
-        "mon": {
-          "maMon": "M01",
-          "tenMon": "Cà phê số 1 VN do Quý làm",
-          "moTaMon": "Đây là mô tả của cà phê số 1 VN",
-          "donGiaMua": 110000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777615594/espresso/capheso1vn_bnhjir.jpg",
-          "donGiaBan": 12000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "PASTRY"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12000.0
-      },
-      {
-        "maCTHD": "HD1777720587975-1316008020668000",
-        "mon": {
-          "maMon": "M02",
-          "tenMon": "Ca bu chi nô của Quý",
-          "moTaMon": "description",
-          "donGiaMua": 200000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630686/espresso/capheso1vn_h3fajz.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720587975-1316008021305000",
-        "mon": {
-          "maMon": "M03",
-          "tenMon": "Trà sữa chân châu 100% đừng",
-          "moTaMon": "description",
-          "donGiaMua": 121.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630715/espresso/capheso1vn_lqnkkq.jpg",
-          "donGiaBan": 1.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 4,
-        "ghiChuKhachHang": "",
-        "thanhTien": 4.0
-      },
-      {
-        "maCTHD": "HD1777720587975-1316008021929500",
-        "mon": {
-          "maMon": "M04",
-          "tenMon": "Bơ già dừa non",
-          "moTaMon": "description",
-          "donGiaMua": 12.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777630738/espresso/capheso1vn_ublspc.jpg",
-          "donGiaBan": 12.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "COFFEE"
-        },
-        "soLuongMon": 1,
-        "ghiChuKhachHang": "",
-        "thanhTien": 12.0
-      },
-      {
-        "maCTHD": "HD1777720587975-1316008022481400",
-        "mon": {
-          "maMon": "M05",
-          "tenMon": "Cà phê số 1 ĐNA",
-          "moTaMon": "do Quý làm",
-          "donGiaMua": 100000.0,
-          "duongDanAnh": "https://res.cloudinary.com/drfkacsvn/image/upload/v1777688539/espresso/capheso1vn_prxpls.jpg",
-          "donGiaBan": 120000.0,
-          "trangThai": true,
-          "phanLoaiMonAn": "TEA"
-        },
-        "soLuongMon": 3,
-        "ghiChuKhachHang": "",
-        "thanhTien": 360000.0
-      }
-    ]
+    "tongTien": 0.0,
+    "dsChiTiet": []
   }
 ]
