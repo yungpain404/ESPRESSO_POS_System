@@ -15,8 +15,7 @@ public class Test{
         }
 
         SwingUtilities.invokeLater(()->{
-//            new LoginForm().setVisible(true);
-        		new MenuManagement().setVisible(true);
+            new LoginForm().setVisible(true);
         });
 
 

@@ -18,5 +18,11 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-2.0.17.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-2.0.17.jar"/>
 	<classpathentry kind="lib" path="lib/sqljdbc42.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-app-3.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-3.0-rc5.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.21.3.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.21.3.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-datatype-jsr310-2.21.3.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-2.21.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

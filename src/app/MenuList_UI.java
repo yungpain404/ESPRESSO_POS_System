@@ -5,6 +5,8 @@ import com.formdev.flatlaf.FlatLightLaf;
 import dao.Mon_DAO;
 import entity.Mon;
 import entity.PhanLoaiMonAn;
+import entity.TaiKhoan;
+import util.SessionManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -56,7 +58,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
 
         JPanel pnlSearchBox = new JPanel(new BorderLayout(5, 0));
         pnlSearchBox.setOpaque(false);
-
+        
         txtSearch = new JTextField();
         txtSearch.setPreferredSize(new Dimension(320, 40));
         txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search menu items...");
@@ -81,17 +83,19 @@ public class MenuList_UI extends JFrame implements ActionListener {
         pnlUser.setLayout(new BoxLayout(pnlUser, BoxLayout.Y_AXIS));
         pnlUser.setOpaque(false);
 
-        JLabel lblUserName = new JLabel("Alex Reed", SwingConstants.RIGHT);
-        lblUserName.setFont(new Font("Inter", Font.BOLD, 14));
+        TaiKhoan user = SessionManager.getCurrentUser();
+        
+        JLabel lblUserTittle = new JLabel("Account", SwingConstants.RIGHT);
+        lblUserTittle.setFont(new Font("Inter", Font.BOLD, 14));
+        lblUserTittle.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+        JLabel lblUserName = new JLabel(user.getTenTaiKhoan());
+        lblUserName.setForeground(textGray);
+        lblUserName.setFont(new Font("Inter", Font.PLAIN, 12));
         lblUserName.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        JLabel lblRole = new JLabel("Head Barista");
-        lblRole.setForeground(textGray);
-        lblRole.setFont(new Font("Inter", Font.PLAIN, 12));
-        lblRole.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
+        pnlUser.add(lblUserTittle);
         pnlUser.add(lblUserName);
-        pnlUser.add(lblRole);
         pnlProfile.add(pnlUser);
 
         pnlHeader.add(pnlSearchBox, BorderLayout.WEST);
@@ -172,8 +176,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
             String urlString = imagePath; 
             
             if (urlString != null && !urlString.isEmpty()) {
-                java.net.URL url = new java.net.URL(urlString);
-                
+            	java.net.URL url = new java.net.URI(imagePath).toURL(); 
                 Image img = javax.imageio.ImageIO.read(url);
                 
                 if (img != null) {
@@ -418,9 +421,6 @@ public class MenuList_UI extends JFrame implements ActionListener {
         }
     }
 
-    public static void main(String[] args) {
-		new MenuList_UI().setVisible(true);
-	}
     @Override
     public void actionPerformed(ActionEvent e) {
     	Object o = e.getSource();

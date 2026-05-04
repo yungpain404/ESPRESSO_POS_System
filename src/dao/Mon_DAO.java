@@ -1,84 +1,85 @@
 package dao;
 
-import java.io.FileReader;
-import java.io.FileWriter;
+import connectDB.ConnectDB;
+import entity.Mon;
+import entity.PhanLoaiMonAn;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import entity.Mon;
-
 public class Mon_DAO {
-    private String filePath = "data/Mon.json";
-    private Gson gson = new Gson();
 
     public List<Mon> getAll() {
-        try (FileReader reader = new FileReader(filePath)) {
-        	List result = gson.fromJson(reader, new TypeToken<List<Mon>>(){}.getType());
-        	if(result != null)
-        		return result;
-        	else 
-        		return new ArrayList<>();
-        } catch (Exception e) {
+        List<Mon> dsMon = new ArrayList<>();
+        String sql = "SELECT * FROM Mon";
+        try (Connection con = ConnectDB.getConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                Mon m = new Mon(
+                    rs.getString("maMon"),
+                    rs.getNString("tenMon"),
+                    rs.getDouble("donGiaMua"),
+                    rs.getDouble("donGiaBan"),
+                    rs.getBoolean("trangThai"),
+                    PhanLoaiMonAn.valueOf(rs.getString("phanLoaiMonAn")),
+                    rs.getNString("moTaMon"),
+                    rs.getString("duongDanAnh")
+                );
+                dsMon.add(m);
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Trả về list rỗng");
-            return new ArrayList<>();
         }
-    }
-    
-    public Mon getMonById(String maMon) {
-    	List<Mon> dsMon = getAll();
-    	
-    	Mon monCanTim = null;
-    	
-    	for(Mon m : dsMon) {
-    		if(m.getMaMon().contains(maMon)) {
-    			monCanTim = m;
-    		}
-    	}
-    	
-    	return monCanTim;
-    }
-    
-    public boolean deleteMonById(String maMon) {
-    	List<Mon> dsMon = getAll();
-        boolean isSuccess = dsMon.removeIf(m -> m.getMaMon().equalsIgnoreCase(maMon));
-
-        if (isSuccess) {
-            saveData(dsMon);
-        }
-        return isSuccess;
+        return dsMon;
     }
 
     public boolean addMon(Mon mon) {
-        List<Mon> list = getAll();
-        list.add(mon);
-        return saveData(list);
-    }
-    
-    public boolean updateMon(Mon mon) {
-    	List<Mon> dsMon = getAll();
-    	boolean isSuccess = false;
-    	for(int i = 0; i < dsMon.size(); i++) {
-    		Mon m = dsMon.get(i);
-    		if(m.equals(mon)) {
-    			dsMon.set(i, mon);
-    			isSuccess = true;
-    		}
-    	}
-    	
-    	if(isSuccess == true) 
-    		saveData(dsMon);
-    	return isSuccess;
+        String sql = "INSERT INTO Mon VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, mon.getMaMon());
+            ps.setNString(2, mon.getTenMon());
+            ps.setNString(3, mon.getMoTaMon());
+            ps.setDouble(4, mon.getDonGiaMua());
+            ps.setDouble(5, mon.getDonGiaBan());
+            ps.setString(6, mon.getDuongDanAnh());
+            ps.setBoolean(7, mon.isTrangThai());
+            ps.setString(8, mon.getPhanLoaiMonAn().name());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    private boolean saveData(List<Mon> list) {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            gson.toJson(list, writer);
-            return true;
-        } catch (Exception e) {
+    public boolean updateMon(Mon mon) {
+        String sql = "UPDATE Mon SET tenMon=?, moTaMon=?, donGiaMua=?, donGiaBan=?, duongDanAnh=?, trangThai=?, phanLoaiMonAn=? WHERE maMon=?";
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setNString(1, mon.getTenMon());
+            ps.setNString(2, mon.getMoTaMon());
+            ps.setDouble(3, mon.getDonGiaMua());
+            ps.setDouble(4, mon.getDonGiaBan());
+            ps.setString(5, mon.getDuongDanAnh());
+            ps.setBoolean(6, mon.isTrangThai());
+            ps.setString(7, mon.getPhanLoaiMonAn().name());
+            ps.setString(8, mon.getMaMon());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteMonById(String maMon) {
+        String sql = "DELETE FROM Mon WHERE maMon = ?";
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, maMon);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

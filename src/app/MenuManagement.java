@@ -228,12 +228,16 @@ public class MenuManagement extends JFrame {
 	        public void onEdit(int row) {
 	        	
 	            String maMon = table.getValueAt(row, 1).toString();
+	            Mon monCanTim = null;
 	            
-	         
-	            Mon mon = monDao.getMonById(maMon);
+	            List<Mon> dsMon = monDao.getAll();
+	            for(Mon m : dsMon) {
+	            	if(m.getMaMon().equals(maMon))
+	            		monCanTim = m;
+	            }
 	            
-	            FoodForm foodForm = new FoodForm(MenuManagement.this, mon);
-	            foodForm.fillData(mon);
+	            FoodForm foodForm = new FoodForm(MenuManagement.this, monCanTim);
+	            foodForm.fillData(monCanTim);
 	            foodForm.setVisible(true);
 	            
 	            loadDataToTable();

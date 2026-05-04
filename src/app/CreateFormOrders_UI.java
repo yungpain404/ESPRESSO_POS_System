@@ -9,6 +9,9 @@ import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.Mon;
 import entity.PhanLoaiMonAn;
+import entity.PhuongThucThanhToan;
+import entity.TaiKhoan;
+import util.SessionManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -44,15 +47,12 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
 	private JTextArea txaInvoiceNote;
 	
 	private double totalAmount = 0.0;
-	private ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
-
-    private java.util.List<entity.Mon> originalList;
+	private java.util.List<entity.Mon> originalList;
     private JButton activeTab; 
 
 
 	private Mon_DAO mon_dao = new Mon_DAO();
 	private HoaDon_DAO hoaDon_dao = new HoaDon_DAO();
-	
 	
 	
     public CreateFormOrders_UI() {
@@ -102,17 +102,19 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         pnlUser.setLayout(new BoxLayout(pnlUser, BoxLayout.Y_AXIS));
         pnlUser.setOpaque(false);
 
-        JLabel lblUserName = new JLabel("Alex Reed", SwingConstants.RIGHT);
-        lblUserName.setFont(new Font("Inter", Font.BOLD, 14));
+        TaiKhoan user = SessionManager.getCurrentUser();
+        
+        JLabel lblUserTittle = new JLabel("Account", SwingConstants.RIGHT);
+        lblUserTittle.setFont(new Font("Inter", Font.BOLD, 14));
+        lblUserTittle.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+        JLabel lblUserName = new JLabel(user.getTenTaiKhoan());
+        lblUserName.setForeground(textGray);
+        lblUserName.setFont(new Font("Inter", Font.PLAIN, 12));
         lblUserName.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        JLabel lblRole = new JLabel("Head Barista");
-        lblRole.setForeground(textGray);
-        lblRole.setFont(new Font("Inter", Font.PLAIN, 12));
-        lblRole.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
+        pnlUser.add(lblUserTittle);
         pnlUser.add(lblUserName);
-        pnlUser.add(lblRole);
         pnlProfile.add(pnlUser);
 
         pnlHeader.add(pnlSearchBox, BorderLayout.WEST);
@@ -287,14 +289,13 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             String urlString = imagePath; 
             
             if (urlString != null && !urlString.isEmpty()) {
-                java.net.URL url = new java.net.URL(urlString);
-                
+            	java.net.URL url = new java.net.URI(imagePath).toURL(); 
                 Image img = javax.imageio.ImageIO.read(url);
                 
                 if (img != null) {
                     Image scaledImg = img.getScaledInstance(200, -1, Image.SCALE_SMOOTH);
                     lblImgPlaceholder.setIcon(new ImageIcon(scaledImg));
-                    lblImgPlaceholder.setText(""); // Xóa text nếu load thành công
+                    lblImgPlaceholder.setText("");
                 } else {
                   lblImgPlaceholder.setText("No Image");
                 }
@@ -364,11 +365,12 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         btnAdd.addActionListener(e -> {
             try {
                 double priceValue = Double.parseDouble(price.replace("$", "").replace(",", "."));
-                addToCart(name, priceValue,  maMon); 
+                // Thêm tham số imagePath vào cuối lệnh gọi hàm
+                addToCart(name, priceValue, maMon, imagePath); 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }); 
+        });
         btnAdd.putClientProperty("JButton.buttonType", "roundRect");
 
         JPanel pnlBtnAdd = new JPanel();
@@ -386,7 +388,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         return pnlCard;
     }
 
-    private void addToCart(String name, double price, String maMon) {
+    private void addToCart(String name, double price, String maMon, String imagePath) {
     	for (Component comp : pnlCartItems.getComponents()) {
             if (comp instanceof JPanel && maMon.equals(comp.getName())) {
                 JPanel existingItem = (JPanel) comp;
@@ -409,10 +411,25 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         lblIcon.setBackground(Color.decode("#e9e9d4")); 
         lblIcon.setOpaque(true);
         lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
-        lblIcon.setText("☕"); 
+        try {
+            if (imagePath != null && !imagePath.isEmpty()) {
+            	java.net.URL url = new java.net.URI(imagePath).toURL(); 
+                Image img = javax.imageio.ImageIO.read(url);
+                if (img != null) {
+                    Image scaledImg = img.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                    lblIcon.setIcon(new ImageIcon(scaledImg));
+                } else {
+                    lblIcon.setText("No Img");
+                }
+            } else {
+                lblIcon.setText("☕"); 
+            }
+        } catch (Exception e) {
+            lblIcon.setText("Error");
+        }
         lblIcon.putClientProperty("JComponent.outlineWidth", 1);
-
-        //Tên, Ghi chú và Bộ điều chỉnh số lượng
+        
+      //Tên, Ghi chú và Bộ điều chỉnh số lượng
         JPanel pnlCenter = new JPanel();
         pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
         pnlCenter.setOpaque(false);
@@ -640,7 +657,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnComplete)) {
-
+        	
             //Check giỏ hàng rỗng
             if (pnlCartItems.getComponentCount() == 0) {
                 JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
@@ -653,6 +670,8 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             hd.setMaHD(maHD);
             hd.setNgayGioLap(LocalDate.now());
             hd.setTrangThaiTT(true);
+            hd.setTaiKhoanLap(SessionManager.getCurrentUser());
+            hd.setPhuongThucTT(PhuongThucThanhToan.TIENMAT);
             
             String ghiChuHoaDon = txaInvoiceNote.getText().trim();
 
@@ -686,6 +705,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                     ct.setMon(mon);
                     ct.setSoLuongMon(soLuong);
                     ct.setGhiChuKhachHang(ghiChuHoaDon);
+//                    ct.setHoaDon(hd); // đang bị lỗi ở đây
                     ct.setThanhTien(); 
 
                     dsChiTiet.add(ct);

@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -13,14 +12,19 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -34,9 +38,11 @@ import javax.swing.table.TableCellRenderer;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
+import entity.HoaDon;
+import util.ExportPDF;
 
 @SuppressWarnings("serial")
-public class Invoice_UI extends JFrame {
+public class Invoice_UI extends JFrame implements ActionListener{
 	static {
 	    try {
 	        FlatLightLaf.setup();
@@ -50,6 +56,8 @@ public class Invoice_UI extends JFrame {
 	private JLabel lblTotal;
 	private DefaultTableModel model;
 	private JTextArea txtNotes;
+	private JButton btnExport;
+	private HoaDon currentInvoice;
 		
 	public Invoice_UI(entity.HoaDon hd) {
 	    this(); 
@@ -67,7 +75,6 @@ public class Invoice_UI extends JFrame {
         Color bgWhite = Color.decode("#FFFFFF");
         Color textDark = Color.decode("#3C2A21");
         Color textGray = Color.decode("#7D7D7D");
-        Color accentMint = Color.decode("#D1E7E5");
         Color btnBrown = Color.decode("#4E342E");
 
         JPanel pnlRoot = new JPanel(new BorderLayout(30, 20));
@@ -91,28 +98,10 @@ public class Invoice_UI extends JFrame {
         pnlSidebar.add(lblQuickActions);
         pnlSidebar.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        // Nút Print
-        JButton btnPrint = new JButton("Print Receipt");
-        btnPrint.setBackground(btnBrown);
-        btnPrint.setForeground(Color.WHITE);
-        btnPrint.setFont(new Font("Inter", Font.BOLD, 13));
-        btnPrint.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        pnlSidebar.add(btnPrint);
-        pnlSidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        // Nút Email
-        JButton btnEmail = new JButton("Email Invoice");
-        btnEmail.setBackground(accentMint);
-        btnEmail.setForeground(textDark);
-        btnEmail.setFont(new Font("Inter", Font.BOLD, 13));
-        btnEmail.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        pnlSidebar.add(btnEmail);
-        pnlSidebar.add(Box.createRigidArea(new Dimension(0, 10)));
-
         // Nút Export
-        JButton btnExport = new JButton("Export PDF");
-        btnExport.setBackground(bgWhite);
-        btnExport.setForeground(textDark);
+        btnExport = new JButton("Export PDF");
+        btnExport.setBackground(btnBrown);
+        btnExport.setForeground(Color.WHITE);
         btnExport.setFont(new Font("Inter", Font.BOLD, 13));
         btnExport.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         pnlSidebar.add(btnExport);
@@ -237,6 +226,9 @@ public class Invoice_UI extends JFrame {
         pnlContent.add(pnlSidebar, BorderLayout.WEST);
         pnlContent.add(pnlInvoiceCard, BorderLayout.CENTER);
         pnlRoot.add(pnlContent, BorderLayout.CENTER);
+        
+        //Event
+        btnExport.addActionListener(this);
     }
 
     // Tùy chỉnh hiển thị JTable
@@ -268,8 +260,9 @@ public class Invoice_UI extends JFrame {
         }
     }
 	
-	public void setData(entity.HoaDon hd) {
-	    lblIdValue.setText("#" + hd.getMaHD());
+	public void setData(HoaDon hd) {
+	    currentInvoice = hd;
+		lblIdValue.setText("#" + hd.getMaHD());
 	    lblDate.setText(hd.getNgayGioLap().toString());
 
 	    model.setRowCount(0);
@@ -379,4 +372,29 @@ public class Invoice_UI extends JFrame {
 
 	    return btn;
 	}
+
+   @Override
+   public void actionPerformed(ActionEvent e) {
+	   Object o = e.getSource();
+	   if (o.equals(btnExport)) {
+		   JFileChooser fileChooser = new JFileChooser();
+		   fileChooser.setDialogTitle("Lưu hóa đơn thành PDF");
+		   int userSelection = fileChooser.showSaveDialog(this);
+
+		   if (userSelection == JFileChooser.APPROVE_OPTION) {
+		        File fileToSave = fileChooser.getSelectedFile();
+		        String path = fileToSave.getAbsolutePath();
+		        if (!path.endsWith(".pdf")) path += ".pdf";
+
+		        try {
+		            ExportPDF.exportInvoice(currentInvoice, path);
+		            JOptionPane.showMessageDialog(this, "Xuất PDF thành công!");
+		        } catch (Exception ex) {
+		            ex.printStackTrace();
+		            JOptionPane.showMessageDialog(this, "Lỗi khi xuất PDF: " + ex.getMessage());
+		        }
+		   }
+	
+	   }
+   }
 }
