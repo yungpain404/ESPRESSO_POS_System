@@ -248,8 +248,8 @@ public class LoginForm extends JFrame implements ActionListener{
 				if (tk != null) {
 					SessionManager.setCurrentUser(tk);
 					MenuList_UI nextFrame = new MenuList_UI();
-					nextFrame.setBounds(this.getBounds());
-					nextFrame.setExtendedState(this.getExtendedState());
+//					nextFrame.setBounds(this.getBounds());
+//					nextFrame.setExtendedState(this.getExtendedState());
 					nextFrame.setVisible(true);
 					this.dispose();
 				}else {
