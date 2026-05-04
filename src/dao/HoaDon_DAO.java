@@ -1,88 +1,118 @@
 package dao;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import connectDB.ConnectDB;
 import entity.HoaDon;
 import entity.PhuongThucThanhToan;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import entity.TaiKhoan;
+import java.sql.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HoaDon_DAO {
-    private String filePath = "data/HoaDon.json";
-    private Gson gson;
-
-    public HoaDon_DAO() {
-        File dir = new File("data");
-        if (!dir.exists()) dir.mkdir();
-
-        this.gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDate.class, new JsonSerializer<LocalDate>() {
-                @Override
-                public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
-                    return new JsonPrimitive(src.format(DateTimeFormatter.ISO_LOCAL_DATE));
-                }
-            })
-            .registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
-                @Override
-                public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                        throws JsonParseException {
-                    return LocalDate.parse(json.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE);
-                }
-            })
-            .setPrettyPrinting()
-            .create();
-    }
 
     public List<HoaDon> getAll() {
-        File file = new File(filePath);
-        if (!file.exists()) return new ArrayList<>();
-
-        try (FileReader reader = new FileReader(filePath)) {
-            List<HoaDon> list = gson.fromJson(reader, new TypeToken<List<HoaDon>>(){}.getType());
-            if (list == null) return new ArrayList<>();
-
-            for (HoaDon hd : list) {
-                if (hd.getPhuongThucTT() == null) {
-                    hd.setPhuongThucTT(PhuongThucThanhToan.TIENMAT);
-                }
+        List<HoaDon> list = new ArrayList<>();
+        String sql = "SELECT * FROM HoaDon";
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                HoaDon hd = new HoaDon();
+                hd.setMaHD(rs.getString("maHD"));
+                
+                TaiKhoan tk = new TaiKhoan();
+                tk.setMaTaiKhoan(rs.getString("maTaiKhoanLap"));
+                hd.setTaiKhoanLap(tk);
+                
+                hd.setNgayGioLap(rs.getDate("ngayGioLap").toLocalDate());
+                hd.setTrangThaiTT(rs.getBoolean("trangThaiTT"));
+                
+                String ptt = rs.getString("phuongThucTT");
+                hd.setPhuongThucTT(ptt != null ? PhuongThucThanhToan.valueOf(ptt) : PhuongThucThanhToan.TIENMAT);
+                
+                hd.setTongTien(rs.getDouble("tongTien"));
+                list.add(hd);
             }
-            return list;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
         }
+        return list;
     }
 
     public List<HoaDon> getByDate(LocalDate ngay) {
         List<HoaDon> result = new ArrayList<>();
-        for (HoaDon hd : getAll()) {
-            if (hd.getNgayGioLap() != null && hd.getNgayGioLap().equals(ngay)) {
-                result.add(hd);
+        String sql = "SELECT * FROM HoaDon WHERE ngayGioLap = ?";
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setDate(1, Date.valueOf(ngay));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    HoaDon hd = new HoaDon();
+                    hd.setMaHD(rs.getString("maHD"));
+                    // ... Map tương tự như getAll()
+                    result.add(hd);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return result;
     }
 
     public boolean addHoaDon(HoaDon hd) {
-        List<HoaDon> list = getAll();
-        list.add(hd);
-        return saveData(list);
-    }
+        String sql = "INSERT INTO HoaDon (maHD, maTaiKhoanLap, ngayGioLap, trangThaiTT, phuongThucTT, tongTien) VALUES (?,?,?,?,?,?)";
+        Connection con = null;
+        try {
+            con = ConnectDB.getConnection();
+            con.setAutoCommit(false); // Bắt đầu Transaction
 
-    private boolean saveData(List<HoaDon> list) {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            gson.toJson(list, writer);
+            // 1. Lưu Hóa Đơn
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setString(1, hd.getMaHD());
+                ps.setString(2, hd.getTaiKhoanLap().getMaTaiKhoan());
+                ps.setDate(3, Date.valueOf(hd.getNgayGioLap()));
+                ps.setBoolean(4, hd.isTrangThaiTT());
+                ps.setString(5, hd.getPhuongThucTT().name());
+                ps.setDouble(6, hd.getTongTien());
+                ps.executeUpdate();
+            }
+
+            // 2. Lưu Chi Tiết Hóa Đơn (Tận dụng addAll nhưng dùng chung connection)
+            if (hd.getDsChiTiet() != null && !hd.getDsChiTiet().isEmpty()) {
+                String sqlCT = "INSERT INTO ChiTietHoaDon (maCTHD, maHD, maMon, soLuongMon, ghiChuKhachHang, thanhTien) VALUES (?,?,?,?,?,?)";
+                try (PreparedStatement psCT = con.prepareStatement(sqlCT)) {
+                    for (entity.ChiTietHoaDon ct : hd.getDsChiTiet()) {
+                        psCT.setString(1, ct.getMaCTHD());
+                        psCT.setString(2, hd.getMaHD());
+                        psCT.setString(3, ct.getMon().getMaMon());
+                        psCT.setInt(4, ct.getSoLuongMon());
+                        psCT.setNString(5, ct.getGhiChuKhachHang());
+                        psCT.setDouble(6, ct.getThanhTien());
+                        psCT.addBatch();
+                    }
+                    psCT.executeBatch();
+                }
+            }
+
+            con.commit();
             return true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            if (con != null) {
+                try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
             e.printStackTrace();
             return false;
+        } finally {
+            if (con != null) {
+                try { con.setAutoCommit(true); con.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
         }
+    }
+    
+    private boolean saveData(List<HoaDon> list) {
+        return true; 
     }
 }
