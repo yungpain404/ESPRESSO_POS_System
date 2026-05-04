@@ -300,8 +300,57 @@ public class FoodForm extends JDialog implements ActionListener{
     }
 
     private boolean isValidated() {
-    	boolean isSuccess = true;
-    	return isSuccess;
+        String maMon = txtMa.getText().trim();
+        String tenMon = txtTen.getText().trim();
+        String moTa = txtMoTa.getText().trim();
+        String giaMuaStr = txtGiaMua.getText().trim();
+        String giaBanStr = txtGiaBan.getText().trim();
+
+        if (!maMon.matches("^M\\d+$")) {
+            return showError("Mã món phải bắt đầu bằng chữ 'M' và theo sau là các con số (VD: M001)!", txtMa);
+        }
+
+        if (!tenMon.matches("^([A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*)$")) {
+            return showError("Tên món phải có ít nhất một từ, mỗi từ viết hoa chữ cái đầu!", txtTen);
+        }
+
+        String[] words = moTa.split("\\s+");
+        if (words.length < 6 || !Character.isUpperCase(moTa.charAt(0))) {
+            return showError("Mô tả phải có ít nhất 6 từ và chữ cái đầu tiên phải viết hoa!", txtMoTa);
+        }
+        
+        double giaMua = 0;
+        try {
+            giaMua = Double.parseDouble(giaMuaStr);
+            if (giaMua <= 0) {
+                return showError("Giá mua phải là số lớn hơn 0!", txtGiaMua);
+            }
+        } catch (NumberFormatException e) {
+            return showError("Giá mua phải là một con số hợp lệ!", txtGiaMua);
+        }
+        
+        try {
+            double giaBan = Double.parseDouble(giaBanStr);
+            if (giaBan <= giaMua) {
+                return showError("Giá bán phải lớn hơn giá mua!", txtGiaBan);
+            }
+        } catch (NumberFormatException e) {
+            return showError("Giá bán phải là một con số hợp lệ!", txtGiaBan);
+        }
+
+        if (selectedImagePath == null || selectedImagePath.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn hình ảnh cho món ăn!", "Lỗi dữ liệu", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean showError(String message, JTextField txtField) {
+        JOptionPane.showMessageDialog(this, message, "Lỗi dữ liệu", JOptionPane.ERROR_MESSAGE);
+        txtField.selectAll();
+        txtField.requestFocus();
+        return false;
     }
 
 	@Override

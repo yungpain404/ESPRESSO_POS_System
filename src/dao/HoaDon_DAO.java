@@ -32,7 +32,7 @@ public class HoaDon_DAO {
                 String ptt = rs.getString("phuongThucTT");
                 hd.setPhuongThucTT(ptt != null ? PhuongThucThanhToan.valueOf(ptt) : PhuongThucThanhToan.TIENMAT);
                 
-                hd.setTongTien(rs.getDouble("tongTien"));
+                hd.setTongTien();
                 list.add(hd);
             }
         } catch (SQLException e) {

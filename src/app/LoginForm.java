@@ -243,7 +243,6 @@ public class LoginForm extends JFrame implements ActionListener{
 			if (validInput()) {
 				String loginName = txtUser.getText().trim();
 				String loginPass = new String(txtPass.getPassword()).trim();
-				//admincoffee | Admin@2026 và nhanvien01 | Nhanvien@01
 				TaiKhoan_DAO taiKhoan_DAO = new TaiKhoan_DAO();
 				TaiKhoan tk = taiKhoan_DAO.kiemTraDangNhap(loginName, loginPass);
 				if (tk != null) {

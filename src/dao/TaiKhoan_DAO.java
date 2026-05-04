@@ -21,7 +21,7 @@ public class TaiKhoan_DAO {
                     rs.getString("maTaiKhoan"),
                     rs.getString("tenTaiKhoan"),
                     rs.getString("matKhau"),
-                    rs.getBoolean("trangThaiHoatDong");
+                    rs.getBoolean("trangThaiHoatDong")
                 ));
             }
         } catch (SQLException e) {
