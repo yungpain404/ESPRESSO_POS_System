@@ -15,6 +15,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -58,6 +60,8 @@ public class Invoice_UI extends JFrame implements ActionListener{
 	private JTextArea txtNotes;
 	private JButton btnExport;
 	private HoaDon currentInvoice;
+	@SuppressWarnings("deprecation")
+	private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 		
 	public Invoice_UI(entity.HoaDon hd) {
 	    this(); 
@@ -206,7 +210,7 @@ public class Invoice_UI extends JFrame implements ActionListener{
 		pnlPrices.setLayout(new BoxLayout(pnlPrices, BoxLayout.Y_AXIS));
 		pnlPrices.setOpaque(false);
 		
-        lblTotal = new JLabel("TOTAL   $0.0");
+		lblTotal = new JLabel("TOTAL   " + currencyFormatter.format(0));
         lblTotal.setFont(new Font("Inter", Font.BOLD, 32));
         lblTotal.setForeground(textDark);
         lblTotal.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -274,8 +278,8 @@ public class Invoice_UI extends JFrame implements ActionListener{
 	                ct.getMon().getMoTaMon() 
 	            },
 	            String.format("%02d", ct.getSoLuongMon()),
-	            String.format("$%.2f", ct.getMon().getDonGiaBan()),
-	            String.format("$%.2f", ct.getThanhTien())
+	            currencyFormatter.format(ct.getMon().getDonGiaBan()),
+	            currencyFormatter.format(ct.getThanhTien())
 	        });
 	    }
 
@@ -283,7 +287,7 @@ public class Invoice_UI extends JFrame implements ActionListener{
 	        txtNotes.setText(hd.getDsChiTiet().get(0).getGhiChuKhachHang());
 	    }
 
-	    lblTotal.setText(String.format("TOTAL   $%.2f", hd.getTongTien()));
+	    lblTotal.setText("TOTAL   " + currencyFormatter.format(hd.getTongTien()));
 	}
     private JPanel createSidebar() {
 	    JPanel sidebar = new JPanel();

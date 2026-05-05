@@ -13,7 +13,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class MenuList_UI extends JFrame implements ActionListener {
@@ -32,10 +34,11 @@ public class MenuList_UI extends JFrame implements ActionListener {
     private JButton btnSearch;
     private JTextField txtSearch;
     private JPanel pnlProductGrid;
-    private java.util.List<entity.Mon> originalList;
+    private List<entity.Mon> originalList;
     private JButton activeTab; 
 
     private Mon_DAO mon_dao = new Mon_DAO();
+    private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
     public MenuList_UI() {
         setTitle("Espresso Menu Browser - Pure Java Optimized");
@@ -181,7 +184,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
                 if (img != null) {
                     Image scaledImg = img.getScaledInstance(250, -1, Image.SCALE_SMOOTH);
                     lblImgPlaceholder.setIcon(new ImageIcon(scaledImg));
-                    lblImgPlaceholder.setText(""); // Xóa text nếu load thành công
+                    lblImgPlaceholder.setText(""); 
                 } else {
                   lblImgPlaceholder.setText("No Image");
                 }
@@ -311,8 +314,8 @@ public class MenuList_UI extends JFrame implements ActionListener {
 }
     
     public void renderMenu() {
-        originalList = mon_dao.getAll(); // Tải dữ liệu 1 lần duy nhất
-        displayFilteredList(originalList); // Hiển thị toàn bộ
+        originalList = mon_dao.getAll(); 
+        displayFilteredList(originalList); 
     }
 
     private JButton createMenuButton(String text, String iconPath) {
@@ -329,21 +332,6 @@ public class MenuList_UI extends JFrame implements ActionListener {
         btn.setForeground(new Color(85, 55, 34));
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         return btn;
-    }
-
-    public void renderMenu1() {
-        pnlProductGrid.removeAll();
-        java.util.List<entity.Mon> listMon = mon_dao.getAll();
-        for (entity.Mon m : listMon) {
-            JPanel card = createProductCard(
-                m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
-                String.format("$%.2f", m.getDonGiaBan()), 
-                bgCard, accentBrown, textGray, m.getDuongDanAnh()
-            );
-            pnlProductGrid.add(card);
-        }
-        pnlProductGrid.revalidate();
-        pnlProductGrid.repaint();
     }
     
     private JButton createTabButton(String text, boolean isSelected) {
@@ -388,18 +376,18 @@ public class MenuList_UI extends JFrame implements ActionListener {
         if (loai == null) {
             displayFilteredList(originalList);
         } else {
-            java.util.List<entity.Mon> filtered = originalList.stream()
+            List<entity.Mon> filtered = originalList.stream()
                     .filter(m -> m.getPhanLoaiMonAn().equals(loai)) 
                     .toList();
             displayFilteredList(filtered);
         }
     }
-    private void displayFilteredList(java.util.List<entity.Mon> list) {
+    private void displayFilteredList(List<entity.Mon> list) {
         pnlProductGrid.removeAll();
         for (entity.Mon m : list) {
             JPanel card = createProductCard(
                 m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
-                String.format("$%.2f", m.getDonGiaBan()), 
+                currencyFormatter.format(m.getDonGiaBan()), 
                 bgCard, accentBrown, textGray, m.getDuongDanAnh()
             );
             pnlProductGrid.add(card);
@@ -439,7 +427,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
             if (m.getMaMon().equalsIgnoreCase(keyword) || m.getTenMon().toLowerCase().contains(keyword.toLowerCase())) {
                 JPanel card = createProductCard(
                     m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
-                    String.format("$%.2f", m.getDonGiaBan()), bgCard, accentBrown, textGray, m.getDuongDanAnh()
+                    currencyFormatter.format(m.getDonGiaBan()), bgCard, accentBrown, textGray, m.getDuongDanAnh()
                 );
                 pnlProductGrid.add(card);
             }
