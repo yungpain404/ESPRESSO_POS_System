@@ -35,6 +35,32 @@ public class Mon_DAO {
         return dsMon;
     }
 
+    public Mon getMon(String maMon) {
+        Mon mon = null;
+        String sql = "SELECT * FROM Mon WHERE maMon = ?";
+        try (Connection con = ConnectDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, maMon);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    mon = new Mon(
+                        rs.getString("maMon"),
+                        rs.getNString("tenMon"),
+                        rs.getDouble("donGiaMua"),
+                        rs.getDouble("donGiaBan"),
+                        rs.getBoolean("trangThai"),
+                        PhanLoaiMonAn.valueOf(rs.getString("phanLoaiMonAn")),
+                        rs.getNString("moTaMon"),
+                        rs.getString("duongDanAnh")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mon;
+    }
+
     public boolean addMon(Mon mon) {
         String sql = "INSERT INTO Mon VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = ConnectDB.getConnection();

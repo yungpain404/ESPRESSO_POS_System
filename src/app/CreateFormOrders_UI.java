@@ -782,8 +782,8 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
     }
     public void renderMenu() {
         pnlProductGrid.removeAll();
-        java.util.List<entity.Mon> listMon = mon_dao.getAll();
-        for (entity.Mon m : listMon) {
+        List<Mon> listMon = mon_dao.getAll();
+        for (Mon m : listMon) {
             JPanel card = createProductCard(
                 m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
                 String.format("$%.2f", m.getDonGiaBan()), 
@@ -803,7 +803,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         System.out.println(originalList);
 
         if (originalList != null) {
-            for (entity.Mon m : originalList) {
+            for (Mon m : originalList) {
                 JPanel card = createProductCard(
                     m.getMaMon(),
                     m.getTenMon(), 
@@ -872,7 +872,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
     }
     private void displayFilteredList(java.util.List<entity.Mon> list) {
         pnlProductGrid.removeAll();
-        for (entity.Mon m : list) {
+        for (Mon m : list) {
             JPanel card = createProductCard(
                 m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
                 String.format("$%.2f", m.getDonGiaBan()), 

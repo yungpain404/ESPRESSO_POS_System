@@ -159,8 +159,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
 
         btnSearch.addActionListener(this);
     }
-
-    private JPanel createProductCard(String maMon, String name, String desc, String price, Color bg, Color brown, Color gray, String imagePath) {
+	private JPanel createProductCard(String maMon, String name, String desc, String price, Color bg, Color brown, Color gray, String imagePath) {
         JPanel pnlCard = new JPanel(new BorderLayout());
         pnlCard.setPreferredSize(new Dimension(230, 255));
         pnlCard.setMaximumSize(new Dimension(230, 255));
@@ -177,7 +176,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
             
             if (urlString != null && !urlString.isEmpty()) {
             	java.net.URL url = new java.net.URI(imagePath).toURL(); 
-                Image img = javax.imageio.ImageIO.read(url);
+            	Image img = javax.imageio.ImageIO.read(url);
                 
                 if (img != null) {
                     Image scaledImg = img.getScaledInstance(250, -1, Image.SCALE_SMOOTH);

@@ -39,7 +39,7 @@ import entity.Mon;
 import entity.PhanLoaiMonAn;
 
 @SuppressWarnings("serial")
-public class FoodForm extends JDialog implements ActionListener{
+public class FoodForm extends JDialog implements ActionListener {
     private JTextField txtMa;
     private JTextField txtTen;
     private JTextField txtGiaMua;
@@ -75,7 +75,6 @@ public class FoodForm extends JDialog implements ActionListener{
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // --- Header ---
         JPanel pnlHeader = new JPanel();
         pnlHeader.setBackground(new Color(85, 55, 34));
         JLabel lblHeader = new JLabel(isEditMode ? "CẬP NHẬT MÓN ĂN" : "THÊM MÓN MỚI");
@@ -85,7 +84,6 @@ public class FoodForm extends JDialog implements ActionListener{
         pnlHeader.add(lblHeader);
         add(pnlHeader, BorderLayout.NORTH);
 
-        // --- Form Content ---
         JPanel pnlForm = new JPanel(new GridBagLayout());
         pnlForm.setBackground(new Color(251, 251, 240));
         pnlForm.setBorder(new EmptyBorder(10, 30, 10, 30));
@@ -98,8 +96,8 @@ public class FoodForm extends JDialog implements ActionListener{
         txtMa = new JTextField();
         txtMa.putClientProperty(FlatClientProperties.STYLE, fieldStyle);
         if (isEditMode) {
-			txtMa.setEditable(false);
-		}
+            txtMa.setEditable(false);
+        }
 
         txtTen = new JTextField();
         txtTen.putClientProperty(FlatClientProperties.STYLE, fieldStyle);
@@ -127,7 +125,7 @@ public class FoodForm extends JDialog implements ActionListener{
         lblImagePreview = new JLabel("Chưa có ảnh", SwingConstants.CENTER);
         lblImagePreview.setPreferredSize(new Dimension(100, 100));
         lblImagePreview.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
-        
+
         txtMoTa = new JTextField();
         txtMoTa.putClientProperty(FlatClientProperties.STYLE, fieldStyle);
 
@@ -162,7 +160,6 @@ public class FoodForm extends JDialog implements ActionListener{
         pnlButtons.add(btnSave);
         add(pnlButtons, BorderLayout.SOUTH);
 
-
         btnSave.addActionListener(this);
         btnCancel.addActionListener(this);
         btnChooseImage.addActionListener(this);
@@ -175,10 +172,10 @@ public class FoodForm extends JDialog implements ActionListener{
         panel.add(field, gbc);
         gbc.insets = new Insets(5, 0, 5, 0);
     }
-    
+
     private ImageIcon createImageFromLocalPath(String imgPath) {
-    	ImageIcon icon = new ImageIcon(new ImageIcon(imgPath).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-    	return icon;
+        ImageIcon icon = new ImageIcon(new ImageIcon(imgPath).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+        return icon;
     }
 
     private void chooseImage() {
@@ -194,11 +191,11 @@ public class FoodForm extends JDialog implements ActionListener{
             lblImagePreview.setText("");
         }
     }
-    
+
     private void displayDefaultImagePreview() {
-    	ImageIcon icon = new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-    	lblImagePreview.setIcon(icon);
-        lblImagePreview.setText(""); 
+        ImageIcon icon = new ImageIcon(new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        lblImagePreview.setIcon(icon);
+        lblImagePreview.setText("");
     }
 
     public void fillData(Mon mon) {
@@ -208,13 +205,13 @@ public class FoodForm extends JDialog implements ActionListener{
         cbLoai.setSelectedItem(mon.getPhanLoaiMonAn());
         txtGiaMua.setText(String.valueOf(mon.getDonGiaMua()));
         txtGiaBan.setText(String.valueOf(mon.getDonGiaBan()));
-        this.selectedImagePath = mon.getDuongDanAnh(); 
-        
-        if(mon.isTrangThai()) 
-        	radConHang.setSelected(true);
+        this.selectedImagePath = mon.getDuongDanAnh();
+
+        if (mon.isTrangThai())
+            radConHang.setSelected(true);
         else
-        	radHetHang.setSelected(true);
-        
+            radHetHang.setSelected(true);
+
         if (selectedImagePath != null && !selectedImagePath.isEmpty()) {
             new Thread(() -> {
                 try {
@@ -222,120 +219,101 @@ public class FoodForm extends JDialog implements ActionListener{
                     Image img = javax.imageio.ImageIO.read(url);
                     if (img != null) {
                         ImageIcon icon = new ImageIcon(img.getScaledInstance(
-                            lblImagePreview.getWidth(), 
-                            lblImagePreview.getHeight(), 
-                            Image.SCALE_SMOOTH)
-                        );
-                        
-                        // update UI 
+                                lblImagePreview.getWidth(),
+                                lblImagePreview.getHeight(),
+                                Image.SCALE_SMOOTH));
+
                         javax.swing.SwingUtilities.invokeLater(() -> {
                             lblImagePreview.setIcon(icon);
-                            lblImagePreview.setText(""); 
+                            lblImagePreview.setText("");
                         });
                     }
                 } catch (Exception e) {
-                    System.err.println("Lỗi load ảnh: " + e.getMessage());
                     displayDefaultImagePreview();
                 }
             }).start();
         } else {
-        	displayDefaultImagePreview();
+            displayDefaultImagePreview();
         }
     }
 
     private void handleSave() {
-    	String maMon = txtMa.getText();
-    	String tenMon = txtTen.getText();
-    	String moTa = txtMoTa.getText();
-    	double giaMua = Double.parseDouble(txtGiaMua.getText());
-    	double giaBan = Double.parseDouble(txtGiaBan.getText());
-    	PhanLoaiMonAn loaiMon = (PhanLoaiMonAn) cbLoai.getSelectedItem();
-    	boolean trangThai = radConHang.isSelected();
-	
-    	if(!isEditMode) {
-    		String finalImageUrl = "";
-    	
-    		if (selectedImagePath != null && !selectedImagePath.isEmpty()) 
+        String maMon = txtMa.getText();
+        String tenMon = txtTen.getText();
+        String moTa = txtMoTa.getText();
+        double giaMua = Double.parseDouble(txtGiaMua.getText());
+        double giaBan = Double.parseDouble(txtGiaBan.getText());
+        PhanLoaiMonAn loaiMon = (PhanLoaiMonAn) cbLoai.getSelectedItem();
+        boolean trangThai = radConHang.isSelected();
+
+        if (!isEditMode) {
+            String finalImageUrl = "";
+
+            if (selectedImagePath != null && !selectedImagePath.isEmpty())
                 finalImageUrl = cloudDao.uploadImage(selectedImagePath);
-            
-        	
-        	if (finalImageUrl != null) {
-            	Mon monMoi = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, moTa,finalImageUrl);
-            	monDao.addMon(monMoi);
-            	JOptionPane.showMessageDialog(this, "Thêm món thành công!");
+
+            if (finalImageUrl != null) {
+                Mon monMoi = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, moTa, finalImageUrl);
+                monDao.addMon(monMoi);
+                JOptionPane.showMessageDialog(this, "Thêm món thành công!");
                 dispose();
-            } 
-        	else 
+            } else
                 JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh lên server!");
-            
-    	}
-    	else {
-    	    String urlToSave = "";
-    	    
-    	    if (selectedImagePath != null && !selectedImagePath.startsWith("http") && !selectedImagePath.isEmpty()) {
-    	        btnSave.setText("Đang tải ảnh mới...");
-    	        urlToSave = cloudDao.uploadImage(selectedImagePath);
-    	        
-    	        if (urlToSave == null) {
-    	            JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh mới lên server!");
-    	            return; 
-    	        }
-    	    } 
-    	    else 
-    	        urlToSave = selectedImagePath;
-    	    
+        } else {
+            String urlToSave = "";
 
-    	    Mon monCapNhat = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, moTa, urlToSave);
-    	    
-    	    boolean isUpdated = monDao.updateMon(monCapNhat);
+            if (selectedImagePath != null && !selectedImagePath.startsWith("http") && !selectedImagePath.isEmpty()) {
+                btnSave.setText("Đang tải ảnh mới...");
+                urlToSave = cloudDao.uploadImage(selectedImagePath);
 
-    	    if (isUpdated) {
-    	        JOptionPane.showMessageDialog(this, "Cập nhật món thành công!");
-    	        dispose();
-    	    } 
-    	    else 
-    	        JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật dữ liệu!");
-    	    
-    	}
+                if (urlToSave == null) {
+                    JOptionPane.showMessageDialog(this, "Lỗi khi tải ảnh mới lên server!");
+                    return;
+                }
+            } else
+                urlToSave = selectedImagePath;
+
+            Mon monCapNhat = new Mon(maMon, tenMon, giaMua, giaBan, trangThai, loaiMon, moTa, urlToSave);
+
+            boolean isUpdated = monDao.updateMon(monCapNhat);
+
+            if (isUpdated) {
+                JOptionPane.showMessageDialog(this, "Cập nhật món thành công!");
+                dispose();
+            } else
+                JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật dữ liệu!");
+        }
     }
 
     private boolean isValidated() {
         String maMon = txtMa.getText().trim();
         String tenMon = txtTen.getText().trim();
         String moTa = txtMoTa.getText().trim();
-        String giaMuaStr = txtGiaMua.getText().trim();
-        String giaBanStr = txtGiaBan.getText().trim();
 
         if (!maMon.matches("^M\\d+$")) {
             return showError("Mã món phải bắt đầu bằng chữ 'M' và theo sau là các con số (VD: M001)!", txtMa);
         }
 
-        if (!tenMon.matches("^([A-ZÀ-Ỹ][a-zà-ỹ]*(\\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*)$")) {
-            return showError("Tên món phải có ít nhất một từ, mỗi từ viết hoa chữ cái đầu!", txtTen);
+        if (!isEditMode && monDao.getMon(maMon) != null) {
+            return showError("Mã món đã tồn tại trong hệ thống!", txtMa);
         }
 
-        String[] words = moTa.split("\\s+");
-        if (words.length < 6 || !Character.isUpperCase(moTa.charAt(0))) {
-            return showError("Mô tả phải có ít nhất 6 từ và chữ cái đầu tiên phải viết hoa!", txtMoTa);
+        if (tenMon.isEmpty()) {
+            return showError("Tên món không được để trống!", txtTen);
         }
-        
-        double giaMua = 0;
-        try {
-            giaMua = Double.parseDouble(giaMuaStr);
-            if (giaMua <= 0) {
-                return showError("Giá mua phải là số lớn hơn 0!", txtGiaMua);
-            }
-        } catch (NumberFormatException e) {
-            return showError("Giá mua phải là một con số hợp lệ!", txtGiaMua);
+
+        if (moTa.isEmpty()) {
+            txtMoTa.setText("Description");
         }
-        
-        try {
-            double giaBan = Double.parseDouble(giaBanStr);
-            if (giaBan <= giaMua) {
-                return showError("Giá bán phải lớn hơn giá mua!", txtGiaBan);
-            }
-        } catch (NumberFormatException e) {
-            return showError("Giá bán phải là một con số hợp lệ!", txtGiaBan);
+
+        double giaMua = parsePrice(txtGiaMua, "Giá mua");
+        if (giaMua < 0) return false;
+
+        double giaBan = parsePrice(txtGiaBan, "Giá bán");
+        if (giaBan < 0) return false;
+
+        if (giaBan < giaMua) {
+            return showError("Giá bán không được nhỏ hơn giá mua!", txtGiaBan);
         }
 
         if (selectedImagePath == null || selectedImagePath.isEmpty()) {
@@ -346,6 +324,21 @@ public class FoodForm extends JDialog implements ActionListener{
         return true;
     }
 
+    private double parsePrice(JTextField textField, String fieldName) {
+        String value = textField.getText().trim();
+        try {
+            double price = Double.parseDouble(value);
+            if (price < 0) {
+                showError(fieldName + " không được là số âm!", textField);
+                return -1;
+            }
+            return price;
+        } catch (NumberFormatException e) {
+            showError(fieldName + " phải là một con số hợp lệ!", textField);
+            return -1;
+        }
+    }
+
     private boolean showError(String message, JTextField txtField) {
         JOptionPane.showMessageDialog(this, message, "Lỗi dữ liệu", JOptionPane.ERROR_MESSAGE);
         txtField.selectAll();
@@ -353,19 +346,17 @@ public class FoodForm extends JDialog implements ActionListener{
         return false;
     }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		Object event = e.getSource();
-		if(event.equals(btnSave)) {
-			if(isValidated()) {
-				handleSave();
-			}
-		}
-		else if(event.equals(btnCancel)) {
-			dispose();
-		}
-		else if(event.equals(btnChooseImage)) {
-			chooseImage();
-		}
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object event = e.getSource();
+        if (event.equals(btnSave)) {
+            if (isValidated()) {
+                handleSave();
+            }
+        } else if (event.equals(btnCancel)) {
+            dispose();
+        } else if (event.equals(btnChooseImage)) {
+            chooseImage();
+        }
+    }
 }
