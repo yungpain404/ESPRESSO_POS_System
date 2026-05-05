@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.List;

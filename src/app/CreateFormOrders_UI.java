@@ -18,9 +18,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class CreateFormOrders_UI extends JFrame implements ActionListener {
@@ -49,13 +51,12 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
 	private double totalAmount = 0.0;
 	private ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
 
-    private java.util.List<entity.Mon> originalList;
+    private List<Mon> originalList;
     private JButton activeTab; 
-
 
 	private Mon_DAO mon_dao = new Mon_DAO();
 	private HoaDon_DAO hoaDon_dao = new HoaDon_DAO();
-	
+	private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 	
     public CreateFormOrders_UI() {
         setTitle("Espresso Menu POS - Pure Java Optimized");
@@ -230,7 +231,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         lblTotalLabel.setForeground(textGray);
         lblTotalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        lblTotalPrice = new JLabel("$0.00");
+        lblTotalPrice = new JLabel(currencyFormatter.format(0));
         lblTotalPrice.setFont(new Font("Inter", Font.BOLD, 30));
         lblTotalPrice.setForeground(accentBrown);
         lblTotalPrice.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -287,7 +288,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         lblImgPlaceholder.setBackground(Color.decode("#EEEEEE"));
         lblImgPlaceholder.putClientProperty("JComponent.outlineWidth", 1);
         try {
-           
             String urlString = imagePath; 
             
             if (urlString != null && !urlString.isEmpty()) {
@@ -298,7 +298,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                 if (img != null) {
                     Image scaledImg = img.getScaledInstance(200, -1, Image.SCALE_SMOOTH);
                     lblImgPlaceholder.setIcon(new ImageIcon(scaledImg));
-                    lblImgPlaceholder.setText(""); // Xóa text nếu load thành công
+                    lblImgPlaceholder.setText("");
                 } else {
                   lblImgPlaceholder.setText("No Image");
                 }
@@ -317,19 +317,16 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             }
         }
 
-        // phần thông tin (Tên, Mô tả, Giá, Nút thêm)
         JPanel pnlDetails = new JPanel();
         pnlDetails.setLayout(new BoxLayout(pnlDetails, BoxLayout.Y_AXIS));
         pnlDetails.setOpaque(false);
         pnlDetails.setBorder(new EmptyBorder(10, 12, 12, 12));
 
-        // Tên món
         JLabel lblName = new JLabel(name);
         lblName.setFont(new Font("Inter", Font.BOLD, 15));
         lblName.setForeground(Color.BLACK);
         lblName.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Mô tả món
         JTextArea txaDesc = new JTextArea(desc);
         txaDesc.setLineWrap(true);
         txaDesc.setWrapStyleWord(true);
@@ -346,18 +343,15 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         pnlDetails.add(txaDesc);
         pnlDetails.add(Box.createVerticalGlue());
 
-        //Phần đáy của Info (Giá và Nút thêm)
         JPanel pnlBottomInfo = new JPanel(new BorderLayout());
         pnlBottomInfo.setOpaque(false);
         pnlBottomInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Nhãn giá
         JLabel lblPrice = new JLabel(price);
         lblPrice.setForeground(brown);
         lblPrice.setFont(new Font("Inter", Font.BOLD, 16));
         pnlBottomInfo.add(lblPrice, BorderLayout.WEST);
 
-        // Nút dấu cộng (+)
         JButton btnAdd = new JButton("+");
         btnAdd.setFont(new Font("Inter", Font.BOLD, 14));
         btnAdd.setForeground(Color.WHITE);
@@ -368,7 +362,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         btnAdd.setPreferredSize(new Dimension(35, 35)); 
         btnAdd.addActionListener(e -> {
             try {
-                double priceValue = Double.parseDouble(price.replace("$", "").replace(",", "."));
+                double priceValue = mon_dao.getAll().stream().filter(m->m.getMaMon().equals(maMon)).findFirst().get().getDonGiaBan();
                 addToCart(name, priceValue,  maMon); 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -394,7 +388,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                 return;
             }
         }
-        //Panel chính cho mỗi dòng
     	JPanel pnlItem = new JPanel();
     	pnlItem.setLayout(new BoxLayout(pnlItem, BoxLayout.X_AXIS)); 
     	pnlItem.setOpaque(false);
@@ -412,7 +405,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         lblIcon.setText("☕"); 
         lblIcon.putClientProperty("JComponent.outlineWidth", 1);
 
-        //Tên, Ghi chú và Bộ điều chỉnh số lượng
         JPanel pnlCenter = new JPanel();
         pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
         pnlCenter.setOpaque(false);
@@ -426,11 +418,9 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         lblNote.setFont(new Font("Inter", Font.ITALIC, 11));
         lblNote.setForeground(Color.GRAY);
 
-        // Điều chỉnh số lượng: [- 1 +] Remove
         JPanel pnlQtyAction = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         pnlQtyAction.setOpaque(false);
 
-        // Panel nhỏ chứa nút [- 1 +]
         JPanel pnlQtyStepper = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 2));
         pnlQtyStepper.setBackground(Color.decode("#eef3f3"));
         pnlQtyStepper.putClientProperty("JComponent.outlineWidth", 0);
@@ -440,7 +430,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         pnlItem.putClientProperty("qtyLabel", lblQty);
         JButton btnPlus = new JButton("+");
         
-        // Định dạng nút bấm nhỏ
         for (JButton btn : new JButton[]{btnMinus, btnPlus}) {
             btn.setPreferredSize(new Dimension(24, 24));
             btn.setFocusPainted(false);
@@ -453,7 +442,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         pnlQtyStepper.add(lblQty);
         pnlQtyStepper.add(btnPlus);
 
-        // Nút Remove màu đỏ
         JButton btnRemove = new JButton("Remove");
         btnRemove.setFont(new Font("Inter", Font.PLAIN, 12));
         btnRemove.setForeground(Color.decode("#d9534f"));
@@ -469,8 +457,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         pnlCenter.add(Box.createVerticalStrut(8));
         pnlCenter.add(pnlQtyAction);
 
-        // Giá tiền
-        JLabel lblItemPrice = new JLabel(String.format("$%.2f", price));
+        JLabel lblItemPrice = new JLabel(currencyFormatter.format(price));
         lblItemPrice.setFont(new Font("Inter", Font.BOLD, 16));
         lblItemPrice.setForeground(Color.decode("#573824"));
         lblItemPrice.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -514,7 +501,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         this.totalAmount += deltaPrice;
         if (this.totalAmount < 0) this.totalAmount = 0; 
         if (lblTotalPrice != null) {
-            lblTotalPrice.setText(String.format("$%.2f", this.totalAmount));
+            lblTotalPrice.setText(currencyFormatter.format(this.totalAmount));
         }
     }
     private void updateQuantityInExistingItem(JPanel itemPanel, double unitPrice) {
@@ -531,7 +518,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
-//    Tạo thanh điều khiển
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setPreferredSize(new Dimension(250, 0));
@@ -640,14 +626,11 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnComplete)) {
-        	
-            //Check giỏ hàng rỗng
             if (pnlCartItems.getComponentCount() == 0) {
                 JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
                 return;
             }
 
-            //Tạo hóa đơn
             HoaDon hd = new HoaDon();
             String maHD = "HD" + System.currentTimeMillis();
             hd.setMaHD(maHD);
@@ -679,7 +662,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                             .findFirst().orElse(null);
 
                     if (mon == null) {
-                        System.out.println("Không tìm thấy món: " + maMon);
                         continue;
                     }
 
@@ -688,7 +670,6 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                     ct.setMon(mon);
                     ct.setSoLuongMon(soLuong);
                     ct.setGhiChuKhachHang(ghiChuHoaDon);
-//                    ct.setHoaDon(hd); // đang bị lỗi ở đây
                     ct.setThanhTien(); 
 
                     dsChiTiet.add(ct);
@@ -698,34 +679,28 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                 }
             }
 
-            //Check nếu không có chi tiết
             if (dsChiTiet.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Lỗi: Không có sản phẩm hợp lệ!");
                 return;
             }
 
-            //Gán vào hóa đơn
             hd.getDsChiTiet().clear();
             hd.getDsChiTiet().addAll(dsChiTiet);
 
-            //Tính tổng tiền
             hd.setTongTien();
 
-            //Lưu file
             if (hoaDon_dao.addHoaDon(hd)) {
 
                 JOptionPane.showMessageDialog(this,
-                        "Thanh toán thành công!\nTổng tiền: $" + hd.getTongTien());
+                        "Thanh toán thành công!\nTổng tiền: " + currencyFormatter.format(hd.getTongTien()));
 
-                // Reset UI
                 pnlCartItems.removeAll();
                 totalAmount = 0;
-                lblTotalPrice.setText("$0.00");
+                lblTotalPrice.setText(currencyFormatter.format(0));
 
                 pnlCartItems.revalidate();
                 pnlCartItems.repaint();
 
-                // Chuyển trang
                 Invoice_UI next = new Invoice_UI(hd);
                 next.setVisible(true);
                 this.dispose();
@@ -744,7 +719,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                 if (opt == JOptionPane.YES_OPTION) {
                     pnlCartItems.removeAll();
                     totalAmount = 0;
-                    lblTotalPrice.setText("$0.00");
+                    lblTotalPrice.setText(currencyFormatter.format(0));
                     txaInvoiceNote.setText("");
                     pnlCartItems.revalidate();
                     pnlCartItems.repaint();
@@ -758,7 +733,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         for (Mon m : listMon) {
             JPanel card = createProductCard(
                 m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
-                String.format("$%.2f", m.getDonGiaBan()), 
+                currencyFormatter.format(m.getDonGiaBan()), 
                 bgCard, accentBrown, textGray, m.getDuongDanAnh()
             );
             pnlProductGrid.add(card);
@@ -772,15 +747,13 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         
         originalList = mon_dao.getAll(); 
         
-        System.out.println(originalList);
-
         if (originalList != null) {
             for (Mon m : originalList) {
                 JPanel card = createProductCard(
                     m.getMaMon(),
                     m.getTenMon(), 
                     m.getMoTaMon(),
-                    String.format("$%.2f", m.getDonGiaBan()), 
+                    currencyFormatter.format(m.getDonGiaBan()), 
                     bgCard, 
                     accentBrown, 
                     textGray,
@@ -826,7 +799,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         return btn;
     }
 
-    private void filterMenu(entity.PhanLoaiMonAn loai, JButton clickedTab) {
+    private void filterMenu(PhanLoaiMonAn loai, JButton clickedTab) {
         if (activeTab != null) {
             updateTabStyle(activeTab, false);
         }
@@ -836,18 +809,18 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         if (loai == null) {
             displayFilteredList(originalList);
         } else {
-            java.util.List<entity.Mon> filtered = originalList.stream()
+            List<Mon> filtered = originalList.stream()
                     .filter(m -> m.getPhanLoaiMonAn().equals(loai)) 
                     .toList();
             displayFilteredList(filtered);
         }
     }
-    private void displayFilteredList(java.util.List<entity.Mon> list) {
+    private void displayFilteredList(List<Mon> list) {
         pnlProductGrid.removeAll();
         for (Mon m : list) {
             JPanel card = createProductCard(
                 m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
-                String.format("$%.2f", m.getDonGiaBan()), 
+                currencyFormatter.format(m.getDonGiaBan()), 
                 bgCard, accentBrown, textGray, m.getDuongDanAnh()
             );
             pnlProductGrid.add(card);
@@ -878,7 +851,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             if (m.getMaMon().equalsIgnoreCase(keyword) || m.getTenMon().toLowerCase().contains(keyword.toLowerCase())) {
                 JPanel card = createProductCard(
                     m.getMaMon(), m.getTenMon(), m.getMoTaMon(),
-                    String.format("$%.2f", m.getDonGiaBan()), bgCard, accentBrown, textGray, m.getDuongDanAnh()
+                    currencyFormatter.format(m.getDonGiaBan()), bgCard, accentBrown, textGray, m.getDuongDanAnh()
                 );
                 pnlProductGrid.add(card);
             }
