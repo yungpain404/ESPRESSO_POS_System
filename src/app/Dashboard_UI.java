@@ -78,6 +78,8 @@ public class Dashboard_UI extends JFrame {
         add(pnlSidebar, BorderLayout.WEST);
         add(pnlCenter, BorderLayout.CENTER);
         
+        btnConfirm.addActionListener(e -> exportReportPDF());
+        
         loadDashboardData();
     }
     
@@ -669,5 +671,160 @@ public class Dashboard_UI extends JFrame {
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         
         return btn;
+    }
+
+    /**
+     * Export report ra file PDF
+     */
+    private void exportReportPDF() {
+        try {
+            // Chọn thư mục lưu file
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Save Report as PDF");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PDF files", "pdf"));
+            
+            String fileName = "Report_" + selectedYearMonth + "_" + System.currentTimeMillis() + ".pdf";
+            fileChooser.setSelectedFile(new java.io.File(fileName));
+            
+            int userSelection = fileChooser.showSaveDialog(this);
+            if (userSelection != JFileChooser.APPROVE_OPTION) {
+                return; // User đã cancel
+            }
+            
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            
+            // Tạo PDF
+            com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+            com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(filePath));
+            document.open();
+            
+            // ✅ Tiêu đề
+            com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 24, com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Paragraph title = new com.itextpdf.text.Paragraph("HÓA ĐƠN", titleFont);
+            title.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            document.add(title);
+            
+            // ✅ Logo & Tên cửa hàng
+            com.itextpdf.text.Font shopFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 14, com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Paragraph shopName = new com.itextpdf.text.Paragraph("COFFEE POS", shopFont);
+            shopName.setAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+            document.add(shopName);
+            
+            document.add(new com.itextpdf.text.Paragraph(" "));
+            
+            // ✅ Thông tin hóa đơn
+            List<HoaDon> hoaDonThang = getHoaDonByYearMonth(selectedYearMonth);
+            if (!hoaDonThang.isEmpty()) {
+                HoaDon firstHD = hoaDonThang.get(0);
+                com.itextpdf.text.Font infoFont = new com.itextpdf.text.Font(
+                    com.itextpdf.text.Font.FontFamily.HELVETICA, 11);
+                
+                document.add(new com.itextpdf.text.Paragraph("Mã hóa đơn: " + firstHD.getMaHD(), infoFont));
+                document.add(new com.itextpdf.text.Paragraph("Ngày xuất: " + firstHD.getNgayGioLap(), infoFont));
+            }
+            
+            document.add(new com.itextpdf.text.Paragraph(" "));
+            
+            // ✅ TỔNG QUAN
+            com.itextpdf.text.Font sectionFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 13, com.itextpdf.text.Font.BOLD);
+            document.add(new com.itextpdf.text.Paragraph("TỔNG QUAN", sectionFont));
+            
+            com.itextpdf.text.pdf.PdfPTable summaryTable = new com.itextpdf.text.pdf.PdfPTable(4);
+            summaryTable.setWidthPercentage(100);
+            
+            // Header
+            String[] headers = {"TỔNG HÓA ĐƠN", "TỔNG DOANH THU", "GIÁ CẢ", "TỔNG TIỀN"};
+            for (String header : headers) {
+                com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(
+                    new com.itextpdf.text.Paragraph(header, new com.itextpdf.text.Font(
+                        com.itextpdf.text.Font.FontFamily.HELVETICA, 10, com.itextpdf.text.Font.BOLD)));
+                cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+                summaryTable.addCell(cell);
+            }
+            
+            // Data
+            double totalRevenue = 0;
+            double avgPrice = 0;
+            if (!hoaDonThang.isEmpty()) {
+                for (HoaDon hd : hoaDonThang) {
+                    totalRevenue += hd.getTongTien();
+                }
+                avgPrice = totalRevenue / hoaDonThang.size();
+            }
+            
+            summaryTable.addCell(String.valueOf(hoaDonThang.size()));
+            summaryTable.addCell(formatCurrency(totalRevenue));
+            summaryTable.addCell(formatCurrency(avgPrice));
+            summaryTable.addCell(formatCurrency(totalRevenue));
+            
+            document.add(summaryTable);
+            document.add(new com.itextpdf.text.Paragraph(" "));
+            
+            // ✅ DANH SÁCH HÓA ĐƠN
+            document.add(new com.itextpdf.text.Paragraph("DANH SÁCH HÓA ĐƠN", sectionFont));
+            
+            com.itextpdf.text.pdf.PdfPTable invoiceTable = new com.itextpdf.text.pdf.PdfPTable(4);
+            invoiceTable.setWidthPercentage(100);
+            
+            String[] invoiceHeaders = {"MÃ HÓA ĐƠN", "NGÀY", "PHƯƠNG THỨC", "TỔNG TIỀN"};
+            for (String header : invoiceHeaders) {
+                com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(
+                    new com.itextpdf.text.Paragraph(header, new com.itextpdf.text.Font(
+                        com.itextpdf.text.Font.FontFamily.HELVETICA, 10, com.itextpdf.text.Font.BOLD)));
+                cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+                invoiceTable.addCell(cell);
+            }
+            
+            for (HoaDon hd : hoaDonThang) {
+                invoiceTable.addCell(hd.getMaHD());
+                invoiceTable.addCell(hd.getNgayGioLap().toString());
+                invoiceTable.addCell(hd.getPhuongThucTT() == PhuongThucThanhToan.TIENMAT ? "Cash" : "Transfer");
+                invoiceTable.addCell(formatCurrency(hd.getTongTien()));
+            }
+            
+            document.add(invoiceTable);
+            document.add(new com.itextpdf.text.Paragraph(" "));
+            
+            // ✅ SẢN PHẨM BÁN CHẠY
+            document.add(new com.itextpdf.text.Paragraph("SẢN PHẨM BÁN CHẠY", sectionFont));
+            
+            com.itextpdf.text.pdf.PdfPTable topItemsTable = new com.itextpdf.text.pdf.PdfPTable(3);
+            topItemsTable.setWidthPercentage(100);
+            
+            String[] topHeaders = {"STT", "TÊN SẢN PHẨM", "SỐ LƯỢNG"};
+            for (String header : topHeaders) {
+                com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(
+                    new com.itextpdf.text.Paragraph(header, new com.itextpdf.text.Font(
+                        com.itextpdf.text.Font.FontFamily.HELVETICA, 10, com.itextpdf.text.Font.BOLD)));
+                cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+                topItemsTable.addCell(cell);
+            }
+            
+            // Lấy top items từ table
+            for (int i = 0; i < modelTopItems.getRowCount(); i++) {
+                topItemsTable.addCell(modelTopItems.getValueAt(i, 0).toString());
+                topItemsTable.addCell(modelTopItems.getValueAt(i, 1).toString());
+                topItemsTable.addCell(modelTopItems.getValueAt(i, 2).toString());
+            }
+            
+            document.add(topItemsTable);
+            
+            document.close();
+            
+            JOptionPane.showMessageDialog(this, 
+                "PDF đã được xuất thành công!\n" + filePath, 
+                "Success", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Lỗi khi xuất PDF: " + ex.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
     }
 }
