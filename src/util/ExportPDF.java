@@ -90,7 +90,7 @@ public class ExportPDF {
 				content.beginText();
 				content.setFont(fontBold, 14);
 				content.newLineAtOffset(400, yPosition - 20);
-				content.showText("Tong cong: ");
+				content.showText("Tổng cộng: ");
 				content.showText(currencyFormatter.format(hd.getTongTien()));
 				content.endText();
 			}
