@@ -715,7 +715,8 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             hd.getDsChiTiet().addAll(dsChiTiet);
 
             hd.setTongTien();
-
+            System.out.println(hd.getTongTien()); // có kết quả
+            
             if (hoaDon_dao.addHoaDon(hd)) {
 
                 JOptionPane.showMessageDialog(this,

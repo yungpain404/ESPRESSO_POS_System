@@ -25,6 +25,7 @@ public class HoaDon {
     public void setPhuongThucTT(PhuongThucThanhToan phuongThucTT) { this.phuongThucTT = phuongThucTT; }
 
     public double getTongTien() { return tongTien; }
+    
     public void setTongTien() {
         double tong = 0;
         for (ChiTietHoaDon ct : dsChiTiet) {

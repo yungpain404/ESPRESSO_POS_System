@@ -1,6 +1,7 @@
 package dao;
 
 import connectDB.ConnectDB;
+import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.PhuongThucThanhToan;
 import entity.TaiKhoan;
@@ -11,35 +12,44 @@ import java.util.List;
 
 public class HoaDon_DAO {
 
-    public List<HoaDon> getAll() {
-        List<HoaDon> list = new ArrayList<>();
-        String sql = "SELECT * FROM HoaDon";
-        try (Connection con = ConnectDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            
-            while (rs.next()) {
-                HoaDon hd = new HoaDon();
-                hd.setMaHD(rs.getString("maHD"));
-                
-                TaiKhoan tk = new TaiKhoan();
-                tk.setMaTaiKhoan(rs.getString("maTaiKhoanLap"));
-                hd.setTaiKhoanLap(tk);
-                
-                hd.setNgayGioLap(rs.getDate("ngayGioLap").toLocalDate());
-                hd.setTrangThaiTT(rs.getBoolean("trangThaiTT"));
-                
-                String ptt = rs.getString("phuongThucTT");
-                hd.setPhuongThucTT(ptt != null ? PhuongThucThanhToan.valueOf(ptt) : PhuongThucThanhToan.TIENMAT);
-                
-                hd.setTongTien();
-                list.add(hd);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
+	public List<HoaDon> getAll() {
+	    List<HoaDon> list = new ArrayList<>();
+	    
+	    ChiTietHoaDon_DAO chiTietDAO = new ChiTietHoaDon_DAO(); 
+	    String sql = "SELECT * FROM HoaDon";
+
+	    try (Connection con = ConnectDB.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            HoaDon hd = new HoaDon();
+	            String maHD = rs.getString("maHD");
+	            hd.setMaHD(maHD);
+
+	            TaiKhoan tk = new TaiKhoan();
+	            tk.setMaTaiKhoan(rs.getString("maTaiKhoanLap"));
+	            hd.setTaiKhoanLap(tk);
+
+	            hd.setNgayGioLap(rs.getDate("ngayGioLap").toLocalDate());
+	            hd.setTrangThaiTT(rs.getBoolean("trangThaiTT"));
+
+	            String ptt = rs.getString("phuongThucTT");
+	            hd.setPhuongThucTT(ptt != null ? PhuongThucThanhToan.valueOf(ptt) : PhuongThucThanhToan.TIENMAT);
+
+	            List<ChiTietHoaDon> dsChiTiet = chiTietDAO.getChiTietByMaHD(maHD);
+	            
+	            hd.setDsChiTiet(dsChiTiet);
+	            
+	            hd.setTongTien(); 
+
+	            list.add(hd);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return list;
+	}
 
     public List<HoaDon> getByDate(LocalDate ngay) {
         List<HoaDon> result = new ArrayList<>();
