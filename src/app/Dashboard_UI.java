@@ -89,9 +89,6 @@ public class Dashboard_UI extends JFrame {
         ct_DAO.getAll();
     }
     
-    /**
-     * Tạo Top Panel với tiêu đề và nút chọn tháng/năm
-     */
     private JPanel createTopPanel() {
         JPanel pnlTop = new JPanel(new BorderLayout());
         pnlTop.setBackground(BG_CARD);
@@ -127,9 +124,6 @@ public class Dashboard_UI extends JFrame {
         return pnlTop;
     }
     
-    /**
-     * Hiển thị dialog chọn tháng/năm
-     */
     private void showMonthYearPicker(JButton btnSelectMonth) {
         JDialog dialog = new JDialog(this, "Select Month & Year", true);
         dialog.setSize(350, 220);
@@ -143,7 +137,6 @@ public class Dashboard_UI extends JFrame {
         
         int currentYear = java.time.Year.now().getValue();
         
-        // Month Label
         JLabel lblMonth = new JLabel("Month:");
         lblMonth.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblMonth.setHorizontalAlignment(SwingConstants.CENTER);
@@ -152,7 +145,6 @@ public class Dashboard_UI extends JFrame {
         gbc.weightx = 0.3;
         dialog.add(lblMonth, gbc);
         
-        // Month Spinner
         SpinnerModel monthModel = new SpinnerNumberModel(selectedYearMonth.getMonthValue(), 1, 12, 1);
         JSpinner spMonth = new JSpinner(monthModel);
         spMonth.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -166,7 +158,6 @@ public class Dashboard_UI extends JFrame {
         gbc.weightx = 0.7;
         dialog.add(spMonth, gbc);
         
-        // Year Label
         JLabel lblYear = new JLabel("Year:");
         lblYear.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblYear.setHorizontalAlignment(SwingConstants.CENTER);
@@ -175,7 +166,6 @@ public class Dashboard_UI extends JFrame {
         gbc.weightx = 0.3;
         dialog.add(lblYear, gbc);
         
-        // Year Spinner - max = năm hiện tại
         SpinnerModel yearModel = new SpinnerNumberModel(selectedYearMonth.getYear(), 2020, currentYear, 1);
         JSpinner spYear = new JSpinner(yearModel);
         spYear.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -187,7 +177,6 @@ public class Dashboard_UI extends JFrame {
         gbc.weightx = 0.7;
         dialog.add(spYear, gbc);
         
-        // Buttons Panel
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         pnlButtons.setBackground(BG);
         
@@ -202,7 +191,6 @@ public class Dashboard_UI extends JFrame {
                 int month = (int) spMonth.getValue();
                 int year = ((Number) spYear.getValue()).intValue();
                 
-                // ✅ Validate - năm không được vượt quá năm hiện tại
                 if (year > currentYear) {
                     JOptionPane.showMessageDialog(dialog, 
                         "Dữ liệu không hợp lệ", 
@@ -253,14 +241,10 @@ public class Dashboard_UI extends JFrame {
         dialog.setVisible(true);
     }
     
-    /**
-     * Load dữ liệu Dashboard theo tháng/năm đã chọn
-     */
     private void loadDashboardData() {
         List<HoaDon> hoaDonThang = getHoaDonByYearMonth(selectedYearMonth);
         
         if (hoaDonThang == null || hoaDonThang.isEmpty()) {
-            System.out.println("Không có hóa đơn trong tháng " + selectedYearMonth);
             lblTotalInvoices.setText("0");
             lblTotalRevenue.setText("0 VNĐ");
             lblCashAmount.setText("0 VNĐ");
@@ -275,9 +259,6 @@ public class Dashboard_UI extends JFrame {
         loadTopItems(hoaDonThang);
     }
     
-    /**
-     * Lấy hóa đơn theo tháng/năm
-     */
     private List<HoaDon> getHoaDonByYearMonth(YearMonth yearMonth) {
         List<HoaDon> result = new ArrayList<>();
         for (HoaDon hd : hoaDonDao.getAll()) {
@@ -294,24 +275,31 @@ public class Dashboard_UI extends JFrame {
     private void calculateStatistics(List<HoaDon> hoaDonList) {
         int totalInvoices = hoaDonList.size();
         double totalRevenue = 0;
-        double cashRevenue = 0;
-        double transferRevenue = 0;
-        
         for (HoaDon hd : hoaDonList) {
             totalRevenue += hd.getTongTien();
-            
-            if (hd.getPhuongThucTT() == PhuongThucThanhToan.TIENMAT) {
-                cashRevenue += hd.getTongTien();
-            } else {
-                transferRevenue += hd.getTongTien();
-            }
         }
-        
+
+        YearMonth prevMonth = selectedYearMonth.minusMonths(1);
+        List<HoaDon> hoaDonPrev = getHoaDonByYearMonth(prevMonth);
+        int countPrev = hoaDonPrev.size();
+        double revenuePrev = 0;
+        for (HoaDon hd : hoaDonPrev) {
+            revenuePrev += hd.getTongTien();
+        }
+
+        int diffCount = totalInvoices - countPrev;
+        lblInvoicesSubtitle.setText((diffCount >= 0 ? "+" : "") + diffCount + " vs last month");
+
+        double diffRevenue = totalRevenue - revenuePrev;
+        if (revenuePrev == 0) {
+            lblRevenueSubtitle.setText(totalRevenue > 0 ? "+100% vs last month" : "0% vs last month");
+        } else {
+            double percent = (diffRevenue / revenuePrev) * 100;
+            lblRevenueSubtitle.setText(String.format("%s%.1f%% vs last month", (percent >= 0 ? "+" : ""), percent));
+        }
+
         lblTotalInvoices.setText(String.valueOf(totalInvoices));
         lblTotalRevenue.setText(formatCurrency(totalRevenue));
-        
-        lblInvoicesSubtitle.setText("+0 vs last month");
-        lblRevenueSubtitle.setText("+0% vs last month");
     }
     
     private void loadRecentInvoices(List<HoaDon> hoaDonList) {
@@ -380,9 +368,6 @@ public class Dashboard_UI extends JFrame {
         return pnlContent;
     }
 
-    /**
-     * Statistics Panel - chia đều 4 khung khi full màn hình
-     */
     private JPanel createStatisticsPanel() {
         JPanel pnlStats = new JPanel(new GridLayout(1, 4, 10, 0));
         pnlStats.setBackground(BG);
@@ -673,138 +658,128 @@ public class Dashboard_UI extends JFrame {
         return btn;
     }
 
-    
     private void exportReportPDF() {
-    try {
-        // Đường dẫn này dành cho Windows. Nếu dùng macOS hãy đổi thành "/Library/Fonts/Arial.ttf"
-        String fontPath = "C:/Windows/Fonts/Arial.ttf"; 
-        com.itextpdf.text.pdf.BaseFont bf = com.itextpdf.text.pdf.BaseFont.createFont(fontPath, 
-                com.itextpdf.text.pdf.BaseFont.IDENTITY_H, com.itextpdf.text.pdf.BaseFont.EMBEDDED);
-        
-        com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(bf, 24, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font shopFont = new com.itextpdf.text.Font(bf, 14, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font sectionFont = new com.itextpdf.text.Font(bf, 13, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font headerTableFont = new com.itextpdf.text.Font(bf, 10, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(bf, 10, com.itextpdf.text.Font.NORMAL);
+        try {
+            String fontPath = "C:/Windows/Fonts/Arial.ttf"; 
+            com.itextpdf.text.pdf.BaseFont bf = com.itextpdf.text.pdf.BaseFont.createFont(fontPath, 
+                    com.itextpdf.text.pdf.BaseFont.IDENTITY_H, com.itextpdf.text.pdf.BaseFont.EMBEDDED);
+            
+            com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(bf, 24, com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font shopFont = new com.itextpdf.text.Font(bf, 14, com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font sectionFont = new com.itextpdf.text.Font(bf, 13, com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font headerTableFont = new com.itextpdf.text.Font(bf, 10, com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(bf, 10, com.itextpdf.text.Font.NORMAL);
 
-        // --- 2. Thiết lập lưu file ---
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Save Report as PDF");
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PDF files", "pdf"));
-        
-        String fileName = "Report_" + selectedYearMonth + "_" + System.currentTimeMillis() + ".pdf";
-        fileChooser.setSelectedFile(new java.io.File(fileName));
-        
-        if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
-            return; 
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Save Report as PDF");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PDF files", "pdf"));
+            
+            String fileName = "Report_" + selectedYearMonth + "_" + System.currentTimeMillis() + ".pdf";
+            fileChooser.setSelectedFile(new java.io.File(fileName));
+            
+            if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+                return; 
+            }
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+            com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+            com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(filePath));
+            document.open();
+
+            com.itextpdf.text.Paragraph title = new com.itextpdf.text.Paragraph("THỐNG KÊ", titleFont);
+            title.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            title.setSpacingAfter(10);
+            document.add(title);
+
+            com.itextpdf.text.Paragraph shopName = new com.itextpdf.text.Paragraph("ESPRESSO LOGIC", shopFont);
+            shopName.setAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+            shopName.setSpacingAfter(20);
+            document.add(shopName);
+
+            List<HoaDon> hoaDonThang = getHoaDonByYearMonth(selectedYearMonth);
+            if (!hoaDonThang.isEmpty()) {
+                HoaDon firstHD = hoaDonThang.get(0);
+                document.add(new com.itextpdf.text.Paragraph("Mã hóa đơn: " + firstHD.getMaHD(), normalFont));
+                document.add(new com.itextpdf.text.Paragraph("Ngày xuất: " + firstHD.getNgayGioLap(), normalFont));
+            }
+
+            com.itextpdf.text.Paragraph secOverview = new com.itextpdf.text.Paragraph("TỔNG QUAN", sectionFont);
+            secOverview.setSpacingBefore(20); 
+            secOverview.setSpacingAfter(10);  
+            document.add(secOverview);
+
+            com.itextpdf.text.pdf.PdfPTable summaryTable = new com.itextpdf.text.pdf.PdfPTable(4);
+            summaryTable.setWidthPercentage(100);
+            String[] headers = {"TỔNG HÓA ĐƠN", "TỔNG DOANH THU", "GIÁ CẢ", "TỔNG TIỀN"};
+            for (String h : headers) {
+                com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase(h, headerTableFont));
+                cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+                cell.setPadding(5);
+                summaryTable.addCell(cell);
+            }
+
+            double totalRevenue = 0;
+            for (HoaDon hd : hoaDonThang) { totalRevenue += hd.getTongTien(); }
+            double avgPrice = hoaDonThang.isEmpty() ? 0 : totalRevenue / hoaDonThang.size();
+
+            summaryTable.addCell(new com.itextpdf.text.Phrase(String.valueOf(hoaDonThang.size()), normalFont));
+            summaryTable.addCell(new com.itextpdf.text.Phrase(formatCurrency(totalRevenue), normalFont));
+            summaryTable.addCell(new com.itextpdf.text.Phrase(formatCurrency(avgPrice), normalFont));
+            summaryTable.addCell(new com.itextpdf.text.Phrase(formatCurrency(totalRevenue), normalFont));
+            document.add(summaryTable);
+
+            com.itextpdf.text.Paragraph secInvoices = new com.itextpdf.text.Paragraph("DANH SÁCH HÓA ĐƠN", sectionFont);
+            secInvoices.setSpacingBefore(25); 
+            secInvoices.setSpacingAfter(10);
+            document.add(secInvoices);
+
+            com.itextpdf.text.pdf.PdfPTable invoiceTable = new com.itextpdf.text.pdf.PdfPTable(4);
+            invoiceTable.setWidthPercentage(100);
+            String[] invHeaders = {"MÃ HÓA ĐƠN", "NGÀY", "PHƯƠNG THỨC", "TỔNG TIỀN"};
+            for (String h : invHeaders) {
+                com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase(h, headerTableFont));
+                cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+                cell.setPadding(5);
+                invoiceTable.addCell(cell);
+            }
+
+            for (HoaDon hd : hoaDonThang) {
+                invoiceTable.addCell(new com.itextpdf.text.Phrase(hd.getMaHD(), normalFont));
+                invoiceTable.addCell(new com.itextpdf.text.Phrase(hd.getNgayGioLap().toString(), normalFont));
+                String method = (hd.getPhuongThucTT() == PhuongThucThanhToan.TIENMAT) ? "Tiền mặt" : "Chuyển khoản";
+                invoiceTable.addCell(new com.itextpdf.text.Phrase(method, normalFont));
+                invoiceTable.addCell(new com.itextpdf.text.Phrase(formatCurrency(hd.getTongTien()), normalFont));
+            }
+            document.add(invoiceTable);
+
+            com.itextpdf.text.Paragraph secTopItems = new com.itextpdf.text.Paragraph("SẢN PHẨM BÁN CHẠY", sectionFont);
+            secTopItems.setSpacingBefore(25);
+            secTopItems.setSpacingAfter(10);
+            document.add(secTopItems);
+
+            com.itextpdf.text.pdf.PdfPTable topItemsTable = new com.itextpdf.text.pdf.PdfPTable(3);
+            topItemsTable.setWidthPercentage(100);
+            String[] topHeaders = {"STT", "TÊN SẢN PHẨM", "SỐ LƯỢNG"};
+            for (String h : topHeaders) {
+                com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase(h, headerTableFont));
+                cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+                cell.setPadding(5);
+                topItemsTable.addCell(cell);
+            }
+
+            for (int i = 0; i < modelTopItems.getRowCount(); i++) {
+                topItemsTable.addCell(new com.itextpdf.text.Phrase(modelTopItems.getValueAt(i, 0).toString(), normalFont));
+                topItemsTable.addCell(new com.itextpdf.text.Phrase(modelTopItems.getValueAt(i, 1).toString(), normalFont));
+                topItemsTable.addCell(new com.itextpdf.text.Phrase(modelTopItems.getValueAt(i, 2).toString(), normalFont));
+            }
+            document.add(topItemsTable);
+
+            document.close();
+            JOptionPane.showMessageDialog(this, "Xuất PDF thành công tại:\n" + filePath);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi khi xuất PDF: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
-        String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-
-        // --- 3. Tạo cấu trúc Document ---
-        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-        com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(filePath));
-        document.open();
-
-        // ✅ TIÊU ĐỀ
-        com.itextpdf.text.Paragraph title = new com.itextpdf.text.Paragraph("THỐNG KÊ", titleFont);
-        title.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-        title.setSpacingAfter(10);
-        document.add(title);
-
-        // ✅ TÊN CỬA HÀNG
-        com.itextpdf.text.Paragraph shopName = new com.itextpdf.text.Paragraph("ESPRESSO LOGIC", shopFont);
-        shopName.setAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
-        shopName.setSpacingAfter(20);
-        document.add(shopName);
-
-        // ✅ THÔNG TIN CHUNG
-        List<HoaDon> hoaDonThang = getHoaDonByYearMonth(selectedYearMonth);
-        if (!hoaDonThang.isEmpty()) {
-            HoaDon firstHD = hoaDonThang.get(0);
-            document.add(new com.itextpdf.text.Paragraph("Mã hóa đơn: " + firstHD.getMaHD(), normalFont));
-            document.add(new com.itextpdf.text.Paragraph("Ngày xuất: " + firstHD.getNgayGioLap(), normalFont));
-        }
-
-        // ✅ PHẦN 1: TỔNG QUAN
-        com.itextpdf.text.Paragraph secOverview = new com.itextpdf.text.Paragraph("TỔNG QUAN", sectionFont);
-        secOverview.setSpacingBefore(20); // Tạo khoảng cách trắng phía trên
-        secOverview.setSpacingAfter(10);  // Khoảng cách với bảng bên dưới
-        document.add(secOverview);
-
-        com.itextpdf.text.pdf.PdfPTable summaryTable = new com.itextpdf.text.pdf.PdfPTable(4);
-        summaryTable.setWidthPercentage(100);
-        String[] headers = {"TỔNG HÓA ĐƠN", "TỔNG DOANH THU", "GIÁ CẢ", "TỔNG TIỀN"};
-        for (String h : headers) {
-            com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase(h, headerTableFont));
-            cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
-            cell.setPadding(5);
-            summaryTable.addCell(cell);
-        }
-
-        double totalRevenue = 0;
-        for (HoaDon hd : hoaDonThang) { totalRevenue += hd.getTongTien(); }
-        double avgPrice = hoaDonThang.isEmpty() ? 0 : totalRevenue / hoaDonThang.size();
-
-        summaryTable.addCell(new com.itextpdf.text.Phrase(String.valueOf(hoaDonThang.size()), normalFont));
-        summaryTable.addCell(new com.itextpdf.text.Phrase(formatCurrency(totalRevenue), normalFont));
-        summaryTable.addCell(new com.itextpdf.text.Phrase(formatCurrency(avgPrice), normalFont));
-        summaryTable.addCell(new com.itextpdf.text.Phrase(formatCurrency(totalRevenue), normalFont));
-        document.add(summaryTable);
-
-        // ✅ PHẦN 2: DANH SÁCH HÓA ĐƠN
-        com.itextpdf.text.Paragraph secInvoices = new com.itextpdf.text.Paragraph("DANH SÁCH HÓA ĐƠN", sectionFont);
-        secInvoices.setSpacingBefore(25); // Khoảng cách trắng rộng hơn để tách biệt
-        secInvoices.setSpacingAfter(10);
-        document.add(secInvoices);
-
-        com.itextpdf.text.pdf.PdfPTable invoiceTable = new com.itextpdf.text.pdf.PdfPTable(4);
-        invoiceTable.setWidthPercentage(100);
-        String[] invHeaders = {"MÃ HÓA ĐƠN", "NGÀY", "PHƯƠNG THỨC", "TỔNG TIỀN"};
-        for (String h : invHeaders) {
-            com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase(h, headerTableFont));
-            cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
-            cell.setPadding(5);
-            invoiceTable.addCell(cell);
-        }
-
-        for (HoaDon hd : hoaDonThang) {
-            invoiceTable.addCell(new com.itextpdf.text.Phrase(hd.getMaHD(), normalFont));
-            invoiceTable.addCell(new com.itextpdf.text.Phrase(hd.getNgayGioLap().toString(), normalFont));
-            String method = (hd.getPhuongThucTT() == PhuongThucThanhToan.TIENMAT) ? "Tiền mặt" : "Chuyển khoản";
-            invoiceTable.addCell(new com.itextpdf.text.Phrase(method, normalFont));
-            invoiceTable.addCell(new com.itextpdf.text.Phrase(formatCurrency(hd.getTongTien()), normalFont));
-        }
-        document.add(invoiceTable);
-
-        // ✅ PHẦN 3: SẢN PHẨM BÁN CHẠY
-        com.itextpdf.text.Paragraph secTopItems = new com.itextpdf.text.Paragraph("SẢN PHẨM BÁN CHẠY", sectionFont);
-        secTopItems.setSpacingBefore(25);
-        secTopItems.setSpacingAfter(10);
-        document.add(secTopItems);
-
-        com.itextpdf.text.pdf.PdfPTable topItemsTable = new com.itextpdf.text.pdf.PdfPTable(3);
-        topItemsTable.setWidthPercentage(100);
-        String[] topHeaders = {"STT", "TÊN SẢN PHẨM", "SỐ LƯỢNG"};
-        for (String h : topHeaders) {
-            com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase(h, headerTableFont));
-            cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
-            cell.setPadding(5);
-            topItemsTable.addCell(cell);
-        }
-
-        for (int i = 0; i < modelTopItems.getRowCount(); i++) {
-            topItemsTable.addCell(new com.itextpdf.text.Phrase(modelTopItems.getValueAt(i, 0).toString(), normalFont));
-            topItemsTable.addCell(new com.itextpdf.text.Phrase(modelTopItems.getValueAt(i, 1).toString(), normalFont));
-            topItemsTable.addCell(new com.itextpdf.text.Phrase(modelTopItems.getValueAt(i, 2).toString(), normalFont));
-        }
-        document.add(topItemsTable);
-
-        document.close();
-        JOptionPane.showMessageDialog(this, "Xuất PDF thành công tại:\n" + filePath);
-
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Lỗi khi xuất PDF: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
-}
 }
