@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.NumberFormat;
+import java.time.YearMonth;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -389,6 +390,8 @@ public class Invoice_UI extends JFrame implements ActionListener {
 		Object o = e.getSource();
 		if (o.equals(btnExport)) {
 			JFileChooser fileChooser = new JFileChooser();
+			String fileName = "Invoice_" + YearMonth.now() + "_" + System.currentTimeMillis() + ".pdf";
+            fileChooser.setSelectedFile(new java.io.File(fileName));
 			fileChooser.setDialogTitle("Lưu hóa đơn thành PDF");
 			int userSelection = fileChooser.showSaveDialog(this);
 
