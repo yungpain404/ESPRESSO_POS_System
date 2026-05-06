@@ -5,7 +5,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -723,6 +725,8 @@ public class Dashboard_UI extends JFrame {
             HoaDon firstHD = hoaDonThang.get(0);
             document.add(new com.itextpdf.text.Paragraph("Mã hóa đơn: " + firstHD.getMaHD(), normalFont));
             document.add(new com.itextpdf.text.Paragraph("Ngày xuất: " + firstHD.getNgayGioLap(), normalFont));
+            String gioHienTai = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+            document.add(new com.itextpdf.text.Paragraph("Thời gian xuất: " + gioHienTai, normalFont));
         }
 
         // ✅ PHẦN 1: TỔNG QUAN
@@ -733,7 +737,7 @@ public class Dashboard_UI extends JFrame {
 
         com.itextpdf.text.pdf.PdfPTable summaryTable = new com.itextpdf.text.pdf.PdfPTable(4);
         summaryTable.setWidthPercentage(100);
-        String[] headers = {"TỔNG HÓA ĐƠN", "TỔNG DOANH THU", "GIÁ CẢ", "TỔNG TIỀN"};
+        String[] headers = {"TỔNG HÓA ĐƠN", "TỔNG DOANH THU", "TRUNG BÌNH TỔNG TIỀN CÁC HÓA ĐƠN", "TỔNG TIỀN"};
         for (String h : headers) {
             com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Phrase(h, headerTableFont));
             cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
@@ -800,7 +804,7 @@ public class Dashboard_UI extends JFrame {
         document.add(topItemsTable);
 
         document.close();
-        JOptionPane.showMessageDialog(this, "Xuất PDF thành công tại:\n" + filePath);
+        JOptionPane.showMessageDialog(this, "Đã xuất thành công !");
 
     } catch (Exception ex) {
         ex.printStackTrace();
