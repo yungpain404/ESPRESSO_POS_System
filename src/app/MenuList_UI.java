@@ -36,9 +36,11 @@ public class MenuList_UI extends JFrame implements ActionListener {
     private JPanel pnlProductGrid;
     private List<entity.Mon> originalList;
     private JButton activeTab; 
+    private JButton btnAll;
 
     private Mon_DAO mon_dao = new Mon_DAO();
-    private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+    @SuppressWarnings("deprecation")
+	private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
     public MenuList_UI() {
         setTitle("Espresso Menu Browser - Pure Java Optimized");
@@ -122,7 +124,7 @@ public class MenuList_UI extends JFrame implements ActionListener {
         JPanel pnlTabs = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnlTabs.setOpaque(false);
         
-        JButton btnAll = createTabButton("All", true);
+        btnAll = createTabButton("All", true);
         activeTab = btnAll;
         btnAll.addActionListener(e -> filterMenu(null, btnAll));
         pnlTabs.add(btnAll);	
@@ -162,7 +164,8 @@ public class MenuList_UI extends JFrame implements ActionListener {
 
         btnSearch.addActionListener(this);
     }
-	private JPanel createProductCard(String maMon, String name, String desc, String price, Color bg, Color brown, Color gray, String imagePath) {
+    private JPanel createProductCard(String maMon, String name, String desc, String price, Color bg, Color brown, Color gray, String imagePath) {
+
         JPanel pnlCard = new JPanel(new BorderLayout());
         pnlCard.setPreferredSize(new Dimension(230, 255));
         pnlCard.setMaximumSize(new Dimension(230, 255));
@@ -174,13 +177,10 @@ public class MenuList_UI extends JFrame implements ActionListener {
         lblImgPlaceholder.setOpaque(true);
         lblImgPlaceholder.setBackground(Color.decode("#EEEEEE"));
         try {
-            
             String urlString = imagePath; 
-            
             if (urlString != null && !urlString.isEmpty()) {
             	java.net.URL url = new java.net.URI(imagePath).toURL(); 
             	Image img = javax.imageio.ImageIO.read(url);
-                
                 if (img != null) {
                     Image scaledImg = img.getScaledInstance(250, -1, Image.SCALE_SMOOTH);
                     lblImgPlaceholder.setIcon(new ImageIcon(scaledImg));
@@ -236,7 +236,6 @@ public class MenuList_UI extends JFrame implements ActionListener {
         lblPrice.setForeground(brown);
         lblPrice.setFont(new Font("Inter", Font.BOLD, 16));
         pnlBottomInfo.add(lblPrice, BorderLayout.WEST);
-
 
         pnlDetails.add(pnlBottomInfo);
 
@@ -372,7 +371,6 @@ public class MenuList_UI extends JFrame implements ActionListener {
         updateTabStyle(clickedTab, true);
         activeTab = clickedTab;
         
-
         if (loai == null) {
             displayFilteredList(originalList);
         } else {
@@ -417,6 +415,12 @@ public class MenuList_UI extends JFrame implements ActionListener {
     	}
     }
     private void searchMenu(String keyword) {
+        if (activeTab != btnAll) {
+            updateTabStyle(activeTab, false);
+            activeTab = btnAll;
+            updateTabStyle(activeTab, true);
+        }
+
         pnlProductGrid.removeAll();
         List<Mon> allMon = mon_dao.getAll();
         if (keyword.isEmpty()) {

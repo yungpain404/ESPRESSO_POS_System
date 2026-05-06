@@ -267,6 +267,7 @@ public class MenuManagement extends JFrame {
 		table.getColumnModel().getColumn(7).setCellEditor(new TableActionEditor(callback));
 	}
 
+	@SuppressWarnings("deprecation")
 	public void loadDataToTable() {
 		List<Mon> dsMon = monDao.getAll();
 		model.setRowCount(0);
@@ -276,20 +277,31 @@ public class MenuManagement extends JFrame {
 			String trangThaiMonAn = m.isTrangThai() ? "Còn hàng" : "Hết hàng";
 			String giaMua = currencyFormatter.format(m.getDonGiaMua());
 			String giaBan = currencyFormatter.format(m.getDonGiaBan());
+			
+			ImageIcon foodIcon = null;
 			try {
 				java.net.URL url = new java.net.URL(m.getDuongDanAnh());
 				Image img = javax.imageio.ImageIO.read(url);
 				if (img != null) {
-					ImageIcon foodIcon = new ImageIcon(img.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-					model.addRow(new Object[] { foodIcon, m.getMaMon(), m.getTenMon(), m.getPhanLoaiMonAn(), giaMua,
-							giaBan, trangThaiMonAn });
+					foodIcon = new ImageIcon(img.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 				}
 			} catch (Exception e) {
-				ImageIcon foodIcon = new ImageIcon(
-						new ImageIcon("img/flatwhite.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-				model.addRow(new Object[] { foodIcon, m.getMaMon(), m.getTenMon(), m.getPhanLoaiMonAn(), giaMua, giaBan,
-						trangThaiMonAn });
 			}
+
+			if (foodIcon == null) {
+				foodIcon = new ImageIcon(new ImageIcon("img/flatwhite.png")
+						.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+			}
+
+			model.addRow(new Object[] { 
+				foodIcon, 
+				m.getMaMon(), 
+				m.getTenMon(), 
+				m.getPhanLoaiMonAn(), 
+				giaMua, 
+				giaBan, 
+				trangThaiMonAn 
+			});
 		}
 	}
 }

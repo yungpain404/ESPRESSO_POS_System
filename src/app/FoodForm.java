@@ -198,7 +198,8 @@ public class FoodForm extends JDialog implements ActionListener {
         lblImagePreview.setText("");
     }
 
-    public void fillData(Mon mon) {
+    @SuppressWarnings("deprecation")
+	public void fillData(Mon mon) {
         txtMa.setText(mon.getMaMon());
         txtTen.setText(mon.getTenMon());
         txtMoTa.setText(mon.getMoTaMon());

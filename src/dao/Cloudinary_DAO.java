@@ -18,7 +18,8 @@ public class Cloudinary_DAO {
         ));
     }
 
-    public String uploadImage(String filePath) {
+    @SuppressWarnings("rawtypes")
+	public String uploadImage(String filePath) {
         try {
             File file = new File(filePath);
             Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "espresso"));

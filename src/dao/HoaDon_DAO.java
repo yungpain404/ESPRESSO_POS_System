@@ -112,7 +112,8 @@ public class HoaDon_DAO {
         }
     }
     
-    private boolean saveData(List<HoaDon> list) {
+    @SuppressWarnings("unused")
+	private boolean saveData(List<HoaDon> list) {
         return true; 
     }
 }

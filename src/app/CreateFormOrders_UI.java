@@ -51,6 +51,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
 	private double totalAmount = 0.0;
 	private java.util.List<entity.Mon> originalList;
     private JButton activeTab; 
+    private JButton btnAll;
 
 	private Mon_DAO mon_dao = new Mon_DAO();
 	private HoaDon_DAO hoaDon_dao = new HoaDon_DAO();
@@ -140,7 +141,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         JPanel pnlTabs = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnlTabs.setOpaque(false);
         
-        JButton btnAll = createTabButton("All", true);
+        btnAll = createTabButton("All", true);
         activeTab = btnAll;
         btnAll.addActionListener(e -> filterMenu(null, btnAll));
         pnlTabs.add(btnAll);
@@ -344,6 +345,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         JPanel pnlBottomInfo = new JPanel(new BorderLayout());
         pnlBottomInfo.setOpaque(false);
         pnlBottomInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         // Nhãn giá
         JLabel lblPrice = new JLabel(price);
         lblPrice.setForeground(brown);
@@ -736,7 +738,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             }
         } else if (o.equals(btnSearch)) {
             String keyword = txtSearch.getText().trim();
-            
+            searchMenu(keyword);
         }else if(o.equals(btnCancel)) {
         	if (pnlCartItems.getComponentCount() > 0) {
                 int opt = JOptionPane.showConfirmDialog(this, 
@@ -761,6 +763,11 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                         nextFrame.setVisible(true);
                         this.dispose();
                     }
+                 MenuList_UI nextFrame = new MenuList_UI();
+                 nextFrame.setBounds(this.getBounds()); 
+                 nextFrame.setExtendedState(this.getExtendedState());
+                 nextFrame.setVisible(true);
+                 this.dispose();
             }
         }
     }
@@ -878,6 +885,12 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         }
     }
     private void searchMenu(String keyword) {
+        if (activeTab != btnAll) {
+            updateTabStyle(activeTab, false);
+            activeTab = btnAll;
+            updateTabStyle(activeTab, true);
+        }
+
         pnlProductGrid.removeAll();
         List<Mon> allMon = mon_dao.getAll();
         if (keyword.isEmpty()) {
