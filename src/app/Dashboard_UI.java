@@ -804,7 +804,7 @@ public class Dashboard_UI extends JFrame {
         document.add(topItemsTable);
 
         document.close();
-        JOptionPane.showMessageDialog(this, "Đã xuất thành công !");
+        JOptionPane.showMessageDialog(this, "Đã xuất thành công");
 
     } catch (Exception ex) {
         ex.printStackTrace();
