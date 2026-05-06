@@ -49,13 +49,13 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
 	private JTextArea txaInvoiceNote;
 	
 	private double totalAmount = 0.0;
-	private ArrayList<ChiTietHoaDon> dsChiTiet = new ArrayList<>();
-
-    private List<Mon> originalList;
+	private java.util.List<entity.Mon> originalList;
     private JButton activeTab; 
+    private JButton btnAll;
 
 	private Mon_DAO mon_dao = new Mon_DAO();
 	private HoaDon_DAO hoaDon_dao = new HoaDon_DAO();
+	@SuppressWarnings("deprecation")
 	private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 	
     public CreateFormOrders_UI() {
@@ -141,7 +141,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         JPanel pnlTabs = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         pnlTabs.setOpaque(false);
         
-        JButton btnAll = createTabButton("All", true);
+        btnAll = createTabButton("All", true);
         activeTab = btnAll;
         btnAll.addActionListener(e -> filterMenu(null, btnAll));
         pnlTabs.add(btnAll);
@@ -291,8 +291,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             String urlString = imagePath; 
             
             if (urlString != null && !urlString.isEmpty()) {
-                java.net.URL url = new java.net.URL(urlString);
-                
+            	java.net.URL url = new java.net.URI(imagePath).toURL(); 
                 Image img = javax.imageio.ImageIO.read(url);
                 
                 if (img != null) {
@@ -346,31 +345,44 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         JPanel pnlBottomInfo = new JPanel(new BorderLayout());
         pnlBottomInfo.setOpaque(false);
         pnlBottomInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        
         JLabel lblPrice = new JLabel(price);
         lblPrice.setForeground(brown);
         lblPrice.setFont(new Font("Inter", Font.BOLD, 16));
         pnlBottomInfo.add(lblPrice, BorderLayout.WEST);
 
         JButton btnAdd = new JButton("+");
-        btnAdd.setFont(new Font("Inter", Font.BOLD, 14));
+        btnAdd.setFont(new Font("Inter", Font.BOLD, 18));
         btnAdd.setForeground(Color.WHITE);
         btnAdd.setBackground(brown);
         btnAdd.setFocusPainted(false);
         btnAdd.setBorderPainted(false);
         btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAdd.setPreferredSize(new Dimension(35, 35)); 
+        btnAdd.setPreferredSize(new Dimension(40, 40)); 
         btnAdd.addActionListener(e -> {
             try {
-                double priceValue = mon_dao.getAll().stream().filter(m->m.getMaMon().equals(maMon)).findFirst().get().getDonGiaBan();
-                addToCart(name, priceValue,  maMon); 
+                double priceValue = currencyFormatter.parse(price).doubleValue();
+                
+                addToCart(name, priceValue, maMon, imagePath); 
+                
             } catch (Exception ex) {
+                Mon monBackup = mon_dao.getAll().stream()
+                        .filter(m -> m.getMaMon().equals(maMon))
+                        .findFirst().orElse(null);
+                if (monBackup != null) {
+                    addToCart(name, monBackup.getDonGiaBan(), maMon, imagePath);
+                }
                 ex.printStackTrace();
             }
-        }); 
+        });
         btnAdd.putClientProperty("JButton.buttonType", "roundRect");
 
-        pnlBottomInfo.add(btnAdd, BorderLayout.EAST); 
+        JPanel pnlBtnAdd = new JPanel();
+        pnlBtnAdd.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        pnlBtnAdd.setOpaque(false);
+        pnlBtnAdd.add(btnAdd);
+        
+        pnlBottomInfo.add(pnlBtnAdd, BorderLayout.EAST); 
 
         pnlDetails.add(pnlBottomInfo);
 
@@ -380,7 +392,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         return pnlCard;
     }
 
-    private void addToCart(String name, double price, String maMon) {
+    private void addToCart(String name, double price, String maMon, String imagePath) {
     	for (Component comp : pnlCartItems.getComponents()) {
             if (comp instanceof JPanel && maMon.equals(comp.getName())) {
                 JPanel existingItem = (JPanel) comp;
@@ -402,9 +414,24 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         lblIcon.setBackground(Color.decode("#e9e9d4")); 
         lblIcon.setOpaque(true);
         lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
-        lblIcon.setText("☕"); 
+        try {
+            if (imagePath != null && !imagePath.isEmpty()) {
+            	java.net.URL url = new java.net.URI(imagePath).toURL(); 
+                Image img = javax.imageio.ImageIO.read(url);
+                if (img != null) {
+                    Image scaledImg = img.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                    lblIcon.setIcon(new ImageIcon(scaledImg));
+                } else {
+                    lblIcon.setText("No Img");
+                }
+            } else {
+                lblIcon.setText("☕"); 
+            }
+        } catch (Exception e) {
+            lblIcon.setText("Error");
+        }
         lblIcon.putClientProperty("JComponent.outlineWidth", 1);
-
+        
         JPanel pnlCenter = new JPanel();
         pnlCenter.setLayout(new BoxLayout(pnlCenter, BoxLayout.Y_AXIS));
         pnlCenter.setOpaque(false);
@@ -710,7 +737,7 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
             }
         } else if (o.equals(btnSearch)) {
             String keyword = txtSearch.getText().trim();
-            
+            searchMenu(keyword);
         }else if(o.equals(btnCancel)) {
         	if (pnlCartItems.getComponentCount() > 0) {
                 int opt = JOptionPane.showConfirmDialog(this, 
@@ -724,6 +751,12 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
                     pnlCartItems.revalidate();
                     pnlCartItems.repaint();
                 }
+            }else {
+                 MenuList_UI nextFrame = new MenuList_UI();
+                 nextFrame.setBounds(this.getBounds()); 
+                 nextFrame.setExtendedState(this.getExtendedState());
+                 nextFrame.setVisible(true);
+                 this.dispose();
             }
         }
     }
@@ -841,6 +874,12 @@ public class CreateFormOrders_UI extends JFrame implements ActionListener {
         }
     }
     private void searchMenu(String keyword) {
+        if (activeTab != btnAll) {
+            updateTabStyle(activeTab, false);
+            activeTab = btnAll;
+            updateTabStyle(activeTab, true);
+        }
+
         pnlProductGrid.removeAll();
         List<Mon> allMon = mon_dao.getAll();
         if (keyword.isEmpty()) {
